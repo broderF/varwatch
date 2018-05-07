@@ -1,0 +1,85 @@
+version: "3"
+
+services:
+  web:
+    image: nginx:1.12
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    volumes:
+      - ./data/website/dist:/usr/share/nginx/html
+      - ./data/website/default:/etc/nginx/conf.d/default.conf
+    #restart: always 
+    ports:
+      - "5000:5000"
+    networks:
+      - overlay
+    depends_on:
+      - api
+
+  api:
+    image: tomcat:8.0.20-jre8
+    #restart: always
+    deploy:
+      placement:
+        constraints: [node.role == manager]     
+    ports:
+      - "8080:8080"
+    networks:
+      - overlay
+    volumes:
+      - ../varwatch-service/target/varwatch-service-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/varwatch.war
+    depends_on:
+      - varwatchdb
+      - hpodb
+
+  beekeeper:
+    build: ./beekeeper
+    hostname: varwatch
+    networks:
+      - overlay
+    depends_on:
+      - varwatchdb
+      - hpodb
+    volumes:
+      - /tmp/worker_data:/log/
+
+  varwatchdb:
+    image: mysql:5.7.21
+    #restart: always 
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: test123
+      MYSQL_DATABASE: varwatch
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: omed
+    volumes:
+      - ./data/sql/varwatch.sql:/docker-entrypoint-initdb.d/varwatch.sql
+      - /tmp/mysql_data:/var/lib/mysql
+    networks:
+      - overlay
+
+  hpodb:
+    image: mysql:5.7.21
+    #restart: always
+    deploy:
+      placement:
+        constraints: [node.role == manager]   
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: test123
+      MYSQL_DATABASE: MYHPO_06_2017
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: omed
+    volumes:
+      - ./data/sql/MYHPO_06_2017.sql:/docker-entrypoint-initdb.d/MYHPO_06_2017.sql
+    networks:
+      - overlay
+networks:
+  overlay:
+

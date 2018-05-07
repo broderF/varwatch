@@ -1,0 +1,11 @@
+db:varwatch_docker
+log:/log/
+job:/varwatch_worker_slurm.sh
+work:/varwatch-worker-1.0-SNAPSHOT-jar-with-dependencies.jar
+nrworker:1
+hpo:/ancestors_path_newHpo.txt
+tmp:/tmp/
+hgvs:/data/varwatch/VarWatchService/jobscript/ensembl_hgvs2genomic.pl
+crossmap:/data/varwatch/VarWatchService/lib/crossmap/crossmap_convert.rb
+fasta:/home/bfredrich/Downloads/Homo_sapiens.GRCh38.dna.chromosome.1.fa
+pluginDir:/data/varwatch/tools/variant_effect/vep/plugins
