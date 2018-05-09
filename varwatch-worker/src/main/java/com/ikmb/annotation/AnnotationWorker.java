@@ -7,25 +7,22 @@ package com.ikmb.annotation;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.ensembl.Ensembl;
+import com.ikmb.core.data.ensembl.EnsemblDataManager;
+import com.ikmb.core.data.reference_db.RefDatabase;
+import com.ikmb.core.data.reference_db.ReferenceDBDataManager;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.varianteffect.VariantEffect;
+import com.ikmb.core.data.varianteffect.VariantEffectDataManager;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.varwatchcommons.entities.GenomicFeature;
-import com.ikmb.varwatchcommons.entities.VariantEffect;
-import com.ikmb.varwatchcommons.tools.VariantEffectPredictor;
-import com.ikmb.varwatchcommons.utils.ParserHelper;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.entities.EnsemblSQL;
-import com.ikmb.varwatchsql.entities.VariantEffectSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.variant_data.varianteffect.VariantEffectDataManager;
-import com.ikmb.varwatchsql.data.ensembl.EnsemblDataManager;
-import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
-import com.ikmb.varwatchsql.data.reference_db.ReferenceDBDataManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
+import com.ikmb.core.varwatchcommons.tools.VariantEffectPredictor;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.job.JobManager;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
 import com.ikmb.varwatchworker.Worker;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,12 +40,12 @@ public class AnnotationWorker implements Worker {
 
     private final Logger logger = LoggerFactory.getLogger(AnnotationWorker.class);
 
-    protected AnalysisWorkerSQL _workerSQL;
-    protected AnalysisSQL _analysisSQL;
-    protected AnalysisJobSQL _analysisJobSQL;
+    protected AnalysisWorker _workerSQL;
+    protected Analysis _analysisSQL;
+    protected AnalysisJob _analysisJobSQL;
     private Map<String, String> _featureImpact;
-    private DatasetVWSQL _dataset;
-    private EnsemblSQL _predictorSQL;
+    private DatasetVW _dataset;
+    private Ensembl _predictorSQL;
 
     @Inject
     private WorkerInputHandler workerInputHandler;
@@ -89,14 +86,14 @@ public class AnnotationWorker implements Worker {
 //        vep.run(variant)
 //        vep.runOfflineWithFasta(_dataset.getVcfFile(), _predictorSQL.getName(), String.valueOf(_dataset.getId()));
 //        List<VariantEffectSQ> variantEffects = vepAnnotator.getVariantEffects();
-        Set<VariantSQL> variants = _dataset.getVariants();
+        Set<Variant> variants = _dataset.getVariants();
 //        List<GenomicFeature> variantInfoFromByteArray = ParserHelper.getVariantInfoFromByteArray(vcfFile);
-        List<VariantEffectSQL> filteredvariantEffects = new ArrayList<>();
-        for (VariantSQL variant : variants) {
-            List<VariantEffect> variantEffects = vep.run(variant.toVariant());
+        List<VariantEffect> filteredvariantEffects = new ArrayList<>();
+        for (Variant variant : variants) {
+            List<VariantEffect> variantEffects = vep.run(variant);
             for (VariantEffect curEffect : variantEffects) {
                 if (curEffect.getTranscriptName().startsWith("ENST") && isImpactfull(curEffect.getConsequence())) {
-                    filteredvariantEffects.add(VariantEffectSQL.get(curEffect));
+                    filteredvariantEffects.add(VariantEffect.get(curEffect));
                     variant.setUploadedVariantion(curEffect.getUploaded_variation());
                 }
             }
@@ -113,14 +110,14 @@ public class AnnotationWorker implements Worker {
         datasetManager.updateDataset(_dataset);
 
         submissionNoti.notifySubmission(_dataset);
-        List<RefDatabaseSQL> referenceDBs = refDBDataManager.getActiveDatabases();
-        for (RefDatabaseSQL referenceDB : referenceDBs) {
+        List<RefDatabase> referenceDBs = refDBDataManager.getActiveDatabases();
+        for (RefDatabase referenceDB : referenceDBs) {
             if (referenceDB.getImplementation().equals("global_beacon")) {
-                jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.SCREENING_BEACON, referenceDB.getId().toString(), AnalysisJobSQL.JobAction.NEW.toString());
+                jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.SCREENING_BEACON, referenceDB.getId().toString(), AnalysisJob.JobAction.NEW.toString());
             }
         }
 
-        jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.SCREEN_BEACON_RESULT_COLLECT, null, AnalysisJobSQL.JobAction.NEW.toString());
+        jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.SCREEN_BEACON_RESULT_COLLECT, null, AnalysisJob.JobAction.NEW.toString());
         jobProcessStatus = WorkFlowManager.JobProcessStatus.SUCCESSFUL;
         logger.info("finish annotation job");
     }
@@ -153,17 +150,17 @@ public class AnnotationWorker implements Worker {
     }
 
     @Override
-    public void setWorkerSQL(AnalysisWorkerSQL workerSQL) {
+    public void setWorker(AnalysisWorker workerSQL) {
         _workerSQL = workerSQL;
     }
 
     @Override
-    public void setAnalysisSQL(AnalysisSQL analysisSQL) {
+    public void setAnalysis(Analysis analysisSQL) {
         _analysisSQL = analysisSQL;
     }
 
     @Override
-    public void setAnalysisJobSQL(AnalysisJobSQL analysisJobSQL) {
+    public void setAnalysisJob(AnalysisJob analysisJobSQL) {
         _analysisJobSQL = analysisJobSQL;
     }
 

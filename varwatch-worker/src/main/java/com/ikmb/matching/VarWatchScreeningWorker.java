@@ -7,19 +7,19 @@ package com.ikmb.matching;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.matching.Match;
+import com.ikmb.core.data.matching.MatchVariantDataManager;
+import com.ikmb.core.data.reference_db.RefDatabase;
+import com.ikmb.core.data.reference_db.ReferenceDBDataManager;
+import com.ikmb.core.data.variant.VariantStatusManager;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.job.JobManager;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
-import com.ikmb.varwatchsql.data.reference_db.ReferenceDBDataManager;
-import com.ikmb.varwatchsql.matching.MatchSQL;
-import com.ikmb.varwatchsql.matching.MatchVariantDataManager;
-import com.ikmb.varwatchsql.status.variant.VariantStatusManager;
 import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
 import com.ikmb.varwatchworker.Worker;
 import java.util.List;
 import org.slf4j.LoggerFactory;
@@ -30,11 +30,11 @@ import org.slf4j.LoggerFactory;
  */
 public class VarWatchScreeningWorker implements Worker {
 
-    protected AnalysisWorkerSQL _workerSQL;
-    protected AnalysisSQL _analysisSQL;
-    protected AnalysisJobSQL _analysisJobSQL;
-    private DatasetVWSQL _dataset;
-    private RefDatabaseSQL _referenceDB;
+    protected AnalysisWorker _workerSQL;
+    protected Analysis _analysisSQL;
+    protected AnalysisJob _analysisJobSQL;
+    private DatasetVW _dataset;
+    private RefDatabase _referenceDB;
     private WorkFlowManager.JobProcessStatus jobProcessStatus = WorkFlowManager.JobProcessStatus.FAILED;
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(VarWatchScreeningWorker.class);
 
@@ -59,17 +59,17 @@ public class VarWatchScreeningWorker implements Worker {
 //    @Inject
 //    private DatasetManager dsDataManager;
     @Override
-    public void setWorkerSQL(AnalysisWorkerSQL workerSQL) {
+    public void setWorker(AnalysisWorker workerSQL) {
         _workerSQL = workerSQL;
     }
 
     @Override
-    public void setAnalysisSQL(AnalysisSQL analysisSQL) {
+    public void setAnalysis(Analysis analysisSQL) {
         _analysisSQL = analysisSQL;
     }
 
     @Override
-    public void setAnalysisJobSQL(AnalysisJobSQL analysisJobSQL) {
+    public void setAnalysisJob(AnalysisJob analysisJobSQL) {
         _analysisJobSQL = analysisJobSQL;
     }
 
@@ -99,18 +99,18 @@ public class VarWatchScreeningWorker implements Worker {
         logger.info("----- Start Screening Database " + _referenceDB.getName() + "-----");
         DatabaseScreener screener = ScreeningFactory.getScreeningDatabase(_referenceDB);
         screener.initialize(_referenceDB, _dataset);
-        RefDatabaseSQL varwatchDB = referenceDBDataManager.getVarWatchDatabase();
+        RefDatabase varwatchDB = referenceDBDataManager.getVarWatchDatabase();
         screener.setVWDatabase(varwatchDB);
         screener.run();
 
-        List<MatchSQL> matches = screener.getMatches();
+        List<Match> matches = screener.getMatches();
         logger.info("Found {} matches", matches.size());
         matches = matchDataManager.persistMatches(matches);
-        for (MatchSQL matchSQL : matches) {
+        for (Match matchSQL : matches) {
             logger.info("match with id {} saved in database", matchSQL.getId());
         }
         variantStatusManager.persistMatchStatus(matches, _referenceDB.getName());
-        jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.SCREEN_RESULT_COLLECT, null, AnalysisJobSQL.JobAction.NEW.toString());
+        jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.SCREEN_RESULT_COLLECT, null, AnalysisJob.JobAction.NEW.toString());
         _dataset.setCompleted(true);
         dsManager.updateDataset(_dataset);
         jobProcessStatus = WorkFlowManager.JobProcessStatus.SUCCESSFUL;

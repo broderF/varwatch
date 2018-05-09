@@ -6,10 +6,10 @@ package com.ikmb.varwatchservice.client;
  * and open the template in the editor.
  */
 import com.google.inject.Inject;
+import com.ikmb.core.auth.client.AuthClient;
+import com.ikmb.core.auth.client.ClientManager;
 import com.ikmb.varwatchservice.ResponseBuilder;
 import com.ikmb.varwatchservice.registration.ClientChecker;
-import com.ikmb.varwatchsql.auth.client.AuthClientSQL;
-import com.ikmb.varwatchsql.auth.client.ClientManager;
 import java.util.logging.Level;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -36,7 +36,7 @@ public class VarWatchClientImpl implements VarWatchClient {
             String errorMessage = clientChecker.getResponse();
             return new ResponseBuilder().withVwError().withVwMessage(errorMessage).withStatusType(Response.Status.NOT_FOUND).build();
         }
-        AuthClientSQL client = clientManager.getClient(clientId);
+        AuthClient client = clientManager.getClient(clientId);
 
         if (!client.getRedirect().equals(redirectUri)) {
             return new ResponseBuilder().withVwError().withVwMessage("Redirect Uri is invalid").withStatusType(Response.Status.NOT_ACCEPTABLE).build();
@@ -53,7 +53,7 @@ public class VarWatchClientImpl implements VarWatchClient {
             String errorMessage = clientChecker.getResponse();
             return new ResponseBuilder().withVwError().withVwMessage(errorMessage).withStatusType(Response.Status.NOT_FOUND).build();
         }
-        AuthClientSQL client = clientManager.getClient(clientId);
+        AuthClient client = clientManager.getClient(clientId);
 
         JSONObject js = new JSONObject();
         try {

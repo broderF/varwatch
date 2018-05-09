@@ -9,14 +9,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
-import com.ikmb.varwatchcommons.entities.MatchInformation;
+import com.ikmb.core.auth.RegistrationResponse;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.matching.MatchVariant;
+import com.ikmb.core.data.matching.MatchVariantDataManager;
+import com.ikmb.core.varwatchcommons.entities.MatchInformation;
+import com.ikmb.core.varwatchcommons.entities.Variant;
 import com.ikmb.varwatchservice.HTTPTokenValidator;
-import com.ikmb.varwatchsql.auth.RegistrationResponse;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
-import com.ikmb.varwatchsql.entities.VariantStatusSQL;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import com.ikmb.varwatchsql.matching.MatchVariantDataManager;
-import com.ikmb.varwatchsql.matching.MatchVariantSQL;
 import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -40,7 +39,7 @@ public class MatchingServiceImpl implements MatchingService {
     @Override
     public Response getMatchingDetails(String header, Long variantID, Long matchStatusID) {
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantID, VariantSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantID, Variant.class);
         if (!tokenValid) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
@@ -54,7 +53,7 @@ public class MatchingServiceImpl implements MatchingService {
     @Override
     public Response getMatchingDetail(String header, Long matchID) {
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(matchID, MatchVariantSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(matchID, MatchVariant.class);
         if (!tokenValid) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
@@ -73,7 +72,7 @@ public class MatchingServiceImpl implements MatchingService {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
         List<MatchInformation> matchInformations = variantmatchingManager.getNewMatchInformation(user);
         JsonArray result = (JsonArray) new Gson().toJsonTree(matchInformations,
                 new TypeToken<List<MatchInformation>>() {
@@ -86,13 +85,13 @@ public class MatchingServiceImpl implements MatchingService {
     public Response setMatchAck(String header, Long matchStatusID) {
         logger.info("ack match with match status id {}", matchStatusID);
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(matchStatusID, MatchVariantSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(matchStatusID, MatchVariant.class);
         if (!tokenValid) {
             logger.error("token is not valid");
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
         variantmatchingManager.setMatchAck(matchStatusID, user);
 
         return Response.status(Response.Status.OK).entity("match acknowledged").build();
@@ -107,7 +106,7 @@ public class MatchingServiceImpl implements MatchingService {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
         variantmatchingManager.setMatchesAck(user);
 
         return Response.status(Response.Status.OK).entity("matches acknowledged").build();

@@ -7,10 +7,10 @@ package com.ikmb.varwatchservice.delete;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import com.ikmb.varwatchsql.auth.RegistrationResponse;
-import com.ikmb.varwatchsql.auth.token.TokenManager;
-import com.ikmb.varwatchsql.wipe.WipeDataManager;
-import com.ikmb.varwatchcommons.entities.VWMatchRequest;
+import com.ikmb.core.auth.RegistrationResponse;
+import com.ikmb.core.auth.token.TokenManager;
+import com.ikmb.core.data.wipe.WipeDataManager;
+import com.ikmb.core.varwatchcommons.entities.VWMatchRequest;
 import com.ikmb.varwatchservice.VarWatchInputConverter;
 import com.ikmb.varwatchservice.VarWatchInputConverter.HTTPParsingResponse;
 import java.io.IOException;

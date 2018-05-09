@@ -6,10 +6,10 @@
 package com.ikmb.extraction;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchcommons.entities.VWStatus;
-import com.ikmb.varwatchcommons.entities.VWVariant;
-import com.ikmb.varwatchcommons.utils.VariantHash;
-import com.ikmb.varwatchsql.status.variant.VariantStatusBuilder;
+import com.ikmb.core.varwatchcommons.entities.VWStatus;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
+import com.ikmb.core.varwatchcommons.utils.VariantHash;
+import com.ikmb.core.data.variant.VariantStatusBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +35,7 @@ public class VariantIndelChecker {
             if (variant.getAlternateBases().length() <= MAX_BASE_LENGTH && variant.getReferenceBases().length() <= MAX_BASE_LENGTH) {
                 correctVariants.add(variant);
             } else {
-                VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatus.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.MAX_INDEL_EXEEDED.getMessage()).buildVWStatus();
+                VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.MAX_INDEL_EXEEDED.getMessage()).buildVWStatus();
                 errorVariants.put(variant, status);
             }
         }
@@ -45,7 +45,7 @@ public class VariantIndelChecker {
         if (variant.getAlternateBases().length() <= MAX_BASE_LENGTH && variant.getReferenceBases().length() <= MAX_BASE_LENGTH) {
             return true;
         } else {
-            VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatus.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.MAX_INDEL_EXEEDED.getMessage()).buildVWStatus();
+            VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.MAX_INDEL_EXEEDED.getMessage()).buildVWStatus();
             return false;
         }
     }

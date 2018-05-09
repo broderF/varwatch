@@ -6,14 +6,14 @@ package com.ikmb.varwatchservice.user;
  * and open the template in the editor.
  */
 import com.google.inject.Inject;
-import com.ikmb.varwatchcommons.entities.DefaultUser;
-import com.ikmb.varwatchcommons.entities.VWResponse;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.auth.user.UserManager;
+import com.ikmb.core.varwatchcommons.entities.DefaultUser;
+import com.ikmb.core.varwatchcommons.entities.VWResponse;
 import com.ikmb.varwatchservice.HTTPTokenValidator;
 import com.ikmb.varwatchservice.ResponseBuilder;
 import com.ikmb.varwatchservice.VarWatchInputConverter;
 import com.ikmb.varwatchservice.registration.RegistrationManager;
-import com.ikmb.varwatchsql.auth.user.UserManager;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
@@ -55,7 +55,7 @@ public class VarWatchUserImpl implements VarWatchUser {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
         try {
             ReportSchedule.valueOf(reportSchedule);
         } catch (IllegalArgumentException ex) {
@@ -96,7 +96,7 @@ public class VarWatchUserImpl implements VarWatchUser {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
         DefaultUser contact;
         try {
             inputConverter.setHTTPRequest(request, DefaultUser.class);

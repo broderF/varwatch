@@ -7,19 +7,17 @@ package com.ikmb.matching;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.matching.Match;
+import com.ikmb.core.data.matching.MatchVariantDataManager;
+import com.ikmb.core.data.reference_db.RefDatabase;
+import com.ikmb.core.data.reference_db.ReferenceDBDataManager;
+import com.ikmb.core.data.variant.VariantStatusManager;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
-import com.ikmb.varwatchsql.data.reference_db.ReferenceDBDataManager;
-import com.ikmb.varwatchsql.matching.MatchSQL;
-import com.ikmb.varwatchsql.matching.MatchVariantDataManager;
-import com.ikmb.varwatchsql.status.variant.VariantStatusBuilder;
-import com.ikmb.varwatchsql.status.variant.VariantStatusManager;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
-import com.ikmb.varwatchworker.CollectScreeningResultWorkerNew;
 import com.ikmb.varwatchworker.Worker;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +29,11 @@ import org.slf4j.LoggerFactory;
  */
 public class ScreeningWorker implements Worker {
 
-    protected AnalysisWorkerSQL _workerSQL;
-    protected AnalysisSQL _analysisSQL;
-    protected AnalysisJobSQL _analysisJobSQL;
-    private DatasetVWSQL _dataset;
-    private RefDatabaseSQL _referenceDB;
+    protected AnalysisWorker _workerSQL;
+    protected Analysis _analysisSQL;
+    protected AnalysisJob _analysisJobSQL;
+    private DatasetVW _dataset;
+    private RefDatabase _referenceDB;
     private WorkFlowManager.JobProcessStatus jobProcessStatus = WorkFlowManager.JobProcessStatus.FAILED;
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(ScreeningWorker.class);
 
@@ -57,17 +55,17 @@ public class ScreeningWorker implements Worker {
 //    @Inject
 //    private DatasetManager dsDataManager;
     @Override
-    public void setWorkerSQL(AnalysisWorkerSQL workerSQL) {
+    public void setWorker(AnalysisWorker workerSQL) {
         _workerSQL = workerSQL;
     }
 
     @Override
-    public void setAnalysisSQL(AnalysisSQL analysisSQL) {
+    public void setAnalysis(Analysis analysisSQL) {
         _analysisSQL = analysisSQL;
     }
 
     @Override
-    public void setAnalysisJobSQL(AnalysisJobSQL analysisJobSQL) {
+    public void setAnalysisJob(AnalysisJob analysisJobSQL) {
         _analysisJobSQL = analysisJobSQL;
     }
 
@@ -91,16 +89,16 @@ public class ScreeningWorker implements Worker {
         logger.info("----- Start Screening Database " + _referenceDB.getName() + "-----");
         DatabaseScreener screener = ScreeningFactory.getScreeningDatabase(_referenceDB);
         screener.initialize(_referenceDB, _dataset);
-        RefDatabaseSQL varwatchDB = referenceDBDataManager.getVarWatchDatabase();
+        RefDatabase varwatchDB = referenceDBDataManager.getVarWatchDatabase();
         screener.setVWDatabase(varwatchDB);
         screener.run();
 
-        List<MatchSQL> matches = screener.getMatches();
+        List<Match> matches = screener.getMatches();
         logger.info("Found {} matches", matches.size());
-        List<MatchSQL> filteredMatches = filterForDuplicates(matches);
+        List<Match> filteredMatches = filterForDuplicates(matches);
         logger.info("Found {} duplicates", matches.size() - filteredMatches.size());
         filteredMatches = matchDataManager.persistMatches(filteredMatches);
-        for (MatchSQL matchSQL : filteredMatches) {
+        for (Match matchSQL : filteredMatches) {
             logger.info("match with id {} saved in database", matchSQL.getId());
         }
         variantStatusManager.persistMatchStatus(filteredMatches, _referenceDB.getName());
@@ -117,9 +115,9 @@ public class ScreeningWorker implements Worker {
         return jobProcessStatus;
     }
 
-    private List<MatchSQL> filterForDuplicates(List<MatchSQL> matches) {
-        List<MatchSQL> filteredMatches = new ArrayList<>();
-        for (MatchSQL curMatch : matches) {
+    private List<Match> filterForDuplicates(List<Match> matches) {
+        List<Match> filteredMatches = new ArrayList<>();
+        for (Match curMatch : matches) {
             if (!matchDataManager.isDuplicatedMatch(curMatch)) {
                 filteredMatches.add(curMatch);
             }

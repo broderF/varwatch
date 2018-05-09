@@ -5,10 +5,10 @@
  */
 package com.ikmb.annotation;
 
-import com.ikmb.varwatchcommons.notification.NotificationSubmitter;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +20,8 @@ public class SubmissionNotification {
 
     private final Logger logger = LoggerFactory.getLogger(SubmissionNotification.class);
 
-    public void notifySubmission(DatasetVWSQL dataset) {
-        UserSQL user = dataset.getUser();
+    public void notifySubmission(DatasetVW dataset) {
+        User user = dataset.getUser();
         String mail = user.getMail();
         if (mail.equals("notifier")) {
             return;
@@ -29,7 +29,7 @@ public class SubmissionNotification {
         logger.info("Send submission report to user: " + mail);
 
         String variants = "";
-        for (VariantSQL variant : dataset.getVariants()) {
+        for (Variant variant : dataset.getVariants()) {
             variants += variant.toDbString() + "\n";
         }
 

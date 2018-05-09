@@ -5,8 +5,9 @@
  */
 package com.ikmb.notification;
 
-import com.ikmb.varwatchsql.auth.user.UserSQL;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.variant.Variant;
+
 
 /**
  *
@@ -14,18 +15,18 @@ import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
  */
 public class NotificationSubmitter {
 
-    private UserSQL user;
-    private VariantSQL variantQuery;
+    private User user;
+    private Variant variantQuery;
 
-    public UserSQL getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UserSQL user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public VariantSQL getVariantQuery() {
+    public Variant getVariantQuery() {
         return variantQuery;
     }
 
@@ -33,7 +34,7 @@ public class NotificationSubmitter {
         return variantQuery.getChromosomeName() + "," + variantQuery.getChromosomePos() + "," + variantQuery.getReferenceBase() + "," + variantQuery.getAlternateBase();
     }
 
-    public void setVariantQuery(VariantSQL variantQuery) {
+    public void setVariantQuery(Variant variantQuery) {
         this.variantQuery = variantQuery;
     }
 

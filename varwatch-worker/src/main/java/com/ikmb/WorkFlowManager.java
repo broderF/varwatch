@@ -6,10 +6,10 @@
 package com.ikmb;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
-import com.ikmb.varwatchsql.workflow.WorkerManager;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.job.JobManager;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
+import com.ikmb.core.workflow.worker.WorkerManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityNotFoundException;
@@ -29,12 +29,12 @@ public class WorkFlowManager {
     @Inject
     private JobManager jobManager;
 
-    public AnalysisWorkerSQL createWorker() {
+    public AnalysisWorker createWorker() {
         return workerManager.createWorker();
     }
 
-    public AnalysisJobSQL getJobForWorker(AnalysisWorkerSQL worker) {
-        AnalysisJobSQL job = null;
+    public AnalysisJob getJobForWorker(AnalysisWorker worker) {
+        AnalysisJob job = null;
         try {
             job = jobManager.getJobForWorker(worker.getId());
         } catch (RollbackException rbe) {
@@ -49,14 +49,14 @@ public class WorkFlowManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void finishWorker(AnalysisWorkerSQL workerSQL) {
+    public void finishWorker(AnalysisWorker workerSQL) {
         workerSQL.setStatus("DONE");
         workerSQL.setDied(new DateTime());
         workerSQL.setCauseOfDeath("Timeout");
         workerManager.update(workerSQL);
     }
 
-    public void setJobReleased(AnalysisJobSQL jobSQL) {
+    public void setJobReleased(AnalysisJob jobSQL) {
         jobSQL.setRetryCount(0);
         jobSQL.setStatus("READY");
         jobSQL.setWorker(null);
@@ -67,12 +67,12 @@ public class WorkFlowManager {
         jobManager.updateJob(jobSQL);
     }
 
-    public void setWorkerReleased(AnalysisWorkerSQL workerSQL) {
+    public void setWorkerReleased(AnalysisWorker workerSQL) {
 //        workerManager.release();
         workerManager.setWorkerReleased(workerSQL);
     }
 
-    public void setJobFailed(AnalysisJobSQL jobSQL) {
+    public void setJobFailed(AnalysisJob jobSQL) {
         if (jobSQL == null) {
             return;
         }
@@ -91,7 +91,7 @@ public class WorkFlowManager {
 
     }
 
-    public void finishJob(JobProcessStatus status, AnalysisWorkerSQL workerSQL, AnalysisJobSQL jobSQL, Long runtime) {
+    public void finishJob(JobProcessStatus status, AnalysisWorker workerSQL, AnalysisJob jobSQL, Long runtime) {
         jobSQL.setStatus(status.toString());
         jobSQL.setRuntime(runtime);
         jobManager.updateJob(jobSQL);

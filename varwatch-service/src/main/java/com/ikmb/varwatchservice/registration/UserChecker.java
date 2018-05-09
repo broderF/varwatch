@@ -5,10 +5,10 @@
  */
 package com.ikmb.varwatchservice.registration;
 
-import com.ikmb.varwatchcommons.utils.PasswordValidator;
+import com.ikmb.core.varwatchcommons.utils.PasswordValidator;
 import com.google.inject.Inject;
-import com.ikmb.varwatchsql.auth.user.UserManager;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.auth.user.UserManager;
 
 /**
  * Validates a user
@@ -34,7 +34,7 @@ public class UserChecker {
      * @return
      */
     public boolean isUserValid(String userMail, String userPass) {
-        UserSQL user = userManager.getUser(userMail);
+        User user = userManager.getUser(userMail);
 
         if (user == null || !passWordValidator.isPasswortValid(user.getPassword(), userPass)) {
             response = "User or Password not valid";

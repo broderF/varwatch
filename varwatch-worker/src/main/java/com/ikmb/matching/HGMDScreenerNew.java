@@ -10,21 +10,20 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.ikmb.WorkerLauncher;
+import com.ikmb.core.data.dataset.DatasetHGMD;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.hpo.Phenotype;
+import com.ikmb.core.data.matching.Match;
+import com.ikmb.core.data.matching.MatchVariant;
+import com.ikmb.core.data.matching.MatchVariantDataManager;
+import com.ikmb.core.data.reference_db.RefDatabase;
+import com.ikmb.core.data.reference_db.ReferenceDBDataManager;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantStatusManager;
+import com.ikmb.core.data.varianteffect.VariantEffect;
 import com.ikmb.varwatchsql.guice.VarWatchInjector;
 import com.ikmb.varwatchsql.guice.VarWatchPersist;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
-import com.ikmb.varwatchsql.entities.DatasetHGMDSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.entities.VariantEffectSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.matching.MatchSQL;
-import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import com.ikmb.varwatchsql.data.hpo.PhenotypeSQL;
-import com.ikmb.varwatchsql.data.reference_db.ReferenceDBDataManager;
-import com.ikmb.varwatchsql.matching.MatchVariantDataManager;
-import com.ikmb.varwatchsql.matching.MatchVariantSQL;
-import com.ikmb.varwatchsql.status.variant.VariantStatusManager;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -42,11 +41,11 @@ import java.util.logging.Logger;
  */
 public class HGMDScreenerNew implements DatabaseScreener {
 
-    private List<MatchSQL> _matches = new ArrayList<MatchSQL>();
-    private DatasetVWSQL _dataset;
-    private RefDatabaseSQL _database;
+    private List<Match> _matches = new ArrayList<Match>();
+    private DatasetVW _dataset;
+    private RefDatabase _database;
     private HashMap<String, HPOPath> pathList;
-    private RefDatabaseSQL vwDatabase;
+    private RefDatabase vwDatabase;
 
     @Inject
     private MatchVariantDataManager matchDataManager;
@@ -55,7 +54,7 @@ public class HGMDScreenerNew implements DatabaseScreener {
     private VariantStatusManager variantStatusManager;
 
     @Override
-    public void setVWDatabase(RefDatabaseSQL vwDatabase) {
+    public void setVWDatabase(RefDatabase vwDatabase) {
         this.vwDatabase = vwDatabase;
     }
 
@@ -65,7 +64,7 @@ public class HGMDScreenerNew implements DatabaseScreener {
             loadHPODistances();
         }
 
-        for (VariantSQL variant : _dataset.getVariants()) {
+        for (Variant variant : _dataset.getVariants()) {
 
             findMatches(variant);
 
@@ -74,21 +73,21 @@ public class HGMDScreenerNew implements DatabaseScreener {
 //        variantStatusManager.addMatches(getMatches(), VariantStatusBuilder.VariantStatusMessage.MATCHED_TO_HGMD);
     }
 
-    public void findMatches(VariantSQL vwVariant) {
-        List<DatasetHGMDSQL> similarGeneVariants = matchDataManager.getSimilarHGMDByGene(vwVariant);
+    public void findMatches(Variant vwVariant) {
+        List<DatasetHGMD> similarGeneVariants = matchDataManager.getSimilarHGMDByGene(vwVariant);
         if (similarGeneVariants.isEmpty()) {
             System.out.println("no matches found");
             return;
         }
 
-        Set<MatchSQL> matches = createAminoAcidMatches(similarGeneVariants, vwVariant);
+        Set<Match> matches = createAminoAcidMatches(similarGeneVariants, vwVariant);
         if (!matches.isEmpty()) {
             _matches.addAll(matches);
             return;
         }
 
         boolean isLof = false;
-        for (VariantEffectSQL vareff : vwVariant.getVariantEffects()) {
+        for (VariantEffect vareff : vwVariant.getVariantEffects()) {
             String loftee = vareff.getLoftee();
             if (loftee != null && loftee.equals("HC")) {
                 isLof = true;
@@ -96,7 +95,7 @@ public class HGMDScreenerNew implements DatabaseScreener {
             }
         }
 
-        List<DatasetHGMDSQL> lofMatches = new ArrayList<>();
+        List<DatasetHGMD> lofMatches = new ArrayList<>();
         if (isLof) {
             lofMatches = getLofMatches(similarGeneVariants);
         }
@@ -112,31 +111,31 @@ public class HGMDScreenerNew implements DatabaseScreener {
     }
 
     @Override
-    public List<MatchSQL> getMatches() {
+    public List<Match> getMatches() {
         return _matches;
     }
 
     @Override
-    public void initialize(RefDatabaseSQL database, DatasetVWSQL dataset
+    public void initialize(RefDatabase database, DatasetVW dataset
     ) {
         _database = database;
         _dataset = dataset;
     }
 
     @Override
-    public DatasetVWSQL getDataset() {
+    public DatasetVW getDataset() {
         return _dataset;
     }
 
     @Override
-    public RefDatabaseSQL getDatabase() {
+    public RefDatabase getDatabase() {
         return _database;
     }
 
-    private Set<MatchSQL> createMatches(List<DatasetHGMDSQL> identicalVariants, VariantSQL variant, boolean equalGene, boolean equalPath, boolean equalFam) {
-        Set<MatchSQL> matches = new HashSet<>();
-        for (DatasetHGMDSQL currentVar : identicalVariants) {
-            MatchSQL match = new MatchSQL();
+    private Set<Match> createMatches(List<DatasetHGMD> identicalVariants, Variant variant, boolean equalGene, boolean equalPath, boolean equalFam) {
+        Set<Match> matches = new HashSet<>();
+        for (DatasetHGMD currentVar : identicalVariants) {
+            Match match = new Match();
             match.setEqualGene(equalGene);
             match.setEqualPath(equalPath);
             match.setEqualFam(equalFam);
@@ -149,14 +148,14 @@ public class HGMDScreenerNew implements DatabaseScreener {
                 match.setIdentical(false);
             }
 
-            MatchVariantSQL hgmdVariant = new MatchVariantSQL();
+            MatchVariant hgmdVariant = new MatchVariant();
             hgmdVariant.setDatabase(_database);
             hgmdVariant.setMatch(match);
             hgmdVariant.setVariantId(currentVar.getId());
             hgmdVariant.setNotified(false);
             match.getVariants().add(hgmdVariant);
 
-            MatchVariantSQL vwVariant = new MatchVariantSQL();
+            MatchVariant vwVariant = new MatchVariant();
             vwVariant.setDatabase(vwDatabase);
             vwVariant.setUser(_dataset.getUser());
             vwVariant.setMatch(match);
@@ -169,15 +168,15 @@ public class HGMDScreenerNew implements DatabaseScreener {
         return matches;
     }
 
-    private Double getHPOSetDistance(VariantSQL variant, DatasetHGMDSQL fixVariant) {
-        Set<PhenotypeSQL> qhpos = variant.getDataset().getPhenotypes();
+    private Double getHPOSetDistance(Variant variant, DatasetHGMD fixVariant) {
+        Set<Phenotype> qhpos = variant.getDataset().getPhenotypes();
 
-        Set<PhenotypeSQL> thpos = fixVariant.getPhenotypes();
+        Set<Phenotype> thpos = fixVariant.getPhenotypes();
 
         Double maxSim = 0d;
-        for (PhenotypeSQL qhpo : qhpos) {
+        for (Phenotype qhpo : qhpos) {
             Double currentMaxSimilarity = 0.5d;
-            for (PhenotypeSQL thpo : thpos) {
+            for (Phenotype thpo : thpos) {
                 String hpoTerm1 = qhpo.getPhenotype().getIdentifier();
                 String hpoTerm2 = thpo.getPhenotype().getIdentifier();
                 Double currentSimilartiy = getHPODistance(hpoTerm1, hpoTerm2);
@@ -188,9 +187,9 @@ public class HGMDScreenerNew implements DatabaseScreener {
             maxSim += currentMaxSimilarity;
         }
 
-        for (PhenotypeSQL thpo : thpos) {
+        for (Phenotype thpo : thpos) {
             Double currentMaxSimilarity = 0.5d;
-            for (PhenotypeSQL qhpo : qhpos) {
+            for (Phenotype qhpo : qhpos) {
                 String hpoTerm1 = qhpo.getPhenotype().getIdentifier();
                 String hpoTerm2 = thpo.getPhenotype().getIdentifier();
                 Double currentSimilartiy = getHPODistance(hpoTerm2, hpoTerm1);
@@ -284,17 +283,17 @@ public class HGMDScreenerNew implements DatabaseScreener {
         HGMDScreenerNew hgmd = inj.getInstance(HGMDScreenerNew.class);
         DatasetManager dsManager = inj.getInstance(DatasetManager.class);
         hgmd.loadHPODistances("/data/varwatch/VarWatchService/lib/ancestors_path_newHpo.txt");
-        RefDatabaseSQL varwatchDB = inj.getInstance(ReferenceDBDataManager.class).getVarWatchDatabase();
+        RefDatabase varwatchDB = inj.getInstance(ReferenceDBDataManager.class).getVarWatchDatabase();
         hgmd.initialize(varwatchDB, dsManager.getDatasetByID(107157l));
         hgmd.setVWDatabase(varwatchDB);
         hgmd.run();
         System.out.println("finish");
     }
 
-    private Set<MatchSQL> createAminoAcidMatches(List<DatasetHGMDSQL> similarVariants, VariantSQL variant) {
-        Set<MatchSQL> matches = new HashSet<>();
-        for (DatasetHGMDSQL currentVar : similarVariants) {
-            MatchSQL match = new MatchSQL();
+    private Set<Match> createAminoAcidMatches(List<DatasetHGMD> similarVariants, Variant variant) {
+        Set<Match> matches = new HashSet<>();
+        for (DatasetHGMD currentVar : similarVariants) {
+            Match match = new Match();
             HGMDScreenerNew.MatchType matchingType = getTypeFromMatch(variant, currentVar);
             if (matchingType.equals(HGMDScreenerNew.MatchType.no_match)) {
                 continue;
@@ -304,14 +303,14 @@ public class HGMDScreenerNew implements DatabaseScreener {
             match.setHpoDist(hpoDist);
             match.setDatabase(_database);
 
-            MatchVariantSQL hgmdVariant = new MatchVariantSQL();
+            MatchVariant hgmdVariant = new MatchVariant();
             hgmdVariant.setDatabase(_database);
             hgmdVariant.setMatch(match);
             hgmdVariant.setVariantId(currentVar.getId());
             hgmdVariant.setNotified(false);
             match.getVariants().add(hgmdVariant);
 
-            MatchVariantSQL vwRefVariant = new MatchVariantSQL();
+            MatchVariant vwRefVariant = new MatchVariant();
             vwRefVariant.setDatabase(vwDatabase);
             vwRefVariant.setUser(_dataset.getUser());
             vwRefVariant.setMatch(match);
@@ -324,7 +323,7 @@ public class HGMDScreenerNew implements DatabaseScreener {
         return matches;
     }
 
-    private MatchType getTypeFromMatch(VariantSQL queryVariant, DatasetHGMDSQL variant) {
+    private MatchType getTypeFromMatch(Variant queryVariant, DatasetHGMD variant) {
         if (isPerfectMatch(queryVariant, variant)) {
             return MatchType.perfect;
         } else if (isNucleotideMatch(queryVariant, variant)) {
@@ -335,16 +334,16 @@ public class HGMDScreenerNew implements DatabaseScreener {
         return MatchType.no_match;
     }
 
-    private boolean isPerfectMatch(VariantSQL queryVariant, DatasetHGMDSQL variant) {
+    private boolean isPerfectMatch(Variant queryVariant, DatasetHGMD variant) {
         return queryVariant.getChromosomeName().equals(variant.getChrName()) && queryVariant.getChromosomePos().equals(variant.getChrPos()) && queryVariant.getReferenceBase().equals(variant.getRefBase()) && queryVariant.getAlternateBase().equals(variant.getAltBase());
     }
 
-    private boolean isNucleotideMatch(VariantSQL queryVariant, DatasetHGMDSQL variant) {
+    private boolean isNucleotideMatch(Variant queryVariant, DatasetHGMD variant) {
         return queryVariant.getChromosomeName().equals(variant.getChrName()) && queryVariant.getChromosomePos().equals(variant.getChrPos());
     }
 
-    private boolean isCodonMatch(VariantSQL queryVariant, DatasetHGMDSQL variant) {
-        for (VariantEffectSQL varEff1 : queryVariant.getVariantEffects()) {
+    private boolean isCodonMatch(Variant queryVariant, DatasetHGMD variant) {
+        for (VariantEffect varEff1 : queryVariant.getVariantEffects()) {
             if (variant.getProtein_end() == null || variant.getProtein_start() == null || varEff1.getProtein_start() == null || varEff1.getProtein_end() == null) {
                 System.out.println("variant or matching variant effect is null for (hgmd variant: " + queryVariant.getId() + ") and effet(effect:" + varEff1.getId() + ")");
                 continue;
@@ -356,24 +355,24 @@ public class HGMDScreenerNew implements DatabaseScreener {
         return false;
     }
 
-    private Set<MatchSQL> createMatches(List<DatasetHGMDSQL> similarGenVariants, VariantSQL variant, MatchType matchType) {
-        Set<MatchSQL> matches = new HashSet<>();
+    private Set<Match> createMatches(List<DatasetHGMD> similarGenVariants, Variant variant, MatchType matchType) {
+        Set<Match> matches = new HashSet<>();
 
-        for (DatasetHGMDSQL currentVar : similarGenVariants) {
-            MatchSQL match = new MatchSQL();
+        for (DatasetHGMD currentVar : similarGenVariants) {
+            Match match = new Match();
             match.setMatch_type(matchType.name());
             Double hpoDist = getHPOSetDistance(variant, currentVar);
             match.setHpoDist(hpoDist);
             match.setDatabase(_database);
 
-            MatchVariantSQL hgmdVariant = new MatchVariantSQL();
+            MatchVariant hgmdVariant = new MatchVariant();
             hgmdVariant.setDatabase(_database);
             hgmdVariant.setMatch(match);
             hgmdVariant.setVariantId(currentVar.getId());
             hgmdVariant.setNotified(false);
             match.getVariants().add(hgmdVariant);
 
-            MatchVariantSQL vwRefVariant = new MatchVariantSQL();
+            MatchVariant vwRefVariant = new MatchVariant();
             vwRefVariant.setDatabase(vwDatabase);
             vwRefVariant.setUser(_dataset.getUser());
             vwRefVariant.setMatch(match);
@@ -386,9 +385,9 @@ public class HGMDScreenerNew implements DatabaseScreener {
         return matches;
     }
 
-    private List<DatasetHGMDSQL> getLofMatches(List<DatasetHGMDSQL> similarGenVariants) {
-        List<DatasetHGMDSQL> lofMatches = new ArrayList<>();
-        for (DatasetHGMDSQL curDs : similarGenVariants) {
+    private List<DatasetHGMD> getLofMatches(List<DatasetHGMD> similarGenVariants) {
+        List<DatasetHGMD> lofMatches = new ArrayList<>();
+        for (DatasetHGMD curDs : similarGenVariants) {
             String loftee = curDs.getLoftee();
             if (loftee != null && loftee.equals("HC")) {
                 lofMatches.add(curDs);

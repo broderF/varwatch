@@ -6,12 +6,12 @@
 package com.ikmb.varwatchbarkeeper;
 
 import com.google.inject.Injector;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
-import com.ikmb.varwatchsql.data.reference_db.ReferenceDBDataManager;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.reference_db.RefDatabase;
+import com.ikmb.core.data.reference_db.ReferenceDBDataManager;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.job.JobManager;
 import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
 import java.util.List;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -34,14 +34,14 @@ public class BeaconWeeklyJob implements Job {
 
         List<Long> datasetIds = dsManager.getAllDatasetIds();
 
-        List<RefDatabaseSQL> referenceDBs = refDBDataManager.getActiveDatabases();
+        List<RefDatabase> referenceDBs = refDBDataManager.getActiveDatabases();
         for (Long id : datasetIds) {
-            for (RefDatabaseSQL referenceDB : referenceDBs) {
+            for (RefDatabase referenceDB : referenceDBs) {
                 if (referenceDB.getImplementation().equals("global_beacon")) {
-                    jobManager.createJob(id, AnalysisBuilder.ModuleName.SCREENING_BEACON, referenceDB.getId().toString(), AnalysisJobSQL.JobAction.UPDATE.toString());
+                    jobManager.createJob(id, AnalysisBuilder.ModuleName.SCREENING_BEACON, referenceDB.getId().toString(), AnalysisJob.JobAction.UPDATE.toString());
                 }
             }
-            jobManager.createJob(id, AnalysisBuilder.ModuleName.SCREEN_BEACON_RESULT_COLLECT, null, AnalysisJobSQL.JobAction.UPDATE.toString());
+            jobManager.createJob(id, AnalysisBuilder.ModuleName.SCREEN_BEACON_RESULT_COLLECT, null, AnalysisJob.JobAction.UPDATE.toString());
         }
         System.out.println("finish create job");
     }

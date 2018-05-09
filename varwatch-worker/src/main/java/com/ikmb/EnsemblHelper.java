@@ -5,7 +5,7 @@
  */
 package com.ikmb;
 
-import com.ikmb.varwatchcommons.utils.ParserHelper;
+import com.ikmb.core.varwatchcommons.utils.ParserHelper;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;

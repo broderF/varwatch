@@ -9,18 +9,19 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
-import com.ikmb.varwatchcommons.entities.Family;
-import com.ikmb.varwatchcommons.entities.Gene;
-import com.ikmb.varwatchcommons.entities.HPOTerm;
-import com.ikmb.varwatchcommons.entities.Pathway;
+import com.ikmb.core.auth.RegistrationResponse;
+import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.varwatchservice.HTTPTokenValidator;
-import com.ikmb.varwatchsql.auth.RegistrationResponse;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import com.ikmb.varwatchsql.data.family.FamilyDataManager;
-import com.ikmb.varwatchsql.data.gene.GeneDataManager;
-import com.ikmb.varwatchsql.data.hpo.PhenotypeDataManager;
-import com.ikmb.varwatchsql.data.pathway.PathwayDataManager;
+import com.ikmb.core.data.family.FamilyDataManager;
+import com.ikmb.core.data.family.GeneFamily;
+import com.ikmb.core.data.gene.Gene;
+import com.ikmb.core.data.gene.GeneDataManager;
+import com.ikmb.core.data.hpo.HPOTerm;
+import com.ikmb.core.data.hpo.PhenotypeDataManager;
+import com.ikmb.core.data.pathway.Pathway;
+import com.ikmb.core.data.pathway.PathwayDataManager;
+import com.ikmb.core.data.variant.Variant;
+//import com.ikmb.core.varwatchcommons.entities.Family;
 import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -42,7 +43,7 @@ public class AnnotationServiceImpl implements AnnotationService {
     @Override
     public Response getDatasetAnnotation(String header, Long datasetId) {
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(datasetId, DatasetVWSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(datasetId, DatasetVW.class);
         if (!tokenValid) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
@@ -59,7 +60,7 @@ public class AnnotationServiceImpl implements AnnotationService {
     @Override
     public Response getVariantPathways(String header, Long variantId) {
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantId, VariantSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantId, Variant.class);
         if (!tokenValid) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
@@ -76,7 +77,7 @@ public class AnnotationServiceImpl implements AnnotationService {
     @Override
     public Response getVariantGenes(String header, Long variantId) {
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantId, VariantSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantId, Variant.class);
         if (!tokenValid) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
@@ -93,15 +94,15 @@ public class AnnotationServiceImpl implements AnnotationService {
     @Override
     public Response getVariantFamilies(String header, Long variantId) {
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantId, VariantSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantId, Variant.class);
         if (!tokenValid) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
 
-        List<Family> families = familyManager.getFamilies(variantId);
+        List<GeneFamily> families = familyManager.getFamilies(variantId);
 
         JsonArray result = (JsonArray) new Gson().toJsonTree(families,
-                new TypeToken<List<Family>>() {
+                new TypeToken<List<GeneFamily>>() {
                 }.getType());
         String currentOutput = result.toString();
         return Response.status(Response.Status.OK).entity(currentOutput).build();

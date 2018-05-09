@@ -6,11 +6,11 @@
 package com.ikmb.extraction;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchcommons.entities.GenomicFeature;
-import com.ikmb.varwatchcommons.entities.VWVariant;
+import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import com.ikmb.EnsemblHelper;
 import com.ikmb.WorkerLauncher;
-import com.ikmb.varwatchcommons.utils.ParserHelper;
+import com.ikmb.core.varwatchcommons.utils.ParserHelper;
 import com.ikmb.utils.VWConfiguration;
 import java.io.BufferedReader;
 import java.io.File;

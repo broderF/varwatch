@@ -13,17 +13,16 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.ikmb.WorkFlowManager;
 import com.ikmb.WorkFlowManager.JobProcessStatus;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.varwatchcommons.notification.NotificationSubmitter;
+import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.job.JobManager;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
+import com.ikmb.core.workflow.worker.WorkerManager;
 import com.ikmb.varwatchsql.guice.VarWatchInjector;
 import com.ikmb.varwatchsql.guice.VarWatchPersist;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.workflow.WorkerManager;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
 import com.ikmb.varwatchworker.Worker;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.apache.commons.lang.StringUtils;
@@ -39,9 +38,9 @@ import org.slf4j.LoggerFactory;
 public class SanityWorker implements Worker {
 
     private final Logger logger = LoggerFactory.getLogger(SanityWorker.class);
-    protected AnalysisWorkerSQL _workerSQL;
-    protected AnalysisSQL _analysisSQL;
-    protected AnalysisJobSQL _analysisJobSQL;
+    protected AnalysisWorker _workerSQL;
+    protected Analysis _analysisSQL;
+    protected AnalysisJob _analysisJobSQL;
 
     private WorkFlowManager.JobProcessStatus jobProcessStatus = WorkFlowManager.JobProcessStatus.FAILED;
     @Inject
@@ -62,17 +61,17 @@ public class SanityWorker implements Worker {
     }
 
     @Override
-    public void setWorkerSQL(AnalysisWorkerSQL workerSQL) {
+    public void setWorker(AnalysisWorker workerSQL) {
         _workerSQL = workerSQL;
     }
 
     @Override
-    public void setAnalysisSQL(AnalysisSQL analysisSQL) {
+    public void setAnalysis(Analysis analysisSQL) {
         _analysisSQL = analysisSQL;
     }
 
     @Override
-    public void setAnalysisJobSQL(AnalysisJobSQL analysisJobSQL) {
+    public void setAnalysisJob(AnalysisJob analysisJobSQL) {
         _analysisJobSQL = analysisJobSQL;
     }
 
@@ -108,7 +107,7 @@ public class SanityWorker implements Worker {
     }
 
     private SanityResponse checkForFailedWorkers() {
-        List<AnalysisWorkerSQL> failedWorkers = workerManager.getWorkerByStatus("FAILED");
+        List<AnalysisWorker> failedWorkers = workerManager.getWorkerByStatus("FAILED");
 
         SanityResponse sanityResponse = new SanityResponse("Check for failed workers in the system");
         if (failedWorkers.isEmpty()) {
@@ -120,9 +119,9 @@ public class SanityWorker implements Worker {
     }
 
     private SanityResponse checkForClaimedWorkers() {
-        List<AnalysisWorkerSQL> claimedWorkers = workerManager.getWorkerByStatus("CLAIMED");
-        List<AnalysisWorkerSQL> claimedLongGoingWorkers = new ArrayList<>();
-        for (AnalysisWorkerSQL currentWorker : claimedWorkers) {
+        List<AnalysisWorker> claimedWorkers = workerManager.getWorkerByStatus("CLAIMED");
+        List<AnalysisWorker> claimedLongGoingWorkers = new ArrayList<>();
+        for (AnalysisWorker currentWorker : claimedWorkers) {
             DateTime bornTime = currentWorker.getBorn();
             DateTime currentTime = new DateTime();
             Duration duration = new Duration(bornTime, currentTime);
@@ -155,7 +154,7 @@ public class SanityWorker implements Worker {
     }
 
     private SanityResponse checkForFailedJobs() {
-        List<AnalysisJobSQL> failedJobs = jobManager.getJobByStatus("FAILED");
+        List<AnalysisJob> failedJobs = jobManager.getJobByStatus("FAILED");
 
         SanityResponse sanityResponse = new SanityResponse("Check for failed jobs in the system");
         if (failedJobs.isEmpty()) {
@@ -167,10 +166,10 @@ public class SanityWorker implements Worker {
     }
 
     private SanityResponse checkForLongGoingJobs() {
-        List<AnalysisJobSQL> longGoingJobs = new ArrayList<>();
+        List<AnalysisJob> longGoingJobs = new ArrayList<>();
 
-        List<AnalysisJobSQL> claimedJobs = jobManager.getJobByStatus("CLAIMED");
-        for (AnalysisJobSQL currentJob : claimedJobs) {
+        List<AnalysisJob> claimedJobs = jobManager.getJobByStatus("CLAIMED");
+        for (AnalysisJob currentJob : claimedJobs) {
             DateTime bornTime = currentJob.getLastCheckIn();
             DateTime currentTime = new DateTime();
             Duration duration = new Duration(bornTime, currentTime);
@@ -179,8 +178,8 @@ public class SanityWorker implements Worker {
             }
         }
 
-        List<AnalysisJobSQL> readyJobs = jobManager.getJobByStatus("READY");
-        for (AnalysisJobSQL currentJob : readyJobs) {
+        List<AnalysisJob> readyJobs = jobManager.getJobByStatus("READY");
+        for (AnalysisJob currentJob : readyJobs) {
             DateTime bornTime = currentJob.getLastCheckIn();
             DateTime currentTime = new DateTime();
             Duration duration = new Duration(bornTime, currentTime);

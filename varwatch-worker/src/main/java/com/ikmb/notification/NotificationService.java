@@ -5,10 +5,7 @@
  */
 package com.ikmb.notification;
 
-import com.google.common.collect.Multimap;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import java.util.ArrayList;
-import java.util.List;
+import com.ikmb.core.data.variant.Variant;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -30,7 +27,7 @@ public class NotificationService {
 //        String mailtext = parseVarWatchMailText(submitSQLVariant, similarVariants);
 //        sendMail(container.getUser().getMail(), mailtext);
 //        for (VariantAPI variant : similarVariants) {
-//            VariantSQL varSQL = (VariantSQL) variant;
+//            Variant varSQL = (Variant) variant;
 //            mailtext = parseVarWatchMailText(variant, submitAsList);
 //            sendMail(varSQL.getDataset().getUser().getMail(), mailtext);
 //        }
@@ -106,12 +103,12 @@ public class NotificationService {
 //
 //        return text;
 //    }
-    public static void sendEmail(VariantSQL _queryVariant, String email, VariantSQL _targetVariant, String _dbName) {
+    public static void sendEmail(Variant _queryVariant, String email, Variant _targetVariant, String _dbName) {
         String mailText = parseVariantMailText(_queryVariant, _targetVariant, _dbName);
         sendMail(email, mailText, "Found similar Variant in VarWatch");
     }
 
-    private static String parseVariantMailText(VariantSQL _queryVariant, VariantSQL _targetVariant, String _dbName) {
+    private static String parseVariantMailText(Variant _queryVariant, Variant _targetVariant, String _dbName) {
         String text = "Dataset: " + _queryVariant.getDataset().getDescription() + " ; " + _queryVariant.getDataset().getId();
         text += "\nFound similar Variant in " + _dbName;
         text += "\nSubmitted Variant: " + _queryVariant.getChromosomeName() + "," + _queryVariant.getChromosomePos() + "," + _queryVariant.getReferenceBase() + "," + _queryVariant.getAlternateBase();
@@ -121,7 +118,7 @@ public class NotificationService {
         return text;
     }
 
-    public static void sendEmail(VariantSQL _queryVariant, String mail, String _dbName) {
+    public static void sendEmail(Variant _queryVariant, String mail, String _dbName) {
         sendEmail(_queryVariant, mail, null, _dbName);
     }
 

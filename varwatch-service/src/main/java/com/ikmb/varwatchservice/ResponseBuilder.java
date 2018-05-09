@@ -6,8 +6,8 @@
 package com.ikmb.varwatchservice;
 
 import com.google.gson.Gson;
-import com.ikmb.varwatchcommons.entities.VWResponse;
-import com.ikmb.varwatchcommons.entities.Status;
+import com.ikmb.core.varwatchcommons.entities.VWResponse;
+import com.ikmb.core.varwatchcommons.entities.Status;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.StatusType;
 

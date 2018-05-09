@@ -5,11 +5,11 @@
  */
 package com.ikmb.varwatchservice.registration;
 
-import com.ikmb.varwatchsql.auth.RegistrationResponse;
-import com.ikmb.varwatchcommons.utils.PasswordValidator;
+import com.ikmb.core.varwatchcommons.utils.PasswordValidator;
 import com.google.inject.Inject;
-import com.ikmb.varwatchsql.auth.client.AuthClientSQL;
-import com.ikmb.varwatchsql.auth.client.ClientManager;
+import com.ikmb.core.auth.RegistrationResponse;
+import com.ikmb.core.auth.client.AuthClient;
+import com.ikmb.core.auth.client.ClientManager;
 
 /**
  * Validates the client
@@ -35,7 +35,7 @@ public class ClientChecker {
      * @return
      */
     public boolean isClientAndSecretValid(String clientName, String clientPass) {
-        AuthClientSQL client = clientManager.getClient(clientName);
+        AuthClient client = clientManager.getClient(clientName);
         if (!client.getValid()) {
             response = RegistrationResponse.CLIENT_NAME_NOT_VALID.getDescription();
             return false;
@@ -57,7 +57,7 @@ public class ClientChecker {
      * @return
      */
     public boolean isClientValid(String clientName) {
-        AuthClientSQL client = clientManager.getClient(clientName);
+        AuthClient client = clientManager.getClient(clientName);
         if (client == null || !client.getValid()) {
             response = RegistrationResponse.CLIENT_NAME_NOT_VALID.getDescription();
             return false;

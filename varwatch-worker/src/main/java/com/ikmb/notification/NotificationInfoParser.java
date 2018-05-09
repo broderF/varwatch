@@ -5,7 +5,7 @@
  */
 package com.ikmb.notification;
 
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
+import com.ikmb.core.data.variant.Variant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class NotificationInfoParser {
     private Map<NotificationSubmitter, List<NotificationInfo>> _notificationInfos = new HashMap<NotificationSubmitter, List<NotificationInfo>>();
     private Map<String, String> _notifications = new HashMap<String, String>();
 
-    public NotificationInfoParser(VariantSQL variant) {
+    public NotificationInfoParser(Variant variant) {
 //        List<MatchGroupSQL> matchGroups = VariantDatabaseHelper.getMatchGroupsToNotifiedByVariant(variant);
 //        for (MatchGroupSQL matchgrp : matchGroups) {
 //            String dbName = matchgrp.getDatabase().getName();

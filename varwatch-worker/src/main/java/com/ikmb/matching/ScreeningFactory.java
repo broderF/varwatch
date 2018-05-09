@@ -6,10 +6,8 @@
 package com.ikmb.matching;
 
 import com.google.inject.Injector;
-import com.ikmb.WorkFlowHandler;
 import com.ikmb.WorkerLauncher;
-import static com.ikmb.WorkerLauncher.injector;
-import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
+import com.ikmb.core.data.reference_db.RefDatabase;
 
 /**
  *
@@ -17,7 +15,7 @@ import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
  */
 public class ScreeningFactory {
 
-    public static DatabaseScreener getScreeningDatabase(RefDatabaseSQL database) {
+    public static DatabaseScreener getScreeningDatabase(RefDatabase database) {
         DatabaseScreener matcher = null;
         String implementation = database.getImplementation();
         Injector injector = WorkerLauncher.injector.getVWInjector();

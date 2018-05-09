@@ -6,11 +6,11 @@
 package com.ikmb.annotation;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchsql.entities.VariantEffectSQL;
 import com.ikmb.EnsemblHelper;
 import com.ikmb.WorkerLauncher;
+import com.ikmb.core.data.varianteffect.VariantEffect;
 import com.ikmb.utils.VWUtils;
-import com.ikmb.varwatchcommons.VWConfiguration;
+import com.ikmb.core.varwatchcommons.VWConfiguration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
 
 /**
@@ -28,10 +28,10 @@ import org.joda.time.DateTime;
 public class VEPAnnotater {
 
     private byte[] _vepFile;
-    private List<VariantEffectSQL> _variantEffects = new ArrayList<VariantEffectSQL>();
+    private List<VariantEffect> _variantEffects = new ArrayList<>();
     @Inject
     private VWUtils vwutils;
-    private Map<String, List<VariantEffectSQL>> _variantEffectMap;
+    private Map<String, List<VariantEffect>> _variantEffectMap;
 
     public void run(byte[] vcfFile, String ensemblName, String fileIdentifier) {
         try {
@@ -137,11 +137,11 @@ public class VEPAnnotater {
         }
     }
 
-    public List<VariantEffectSQL> getVariantEffects() {
+    public List<VariantEffect> getVariantEffects() {
         return _variantEffects;
     }
 
-    public Map<String, List<VariantEffectSQL>> getVariantEffectMap() {
+    public Map<String, List<VariantEffect>> getVariantEffectMap() {
         return _variantEffectMap;
     }
 

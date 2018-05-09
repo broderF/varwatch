@@ -5,8 +5,9 @@
  */
 package com.ikmb.varwatchcommons.tools;
 
-import com.ikmb.varwatchcommons.entities.Variant;
-import com.ikmb.varwatchcommons.entities.VariantEffect;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.varianteffect.VariantEffect;
+import com.ikmb.core.varwatchcommons.tools.VariantEffectPredictor;
 import java.util.List;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class VariantEffectPredictorTest {
 
     @Test
     public void shouldPredictVariantEffect() {
-        variant.setPosition(6524705);
+        variant.setChromosomePos(6524705);
         variant.setReferenceBase("G");
         variant.setAlternateBase("T");
         variant.setChromosomeName("1");

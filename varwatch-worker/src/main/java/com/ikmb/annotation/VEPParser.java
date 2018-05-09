@@ -5,7 +5,7 @@
  */
 package com.ikmb.annotation;
 
-import com.ikmb.varwatchsql.entities.VariantEffectSQL;
+import com.ikmb.core.data.varianteffect.VariantEffect;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +28,9 @@ import java.util.logging.Logger;
 public class VEPParser {
 
     List<String> _header = new ArrayList<String>();
-    List<VariantEffectSQL> _variantEffects = new ArrayList<VariantEffectSQL>();
+    List<VariantEffect> _variantEffects = new ArrayList<VariantEffect>();
     private int MAX_CHAR = 50;
-    private Map<String, List<VariantEffectSQL>> _variantEffectMap = new HashMap<>();
+    private Map<String, List<VariantEffect>> _variantEffectMap = new HashMap<>();
 
     public void parse(InputStream annotatedFile) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(annotatedFile));
@@ -50,7 +49,7 @@ public class VEPParser {
                 if (!canonical) {
                     continue;
                 }
-                VariantEffectSQL variantEffect = new VariantEffectSQL();
+                VariantEffect variantEffect = new VariantEffect();
                 String uploadedVar = getUploaded_variation(variantInformation);
                 variantEffect.setUploaded_variation(uploadedVar);
                 variantEffect.setConsequence(getConsequence(variantInformation));
@@ -97,7 +96,7 @@ public class VEPParser {
                 if (_variantEffectMap.containsKey(uploadedVar)) {
                     _variantEffectMap.get(uploadedVar).add(variantEffect);
                 } else {
-                    List<VariantEffectSQL> effectList = new ArrayList<>();
+                    List<VariantEffect> effectList = new ArrayList<>();
                     effectList.add(variantEffect);
                     _variantEffectMap.put(uploadedVar, effectList);
                 }
@@ -114,11 +113,11 @@ public class VEPParser {
         }
     }
 
-    public List<VariantEffectSQL> getVariantEffects() {
+    public List<VariantEffect> getVariantEffects() {
         return _variantEffects;
     }
 
-    public Map<String, List<VariantEffectSQL>> getVariantEffectMap() {
+    public Map<String, List<VariantEffect>> getVariantEffectMap() {
         return _variantEffectMap;
     }
 
@@ -227,8 +226,8 @@ public class VEPParser {
         try {
             fileInputStream = new FileInputStream(pathToVEP);
             parser.parse(new BufferedInputStream(fileInputStream));
-            List<VariantEffectSQL> variantEffects = parser.getVariantEffects();
-            for (VariantEffectSQL ve : variantEffects) {
+            List<VariantEffect> variantEffects = parser.getVariantEffects();
+            for (VariantEffect ve : variantEffects) {
                 System.out.println(ve.getSift());
                 System.out.println(ve.getPolyphen());
             }

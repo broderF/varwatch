@@ -6,11 +6,11 @@
 package com.ikmb.varwatchbarkeeper;
 
 import com.google.inject.Injector;
-import com.ikmb.varwatchcommons.VWConfiguration;
+import com.ikmb.core.varwatchcommons.VWConfiguration;
+import com.ikmb.core.workflow.job.JobManager;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
+import com.ikmb.core.workflow.worker.WorkerManager;
 import com.ikmb.varwatchsql.guice.VWInjectionInit;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.workflow.WorkerManager;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
@@ -52,7 +52,7 @@ public class VarWatchBarkeeper {
         try {
             CommandLine cmd = parser.parse(options, args);
             if (!cmd.hasOption("cp")) {
-                System.out.println("No Config Path");
+                System.out.println("Noo Config Path");
                 System.exit(0);
             } else {
                 pathToConfig = cmd.getOptionValue("cp");
@@ -98,8 +98,8 @@ public class VarWatchBarkeeper {
             for (int i = 0; i < Math.min(max_worker - numberOfAvailableWorker, (numberOfAvailableJobs - numberOfAvailableWorker + 1) / 2); i++) {
                 createNewWorker(workerManager, pathToConfig);
             }
-            List<AnalysisWorkerSQL> worker = getAvailableWorker(workerManager);
-            for (AnalysisWorkerSQL curWorker : worker) {
+            List<AnalysisWorker> worker = getAvailableWorker(workerManager);
+            for (AnalysisWorker curWorker : worker) {
                 if (new DateTime().minusMinutes(30).isAfter(curWorker.getBorn())) {
                     curWorker.setStatus("FAILED");
                     workerManager.update(curWorker);
@@ -114,12 +114,12 @@ public class VarWatchBarkeeper {
         }
     }
 
-    private List<AnalysisWorkerSQL> getAvailableWorker(WorkerManager workerManager) {
+    private List<AnalysisWorker> getAvailableWorker(WorkerManager workerManager) {
         return workerManager.getAvailableWorker();
     }
 
     private Integer getNumberOfAvailableWorker(WorkerManager workerManager) {
-        List<AnalysisWorkerSQL> worker = workerManager.getAvailableWorker();
+        List<AnalysisWorker> worker = workerManager.getAvailableWorker();
         return worker.size();
     }
 
@@ -134,7 +134,7 @@ public class VarWatchBarkeeper {
         String pathToLog = configuration.getPathToLog();
 
         try {
-            AnalysisWorkerSQL workerSQL = workerManager.createWorker();
+            AnalysisWorker workerSQL = workerManager.createWorker();
             Long id = workerSQL.getId();
 
             String command = "sbatch -o " + pathToLog + id + "_output.txt " + pathToWorkerScript + " " + pathToWorker + " " + pathToConfig + " " + id;

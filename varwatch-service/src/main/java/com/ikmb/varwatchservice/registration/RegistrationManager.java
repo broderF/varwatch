@@ -5,27 +5,20 @@
  */
 package com.ikmb.varwatchservice.registration;
 
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.persist.jpa.JpaPersistModule;
-import com.ikmb.varwatchcommons.entities.VWResponse;
-import com.ikmb.varwatchcommons.entities.RegistrationUser;
-import com.ikmb.varwatchcommons.entities.Client;
-import com.ikmb.varwatchcommons.entities.Contact;
-import com.ikmb.varwatchcommons.entities.DefaultUser;
-import com.ikmb.varwatchcommons.entities.Password;
+import com.ikmb.core.varwatchcommons.entities.VWResponse;
+import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
+import com.ikmb.core.varwatchcommons.entities.Client;
+import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.varwatchservice.ResponseBuilder;
 import static com.ikmb.varwatchservice.registration.RegistrationManager.RegistrationResponse.REGISTRATION_ERROR_DOUBLE_ENTITY;
 import static com.ikmb.varwatchservice.registration.RegistrationManager.RegistrationResponse.REGISTRATION_ERROR_INFORMATIONS_MISSING;
 import static com.ikmb.varwatchservice.registration.RegistrationManager.RegistrationResponse.REGISTRATION_SUCCESFULL;
 import static com.ikmb.varwatchservice.registration.RegistrationManager.RegistrationResponse.UPDATE_SUCCESFULL;
-import com.ikmb.varwatchsql.guice.VarWatchInjector;
-import com.ikmb.varwatchsql.guice.VarWatchPersist;
-import com.ikmb.varwatchsql.auth.client.ClientManager;
-import com.ikmb.varwatchsql.auth.user.UserBuilder;
-import com.ikmb.varwatchsql.auth.user.UserManager;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
+import com.ikmb.core.auth.client.ClientManager;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.auth.user.UserBuilder;
+import com.ikmb.core.auth.user.UserManager;
 import javax.ws.rs.core.Response;
 
 /**
@@ -61,7 +54,7 @@ public class RegistrationManager {
      */
     public Response saveUser(RegistrationUser user) {
         VWResponse response = new VWResponse();
-        UserSQL userSQL = userBuilder.withRegistrationUser(user).secretPass().buildSQL();
+        User userSQL = userBuilder.withRegistrationUser(user).secretPass().build();
         if (!validateRegistrationUser(user)) {
             response.setMessage(REGISTRATION_ERROR_INFORMATIONS_MISSING.message);
             response.setDescription(REGISTRATION_ERROR_INFORMATIONS_MISSING.description);
@@ -106,7 +99,7 @@ public class RegistrationManager {
         return true;
     }
 
-    public Response updateUser(DefaultUser contact, UserSQL userSql) {
+    public Response updateUser(DefaultUser contact, User userSql) {
         if (contact.getFirstName() != null) {
             userSql.setFirstName(contact.getFirstName());
         }

@@ -6,8 +6,8 @@
 package com.ikmb.extraction;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchcommons.entities.VWVariant;
-import static com.ikmb.varwatchcommons.utils.VariantHash.MAX_BASE_LENGTH;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
+import static com.ikmb.core.varwatchcommons.utils.VariantHash.MAX_BASE_LENGTH;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;

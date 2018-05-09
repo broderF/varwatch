@@ -5,12 +5,12 @@ package com.ikmb.extraction;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantBuilder;
 import com.ikmb.utils.VWConfiguration;
-import com.ikmb.varwatchcommons.builder.VariantBuilder;
-import com.ikmb.varwatchcommons.tools.CrossMap;
-import com.ikmb.varwatchcommons.entities.GenomicFeature;
-import com.ikmb.varwatchcommons.entities.VWVariant;
-import com.ikmb.varwatchcommons.entities.Variant;
+import com.ikmb.core.varwatchcommons.tools.CrossMap;
+import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

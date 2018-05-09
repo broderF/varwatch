@@ -8,22 +8,22 @@ package com.ikmb.report;
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
 import com.ikmb.WorkFlowManager.JobProcessStatus;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.auth.user.UserManager;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.varwatchcommons.entities.ExternalMatchInformation;
-import com.ikmb.varwatchcommons.entities.InternalMatchInformation;
-import com.ikmb.varwatchcommons.entities.MatchInformation;
-import com.ikmb.varwatchcommons.notification.NotificationSubmitter;
-import com.ikmb.varwatchcommons.utils.VariantHash;
-import com.ikmb.varwatchsql.auth.user.UserManager;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantDataManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import com.ikmb.varwatchsql.matching.MatchVariantDataManager;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
+import com.ikmb.core.varwatchcommons.entities.ExternalMatchInformation;
+import com.ikmb.core.varwatchcommons.entities.InternalMatchInformation;
+import com.ikmb.core.varwatchcommons.entities.MatchInformation;
+import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
+import com.ikmb.core.varwatchcommons.utils.VariantHash;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.matching.MatchVariantDataManager;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantDataManager;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 import com.ikmb.varwatchworker.Worker;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,9 +44,9 @@ import org.slf4j.LoggerFactory;
 public class ReportWorker implements Worker {
 
     private final Logger logger = LoggerFactory.getLogger(ReportWorker.class);
-    protected AnalysisWorkerSQL _workerSQL;
-    protected AnalysisSQL _analysisSQL;
-    protected AnalysisJobSQL _analysisJobSQL;
+    protected AnalysisWorker _workerSQL;
+    protected Analysis _analysisSQL;
+    protected AnalysisJob _analysisJobSQL;
 
     private WorkFlowManager.JobProcessStatus jobProcessStatus = WorkFlowManager.JobProcessStatus.FAILED;
 
@@ -62,17 +62,17 @@ public class ReportWorker implements Worker {
     private DatasetManager dsDm;
 
     @Override
-    public void setWorkerSQL(AnalysisWorkerSQL workerSQL) {
+    public void setWorker(AnalysisWorker workerSQL) {
         _workerSQL = workerSQL;
     }
 
     @Override
-    public void setAnalysisSQL(AnalysisSQL analysisSQL) {
+    public void setAnalysis(Analysis analysisSQL) {
         _analysisSQL = analysisSQL;
     }
 
     @Override
-    public void setAnalysisJobSQL(AnalysisJobSQL analysisJobSQL) {
+    public void setAnalysisJob(AnalysisJob analysisJobSQL) {
         _analysisJobSQL = analysisJobSQL;
     }
 
@@ -84,7 +84,7 @@ public class ReportWorker implements Worker {
         workerInputHandler.parseInputData();
 
         Integer userId = workerInputHandler.getInteger("user_id");
-        UserSQL user = userManager.getUserById(userId);
+        User user = userManager.getUserById(userId);
         logger.info("run report job for user {}" + user.getMail());
         String schedule = user.getReportSchedule();
 
@@ -190,7 +190,7 @@ public class ReportWorker implements Worker {
         for (MatchInformation matchInfo : matches) {
             if (matchInfo instanceof InternalMatchInformation) {
                 InternalMatchInformation internalInfo = (InternalMatchInformation) matchInfo;
-                VariantSQL variant = variantDm.get(internalInfo.getQueryVariantId());
+                Variant variant = variantDm.get(internalInfo.getQueryVariantId());
                 String variantHash = VariantHash.getVariantHash(variant.getChromosomeName(), variant.getChromosomePos(), variant.getReferenceBase(), variant.getAlternateBase());
                 if (notifiedVariants.contains(variantHash)) {
                     continue;
@@ -209,7 +209,7 @@ public class ReportWorker implements Worker {
         for (MatchInformation matchInfo : matches) {
             if (matchInfo instanceof ExternalMatchInformation) {
                 ExternalMatchInformation internalInfo = (ExternalMatchInformation) matchInfo;
-                VariantSQL variant = variantDm.get(internalInfo.getQueryVariantId());
+                Variant variant = variantDm.get(internalInfo.getQueryVariantId());
                 String variantHash = VariantHash.getVariantHash(variant.getChromosomeName(), variant.getChromosomePos(), variant.getReferenceBase(), variant.getAlternateBase());
                 if (notifiedVariants.contains(variantHash)) {
                     continue;
@@ -230,7 +230,7 @@ public class ReportWorker implements Worker {
         Map<Long, List<MatchInformation>> variantToMatchInfo = new HashMap<>();
         for (MatchInformation matchInfo : matches) {
 
-            VariantSQL variant = null;
+            Variant variant = null;
             if (matchInfo instanceof InternalMatchInformation) { //vw match
                 InternalMatchInformation internalInfo = (InternalMatchInformation) matchInfo;
                 variant = variantDm.get(internalInfo.getQueryVariantId());
@@ -264,7 +264,7 @@ public class ReportWorker implements Worker {
         String mailText = "";
 
         for (Long dsId : datasetToVariants.keySet()) {
-            DatasetVWSQL dataset = dsDm.getDatasetByID(dsId);
+            DatasetVW dataset = dsDm.getDatasetByID(dsId);
             String link = "Link to dataset: https://varwatch.de/datasets/" + dataset.getId() + "\n";
             String description = "Description: " + dataset.getDescription() + "\n";
 

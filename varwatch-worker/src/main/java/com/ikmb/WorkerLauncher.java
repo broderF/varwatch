@@ -5,7 +5,6 @@
  */
 package com.ikmb;
 
-import com.google.inject.Injector;
 import com.ikmb.varwatchsql.guice.VWInjectionInit;
 import java.util.logging.Level;
 import java.util.logging.Logger;

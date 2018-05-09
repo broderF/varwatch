@@ -6,8 +6,8 @@
 package com.ikmb.annotation;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
 
 /**
  *
@@ -18,7 +18,7 @@ public class AnnotationDataManager {
     @Inject
     private DatasetManager datasetManager;
 
-    public DatasetVWSQL getDatasetByID(Long datasetID) {
+    public DatasetVW getDatasetByID(Long datasetID) {
         return datasetManager.getDatasetWithVariantsByID(datasetID);
     }
 }

@@ -9,25 +9,25 @@ import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
 import com.ikmb.matching.VarWatchScreenerNew.MatchType;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.varwatchcommons.notification.NotificationSubmitter;
-import com.ikmb.varwatchcommons.utils.VariantHash;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantBuilder;
-import com.ikmb.varwatchsql.variant_data.variant.VariantDataManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import com.ikmb.varwatchsql.data.hpo.HPOTermBuilder;
-import com.ikmb.varwatchsql.matching.MatchSQL;
-import com.ikmb.varwatchsql.matching.MatchVariantDataManager;
-import com.ikmb.varwatchsql.matching.MatchVariantSQL;
-import com.ikmb.varwatchsql.status.dataset.DatasetStatusBuilder;
-import com.ikmb.varwatchsql.status.dataset.DatasetStatusManager;
-import com.ikmb.varwatchsql.status.variant.VariantStatusBuilder;
-import com.ikmb.varwatchsql.status.variant.VariantStatusManager;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
+import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
+import com.ikmb.core.varwatchcommons.utils.VariantHash;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetStatusBuilder;
+import com.ikmb.core.data.dataset.DatasetStatusManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.variant.VariantBuilder;
+import com.ikmb.core.data.variant.VariantDataManager;
+import com.ikmb.core.data.hpo.HPOTermBuilder;
+import com.ikmb.core.data.matching.Match;
+import com.ikmb.core.data.matching.MatchVariant;
+import com.ikmb.core.data.matching.MatchVariantDataManager;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantStatusBuilder;
+import com.ikmb.core.data.variant.VariantStatusManager;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.job.JobManager;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,11 +42,11 @@ public class CollectScreeningResultWorkerNew implements Worker {
 
     private final Logger logger = LoggerFactory.getLogger(CollectScreeningResultWorkerNew.class);
 
-    protected AnalysisWorkerSQL _workerSQL;
-    protected AnalysisSQL _analysisSQL;
-    protected AnalysisJobSQL _analysisJobSQL;
+    protected AnalysisWorker _workerSQL;
+    protected Analysis _analysisSQL;
+    protected AnalysisJob _analysisJobSQL;
 
-    private DatasetVWSQL _dataset;
+    private DatasetVW _dataset;
 
 //    private byte[] _rawData;
 //    private String _rawDataType;
@@ -96,8 +96,8 @@ public class CollectScreeningResultWorkerNew implements Worker {
         parseInput();
 
         //check precond
-        List<AnalysisJobSQL> referenceDBJobs = jobManager.getScreeningJobs(_dataset.getId());
-        for (AnalysisJobSQL analysisJob : referenceDBJobs) {
+        List<AnalysisJob> referenceDBJobs = jobManager.getScreeningJobs(_dataset.getId());
+        for (AnalysisJob analysisJob : referenceDBJobs) {
             if (!analysisJob.getStatus().equals("DONE")) {
                 jobProcessStatus = WorkFlowManager.JobProcessStatus.PRECONDITION_FAILED;
                 logger.info("precondition failed");
@@ -105,15 +105,15 @@ public class CollectScreeningResultWorkerNew implements Worker {
             }
         }
 
-        List<VariantSQL> variants = variantDM.getVariantsByDatasetWithMatches(_dataset.getId());
-        for (VariantSQL variant : variants) {
-            List<MatchSQL> curMatches = matchDM.getMatchesByVariant(variant);
-            for (MatchSQL match : curMatches) {
+        List<Variant> variants = variantDM.getVariantsByDatasetWithMatches(_dataset.getId());
+        for (Variant variant : variants) {
+            List<Match> curMatches = matchDM.getMatchesByVariant(variant);
+            for (Match match : curMatches) {
                 if (match.getDatabase().getName().equals("VarWatch") && (match.getMatch_type().equals(MatchType.perfect.name()) || match.getMatch_type().equals(MatchType.nucleotide.name()) || match.getMatch_type().equals(MatchType.codon.name()))) {
                     Set<String> emails = new HashSet<>();
-                    for (MatchVariantSQL matchedVar : match.getVariants()) {
+                    for (MatchVariant matchedVar : match.getVariants()) {
                         Long variantId = matchedVar.getVariantId(); //all Variants should be VarWatch Variants
-                        VariantSQL curVar = variantDM.get(variantId);
+                        Variant curVar = variantDM.get(variantId);
                         String mail = curVar.getDataset().getUser().getMail();
                         emails.add(mail);
                     }
@@ -125,13 +125,13 @@ public class CollectScreeningResultWorkerNew implements Worker {
         }
 
 //        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Size of matched variants to a beacon:{0}", beaconMatchedVariants.size());
-//        for (VariantSQL curVar : beaconMatchedVariants.keySet()) {
+//        for (Variant curVar : beaconMatchedVariants.keySet()) {
 //            //delete Variant, set Variantstatus, remove Matches
 //            VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatus.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.MATCHED_TO_BEACON).buildVWStatus();
 //            VWVariant buildVW = variantBuilder.withSQLVariant(curVar).buildVW();
 //            String variantHash = variantHasher.getVariantHash(buildVW, hpoTermBuilder.addFeatures(_dataset.getPhenotypes()).buildStringSet());
 //            variantStatusManager.save(_dataset, null, variantHash, status);
-//            List<MatchSQL> matches = beaconMatchedVariants.get(curVar);
+//            List<Match> matches = beaconMatchedVariants.get(curVar);
 //            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Nr of Matches:{0}", matches.size());
 //
 //            variantDM.deleteVariantCompletly(curVar);
@@ -144,17 +144,17 @@ public class CollectScreeningResultWorkerNew implements Worker {
     }
 
     @Override
-    public void setWorkerSQL(AnalysisWorkerSQL workerSQL) {
+    public void setWorker(AnalysisWorker workerSQL) {
         _workerSQL = workerSQL;
     }
 
     @Override
-    public void setAnalysisSQL(AnalysisSQL analysisSQL) {
+    public void setAnalysis(Analysis analysisSQL) {
         _analysisSQL = analysisSQL;
     }
 
     @Override
-    public void setAnalysisJobSQL(AnalysisJobSQL analysisJobSQL) {
+    public void setAnalysisJob(AnalysisJob analysisJobSQL) {
         _analysisJobSQL = analysisJobSQL;
     }
 
@@ -177,7 +177,7 @@ public class CollectScreeningResultWorkerNew implements Worker {
         return jobProcessStatus;
     }
 
-    private String getMailTextFromVariant(VariantSQL variant) {
+    private String getMailTextFromVariant(Variant variant) {
         String mailText = "Dear user,\n\nVarWatch has found an identical entry to one of your variants. For details, please follow this link:\n";
         String datasetId = variant.getDataset().getId().toString();
         String variantId = variant.getId().toString();

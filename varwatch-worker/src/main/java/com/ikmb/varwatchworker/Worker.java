@@ -6,9 +6,9 @@
 package com.ikmb.varwatchworker;
 
 import com.ikmb.WorkFlowManager.JobProcessStatus;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 
 /**
  *
@@ -30,11 +30,11 @@ public interface Worker {
 
 //    public void postprocessing(Long runtime);
 
-    public void setWorkerSQL(AnalysisWorkerSQL workerSQL);
+    public void setWorker(AnalysisWorker workerSQL);
 
-    public void setAnalysisSQL(AnalysisSQL analysisSQL);
+    public void setAnalysis(Analysis analysisSQL);
 
-    public void setAnalysisJobSQL(AnalysisJobSQL analysisJobSQL);
+    public void setAnalysisJob(AnalysisJob analysisJobSQL);
 
 //    public void revert();
 //

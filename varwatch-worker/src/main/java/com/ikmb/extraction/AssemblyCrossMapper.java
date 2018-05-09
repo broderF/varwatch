@@ -7,8 +7,8 @@ package com.ikmb.extraction;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkerLauncher;
-import com.ikmb.varwatchcommons.entities.GenomicFeature;
-import com.ikmb.varwatchcommons.entities.VWVariant;
+import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import com.ikmb.utils.VWUtils;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

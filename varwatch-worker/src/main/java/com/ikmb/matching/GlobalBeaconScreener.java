@@ -1,15 +1,14 @@
 package com.ikmb.matching;
 
 import com.google.inject.Inject;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.matching.Match;
+import com.ikmb.core.data.matching.MatchVariant;
+import com.ikmb.core.data.matching.MatchVariantDataManager;
+import com.ikmb.core.data.reference_db.RefDatabase;
+import com.ikmb.core.data.variant.Variant;
 import com.ikmb.matching.VarWatchScreenerNew.MatchType;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.matching.MatchSQL;
-import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-//import com.ikmb.varwatchsql.entities.ExternalVariantSQL;
-import com.ikmb.varwatchsql.matching.MatchVariantDataManager;
-import com.ikmb.varwatchsql.matching.MatchVariantSQL;
-import com.ikmb.varwatchsql.status.variant.VariantStatusManager;
+import com.ikmb.core.data.variant.VariantStatusManager;
 import java.net.URI;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -39,10 +38,10 @@ import org.json.JSONObject;
 class GlobalBeaconScreener implements DatabaseScreener {
 
     private Connection _conn = null;
-    private List<MatchSQL> _matches = new ArrayList<MatchSQL>();
-    private DatasetVWSQL _dataset;
-    private RefDatabaseSQL _database;
-    private RefDatabaseSQL vwDatabase;
+    private List<Match> _matches = new ArrayList<>();
+    private DatasetVW _dataset;
+    private RefDatabase _database;
+    private RefDatabase vwDatabase;
 
     @Inject
     private MatchVariantDataManager matchDataManager;
@@ -51,33 +50,33 @@ class GlobalBeaconScreener implements DatabaseScreener {
     private VariantStatusManager variantStatusManager;
 
     @Override
-    public void initialize(RefDatabaseSQL database, DatasetVWSQL dataset) {
+    public void initialize(RefDatabase database, DatasetVW dataset) {
         _database = database;
         _dataset = dataset;
     }
 
     @Override
-    public void setVWDatabase(RefDatabaseSQL vwDatabase) {
+    public void setVWDatabase(RefDatabase vwDatabase) {
         this.vwDatabase = vwDatabase;
     }
 
     @Override
-    public DatasetVWSQL getDataset() {
+    public DatasetVW getDataset() {
         return _dataset;
     }
 
     @Override
-    public RefDatabaseSQL getDatabase() {
+    public RefDatabase getDatabase() {
         return _database;
     }
 
     @Override
     public void run() {
-//        List<VariantSQL> variants = ConvertHelper.convertVariantsFromSQL(new ArrayList<VariantSQL>(_dataset.getVariants()));
+//        List<Variant> variants = ConvertHelper.convertVariantsFromSQL(new ArrayList<Variant>(_dataset.getVariants()));
 //        if (!_database.getAssembly().equals(VWConfiguration.STANDARD_COORDS)) {
 //            variants = CrossmapHelper.mapVariantsFromAssembly(variants, VWConfiguration.STANDARD_COORDS, _database.getAssembly());
 //        }
-        for (VariantSQL variant : _dataset.getVariants()) {
+        for (Variant variant : _dataset.getVariants()) {
             String chromosome = variant.getChromosomeName();
 //            Integer position = variant.getChromosomePos() - 1; //beacons are zero based
             Integer position = variant.getChromosomePos(); //beacons are zero based
@@ -142,22 +141,22 @@ class GlobalBeaconScreener implements DatabaseScreener {
     }
 
     @Override
-    public List<MatchSQL> getMatches() {
+    public List<Match> getMatches() {
         return _matches;
     }
 
     public static void main(String[] args) {
         GlobalBeaconScreener screener = new GlobalBeaconScreener();
-        DatasetVWSQL ds = new DatasetVWSQL();
-        VariantSQL variant = new VariantSQL();
+        DatasetVW ds = new DatasetVW();
+        Variant variant = new Variant();
         variant.setAlternateBase("T");
         variant.setChromosomeName("1");
         variant.setChromosomePos(1014143);
         variant.setReferenceBase("C");
-        Set<VariantSQL> variants = new HashSet<>();
+        Set<Variant> variants = new HashSet<>();
         variants.add(variant);
         ds.setVariants(variants);
-        RefDatabaseSQL db = new RefDatabaseSQL();
+        RefDatabase db = new RefDatabase();
         db.setPath("tsri-clinvar");
         db.setAssembly("GRCh38");
         screener.initialize(db, ds);
@@ -180,9 +179,9 @@ class GlobalBeaconScreener implements DatabaseScreener {
 //
 //    }
 
-    private void createMatch(VariantSQL variant) {
+    private void createMatch(Variant variant) {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Beacon MATCH");
-        MatchSQL match = new MatchSQL();
+        Match match = new Match();
 //        match.setEqualGene(true);
 //        match.setEqualPath(true);
 //        match.setEqualFam(true);
@@ -191,13 +190,13 @@ class GlobalBeaconScreener implements DatabaseScreener {
 //        match.setIdentical(true);
         match.setDatabase(_database);
 
-        MatchVariantSQL beaconVariant = new MatchVariantSQL();
+        MatchVariant beaconVariant = new MatchVariant();
         beaconVariant.setDatabase(_database);
         beaconVariant.setMatch(match);
         beaconVariant.setNotified(false);
         match.getVariants().add(beaconVariant);
 
-        MatchVariantSQL vwVariant = new MatchVariantSQL();
+        MatchVariant vwVariant = new MatchVariant();
         vwVariant.setDatabase(vwDatabase);
         vwVariant.setUser(_dataset.getUser());
         vwVariant.setVariantId(variant.getId());

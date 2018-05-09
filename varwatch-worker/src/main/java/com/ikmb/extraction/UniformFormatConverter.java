@@ -6,14 +6,14 @@
 package com.ikmb.extraction;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchcommons.entities.GenomicFeature;
-import com.ikmb.varwatchcommons.entities.VWVariant;
-import com.ikmb.varwatchcommons.entities.VWStatus;
-import com.ikmb.varwatchcommons.utils.ParserHelper;
-import com.ikmb.varwatchsql.entities.EnsemblSQL;
-import com.ikmb.varwatchsql.data.ensembl.EnsemblDataManager;
-import com.ikmb.varwatchsql.status.variant.VariantStatusBuilder;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.ensembl.Ensembl;
+import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
+import com.ikmb.core.varwatchcommons.entities.VWStatus;
+import com.ikmb.core.varwatchcommons.utils.ParserHelper;
+import com.ikmb.core.data.ensembl.EnsemblDataManager;
+import com.ikmb.core.data.variant.VariantStatusBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,11 +36,11 @@ public class UniformFormatConverter {
     @Inject
     private EnsemblDataManager ensemblDataManager;
 
-    private DatasetVWSQL dataset;
+    private DatasetVW dataset;
     private List<GenomicFeature> genomicFeatures;
     private Map<String, VWStatus> errorVariants;
 
-    public void setDataset(DatasetVWSQL dataset) {
+    public void setDataset(DatasetVW dataset) {
         this.dataset = dataset;
     }
 
@@ -79,12 +79,12 @@ public class UniformFormatConverter {
 //                hgvsConverter.setGenomicfeatures(genomicFeatures);
 //                hgvsConverter.run();
 
-                EnsemblSQL _predictorSQL = ensemblDataManager.getActiveEnsembl(false);
+                Ensembl _predictorSQL = ensemblDataManager.getActiveEnsembl(false);
                 hgvsConverter.setEnsemblVersion(_predictorSQL.getName());
                 genomicFeatures = hgvsConverter.mapVariants(tmpfeatures,dataset.getRawDataAssembly());
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Nof genomic features:" + genomicFeatures.size());
                 for (String variant : hgvsConverter.getErrorVariants()) {
-                    errorVariants.put(variant, variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatus.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.HGVS_NOT_CONVERTABLE.getMessage()).buildVWStatus());
+                    errorVariants.put(variant, variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.HGVS_NOT_CONVERTABLE.getMessage()).buildVWStatus());
                 }
                 break;
         }

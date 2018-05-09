@@ -8,6 +8,9 @@ package com.ikmb.varwatchworker;
 import com.google.inject.Injector;
 import com.ikmb.WorkerLauncher;
 import com.ikmb.annotation.AnnotationWorker;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 import com.ikmb.extraction.ExtractVariantsWorker;
 import com.ikmb.matching.BeaconCollectorWorker;
 import com.ikmb.matching.HGMDScreeningWorker;
@@ -15,9 +18,6 @@ import com.ikmb.matching.ScreeningWorker;
 import com.ikmb.matching.VarWatchScreeningWorker;
 import com.ikmb.report.ReportWorker;
 import com.ikmb.sanity.SanityWorker;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
 
 /**
  *
@@ -28,60 +28,60 @@ public class WorkerFactory {
 //    public static Worker getWorker(String module) {
 //        Worker worker = null;
 //        switch (module) {
-//            case AnalysisSQL.ANALYSIS_ANNOTATION:
+//            case Analysis.ANALYSIS_ANNOTATION:
 ////                worker = new AnnotationWorker();
 //                break;
-//            case AnalysisSQL.ANALYSIS_EXTRACTION:
+//            case Analysis.ANALYSIS_EXTRACTION:
 //                worker = new ExtractVariantsWorker();
 //                break;
-//            case AnalysisSQL.ANALYSIS_COLLECTING:
+//            case Analysis.ANALYSIS_COLLECTING:
 ////                worker = new CollectScreeningResultWorker();
 //                break;
-//            case AnalysisSQL.ANALYSIS_NOTIFICATION:
+//            case Analysis.ANALYSIS_NOTIFICATION:
 ////                worker = new NotificationWorker();
 //                break;
-//            case AnalysisSQL.ANALYSIS_SCREENING:
+//            case Analysis.ANALYSIS_SCREENING:
 ////                worker = new ScreeningWorker();
 //                break;
 //        }
 //        return worker;
 //    }
-    public static Worker getWorker(AnalysisWorkerSQL workerSQL, AnalysisSQL analysis, AnalysisJobSQL jobSQL) {
+    public static Worker getWorker(AnalysisWorker workerSQL, Analysis analysis, AnalysisJob jobSQL) {
         Worker worker = null;
         Injector injector = WorkerLauncher.injector.getVWInjector();
         switch (analysis.getModule()) {
-            case AnalysisSQL.ANALYSIS_EXTRACTION:
+            case Analysis.ANALYSIS_EXTRACTION:
                 worker = injector.getInstance(ExtractVariantsWorker.class);
                 break;
-            case AnalysisSQL.ANALYSIS_ANNOTATION:
+            case Analysis.ANALYSIS_ANNOTATION:
                 worker = injector.getInstance(AnnotationWorker.class);
                 break;
-            case AnalysisSQL.ANALYSIS_SCREENING_VARWATCH:
+            case Analysis.ANALYSIS_SCREENING_VARWATCH:
                 worker = injector.getInstance(VarWatchScreeningWorker.class);
                 break;
-            case AnalysisSQL.ANALYSIS_SCREENING_HGMD:
+            case Analysis.ANALYSIS_SCREENING_HGMD:
                 worker = injector.getInstance(HGMDScreeningWorker.class);
                 break;
-            case AnalysisSQL.ANALYSIS_COLLECTING:
+            case Analysis.ANALYSIS_COLLECTING:
                 worker = injector.getInstance(CollectScreeningResultWorkerNew.class);
                 break;
-            case AnalysisSQL.ANALYSIS_SCREENING_BEACON:
+            case Analysis.ANALYSIS_SCREENING_BEACON:
                 worker = injector.getInstance(ScreeningWorker.class);
                 break;
-            case AnalysisSQL.ANALYSIS_COLLECTING_BEACON:
+            case Analysis.ANALYSIS_COLLECTING_BEACON:
                 worker = injector.getInstance(BeaconCollectorWorker.class);
                 break;
-            case AnalysisSQL.ANALYSIS_REPORT:
+            case Analysis.ANALYSIS_REPORT:
                 worker = injector.getInstance(ReportWorker.class);
                 break;
-            case AnalysisSQL.ANALYSIS_SANITY_CHECK:
+            case Analysis.ANALYSIS_SANITY_CHECK:
                 worker = injector.getInstance(SanityWorker.class);
                 break;
         }
 
-        worker.setAnalysisJobSQL(jobSQL);
-        worker.setAnalysisSQL(analysis);
-        worker.setWorkerSQL(workerSQL);
+        worker.setAnalysisJob(jobSQL);
+        worker.setAnalysis(analysis);
+        worker.setWorker(workerSQL);
         return worker;
     }
 }

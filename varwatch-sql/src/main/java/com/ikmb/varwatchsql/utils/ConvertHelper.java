@@ -5,8 +5,8 @@
  */
 package com.ikmb.varwatchsql.utils;
 
-import com.ikmb.varwatchcommons.entities.VWVariant;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ConvertHelper {
 
-    public static VWVariant convertVariantFromSQL(VariantSQL curVar) {
+    public static VWVariant convertVariantFromSQL(Variant curVar) {
         VWVariant newVar = new VWVariant();
         newVar.setAlternateBases(curVar.getAlternateBase());
         newVar.setReferenceBases(curVar.getReferenceBase());
@@ -25,9 +25,9 @@ public class ConvertHelper {
         return newVar;
     }
 
-    public static List<VWVariant> convertVariantsFromSQL(List<VariantSQL> variants) {
+    public static List<VWVariant> convertVariantsFromSQL(List<Variant> variants) {
         List<VWVariant> response = new ArrayList<VWVariant>();
-        for (VariantSQL curVar : variants) {
+        for (Variant curVar : variants) {
             VWVariant newVar = new VWVariant();
             newVar.setAlternateBases(curVar.getAlternateBase());
             newVar.setReferenceBases(curVar.getReferenceBase());
@@ -38,8 +38,8 @@ public class ConvertHelper {
         return response;
     }
 
-    public static VariantSQL convertVariantToSQL(VWVariant curVar) {
-        VariantSQL newVar = new VariantSQL();
+    public static Variant convertVariantToSQL(VWVariant curVar) {
+        Variant newVar = new Variant();
         newVar.setAlternateBase(curVar.getAlternateBases());
         newVar.setReferenceBase(curVar.getReferenceBases());
         newVar.setChromosomeName(curVar.getReferenceName());

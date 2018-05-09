@@ -6,7 +6,7 @@
 package com.ikmb.varwatchservice.hpo;
 
 import com.google.inject.Inject;
-import com.ikmb.update.hpo.HPOUpdateManager;
+import com.ikmb.core.data.hpo.HPOUpdateManager;
 import javax.ws.rs.Path;
 
 /**

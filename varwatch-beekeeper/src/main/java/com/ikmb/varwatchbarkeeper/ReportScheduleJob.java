@@ -6,10 +6,10 @@
 package com.ikmb.varwatchbarkeeper;
 
 import com.google.inject.Injector;
-import com.ikmb.varwatchsql.auth.user.UserManager;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.auth.user.UserManager;
+import com.ikmb.core.workflow.job.JobManager;
 import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
 import java.util.List;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -27,9 +27,9 @@ public class ReportScheduleJob implements Job {
         Injector injector = (Injector) jec.getMergedJobDataMap().get("injector");
 
         UserManager userManager = injector.getInstance(UserManager.class);
-        List<UserSQL> userList = userManager.getAllUser();
+        List<User> userList = userManager.getAllUser();
         JobManager jobManager = injector.getInstance(JobManager.class);
-        for(UserSQL user: userList){
+        for(User user: userList){
             jobManager.createJob(AnalysisBuilder.ModuleName.REPORT, String.valueOf(user.getId()), "NEW");
         }
         System.out.println("finish create job");

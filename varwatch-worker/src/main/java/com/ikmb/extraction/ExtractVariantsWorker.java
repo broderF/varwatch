@@ -7,23 +7,23 @@ package com.ikmb.extraction;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchcommons.entities.GenomicFeature;
-import com.ikmb.varwatchcommons.entities.VWVariant;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
+import com.ikmb.core.data.dataset.DatasetStatusBuilder;
+import com.ikmb.core.data.dataset.DatasetStatusManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantStatusBuilder;
+import com.ikmb.core.data.wipe.WipeDataManager;
+import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
+import com.ikmb.core.varwatchcommons.entities.VWStatus;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
+import com.ikmb.core.varwatchcommons.utils.ParserHelper;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.job.JobManager;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 import com.ikmb.utils.VWConfiguration;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.varwatchcommons.entities.VWStatus;
-import com.ikmb.varwatchcommons.utils.ParserHelper;
-import com.ikmb.varwatchsql.status.dataset.DatasetStatusBuilder;
-import com.ikmb.varwatchsql.status.dataset.DatasetStatusManager;
-import com.ikmb.varwatchsql.status.variant.VariantStatusBuilder;
-import com.ikmb.varwatchsql.wipe.WipeDataManager;
 import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
 import com.ikmb.varwatchworker.Worker;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +37,13 @@ import org.slf4j.LoggerFactory;
  */
 public class ExtractVariantsWorker implements Worker {
 
-    protected AnalysisWorkerSQL _workerSQL;
-    protected AnalysisSQL _analysisSQL;
-    protected AnalysisJobSQL _analysisJobSQL;
+    protected AnalysisWorker _workerSQL;
+    protected Analysis _analysisSQL;
+    protected AnalysisJob _analysisJobSQL;
 
     private final Logger logger = LoggerFactory.getLogger(ExtractVariantsWorker.class);
 
-    private DatasetVWSQL _dataset;
+    private DatasetVW _dataset;
 
     @Inject
     private WorkerInputHandler workerInputHandler;
@@ -113,7 +113,7 @@ public class ExtractVariantsWorker implements Worker {
         }
         logger.info("{} variants mapped", mappedVariants.size());
         logger.info("{} variants couldnt be mapped", notMapableVariants.size());
-        VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatus.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.ASSEMBLY_NOT_MAPABLE.getMessage()).buildVWStatus();
+        VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.ASSEMBLY_NOT_MAPABLE.getMessage()).buildVWStatus();
         extractionDataManager.setVariantStatus(_dataset, notMapableVariants, status);
 
         String vcfString = ParserHelper.json2vcf(mappedVariants);
@@ -129,24 +129,24 @@ public class ExtractVariantsWorker implements Worker {
         List<VWVariant> correctVariants = variantChecker.getCorrectVariants();
         logger.info("{} correct variants", correctVariants.size());
         extractionDataManager.setVariantStatus(_dataset, maxIndelExceededVariants);
-        List<VariantSQL> persistVariants = extractionDataManager.persistVariants(correctVariants, _dataset);
+        List<Variant> persistVariants = extractionDataManager.persistVariants(correctVariants, _dataset);
 
 //        VariantDatabaseHelper.persistVariants(_variants, _dataset);
-//        DatasetVWSQL dataset = VariantDatabaseHelper.getDatasetByID(_dataset.getId());
-//        Set<VariantSQL> variants = dataset.getVariants();
+//        DatasetVW dataset = VariantDatabaseHelper.getDatasetByID(_dataset.getId());
+//        Set<Variant> variants = dataset.getVariants();
         String vcf = json2vcf(persistVariants);
         extractionDataManager.persistVCFFile(vcf.getBytes(), _dataset);
 
-        jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.ANNOTATION, null, AnalysisJobSQL.JobAction.NEW.toString());
+        jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.ANNOTATION, null, AnalysisJob.JobAction.NEW.toString());
         jobProcessStatus = WorkFlowManager.JobProcessStatus.SUCCESSFUL;
     }
 
     //before rawDataType on of the three, _rawdata != null
     //after genomic features with content, variants with content, assembly is set
-    private String json2vcf(List<VariantSQL> variants) {
+    private String json2vcf(List<Variant> variants) {
         StringBuilder vcfString = new StringBuilder();
         vcfString.append("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n");
-        for (VariantSQL variant : variants) {
+        for (Variant variant : variants) {
             String id = ".";
             if (variant.getVEPIdentifier() != null) {
                 id = variant.getVEPIdentifier();
@@ -157,17 +157,17 @@ public class ExtractVariantsWorker implements Worker {
     }
 
     @Override
-    public void setWorkerSQL(AnalysisWorkerSQL workerSQL) {
+    public void setWorker(AnalysisWorker workerSQL) {
         _workerSQL = workerSQL;
     }
 
     @Override
-    public void setAnalysisSQL(AnalysisSQL analysisSQL) {
+    public void setAnalysis(Analysis analysisSQL) {
         _analysisSQL = analysisSQL;
     }
 
     @Override
-    public void setAnalysisJobSQL(AnalysisJobSQL analysisJobSQL) {
+    public void setAnalysisJob(AnalysisJob analysisJobSQL) {
         _analysisJobSQL = analysisJobSQL;
     }
 

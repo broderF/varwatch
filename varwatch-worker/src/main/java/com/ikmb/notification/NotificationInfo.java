@@ -5,8 +5,6 @@
  */
 package com.ikmb.notification;
 
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import java.util.List;
 
 /**
  *

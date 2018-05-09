@@ -5,8 +5,8 @@
  */
 package com.ikmb.utils;
 
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,15 +18,15 @@ public class WorkerInputHandler {
 
     private static String DATASET_ID = "dataset_id";
 
-    private AnalysisSQL _analysisSQL;
-    private AnalysisJobSQL _analysisJobSQL;
+    private Analysis _analysisSQL;
+    private AnalysisJob _analysisJobSQL;
     private Map<String, String> _inputParameters = new HashMap<>();
 
-    public void setAnalysis(AnalysisSQL analysisSQL) {
+    public void setAnalysis(Analysis analysisSQL) {
         _analysisSQL = analysisSQL;
     }
 
-    public void setJob(AnalysisJobSQL analysisJobSQL) {
+    public void setJob(AnalysisJob analysisJobSQL) {
         _analysisJobSQL = analysisJobSQL;
     }
 

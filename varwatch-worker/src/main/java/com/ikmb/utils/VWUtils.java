@@ -6,7 +6,7 @@
 package com.ikmb.utils;
 
 import com.ikmb.EnsemblHelper;
-import com.ikmb.varwatchcommons.entities.VWVariant;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

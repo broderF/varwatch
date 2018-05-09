@@ -5,8 +5,8 @@
  */
 package com.ikmb.extraction;
 
-import com.ikmb.varwatchcommons.entities.GenomicFeature;
-import com.ikmb.varwatchcommons.entities.VWVariant;
+import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
+import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import com.ikmb.utils.VWUtils;
 import java.util.ArrayList;
 import java.util.List;

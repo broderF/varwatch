@@ -5,12 +5,11 @@
  */
 package com.ikmb.varwatchcommons.tools;
 
-import com.ikmb.varwatchcommons.builder.VariantBuilder;
-import com.ikmb.varwatchcommons.entities.Variant;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantBuilder;
+import com.ikmb.core.varwatchcommons.tools.CrossMap;
 import junit.framework.Assert;
 import org.junit.Test;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 /**
  *
@@ -52,7 +51,7 @@ public class CrossMapTest {
     public void shouldParseCorrectResponse() {
         Variant outputVariant = crossMap.run(grch37Variant, "GRCh37", "GRCh38").get();
         Assert.assertEquals("22", outputVariant.getChromosomeName());
-        Assert.assertEquals(new Integer(46219983), outputVariant.getPosition());
+        Assert.assertEquals(new Integer(46219983), outputVariant.getChromosomePos());
         Assert.assertEquals("T", outputVariant.getReferenceBase());
         Assert.assertEquals("C", outputVariant.getAlternateBase());
     }

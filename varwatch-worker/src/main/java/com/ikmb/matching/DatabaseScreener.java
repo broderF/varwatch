@@ -5,9 +5,9 @@
  */
 package com.ikmb.matching;
 
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
-import com.ikmb.varwatchsql.matching.MatchSQL;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.matching.Match;
+import com.ikmb.core.data.reference_db.RefDatabase;
 import java.util.List;
 
 /**
@@ -16,15 +16,15 @@ import java.util.List;
  */
 public interface DatabaseScreener {
     
-    public void setVWDatabase(RefDatabaseSQL vwDatabase);
+    public void setVWDatabase(RefDatabase vwDatabase);
 
     public void run();
 
-    public List<MatchSQL> getMatches();
+    public List<Match> getMatches();
 
-    public void initialize(RefDatabaseSQL screenedDatabase, DatasetVWSQL dataset);
+    public void initialize(RefDatabase screenedDatabase, DatasetVW dataset);
 
-    public DatasetVWSQL getDataset();
+    public DatasetVW getDataset();
 
-    public RefDatabaseSQL getDatabase();
+    public RefDatabase getDatabase();
 }

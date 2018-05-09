@@ -6,18 +6,18 @@
 package com.ikmb.varwatchservice;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchcommons.entities.VWResponse;
-import com.ikmb.varwatchsql.auth.client.AuthClientSQL;
-import com.ikmb.varwatchsql.auth.token.TokenManager;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.entities.VariantStatusSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantDataManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import com.ikmb.varwatchsql.matching.MatchVariantDataManager;
-import com.ikmb.varwatchsql.matching.MatchVariantSQL;
-import com.ikmb.varwatchsql.status.variant.VariantStatusManager;
+import com.ikmb.core.auth.client.AuthClient;
+import com.ikmb.core.auth.token.TokenManager;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.varwatchcommons.entities.VWResponse;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.matching.MatchVariant;
+import com.ikmb.core.data.matching.MatchVariantDataManager;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantDataManager;
+import com.ikmb.core.data.variant.VariantStatus;
+import com.ikmb.core.data.variant.VariantStatusManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -99,11 +99,11 @@ public class HTTPTokenValidator {
         return accessToken;
     }
 
-    public UserSQL getUser() {
+    public User getUser() {
         return tokenManager.getUserByToken(accessToken);
     }
 
-    public AuthClientSQL getClient() {
+    public AuthClient getClient() {
         return tokenManager.getClientByToken(accessToken);
     }
 
@@ -121,19 +121,19 @@ public class HTTPTokenValidator {
         }
         String currentUser = getUser().getMail();
         String dataUser = null;
-        if (aClass == DatasetVWSQL.class) {
-            DatasetVWSQL ds = dsManager.getDatasetByID(dataId);
+        if (aClass == DatasetVW.class) {
+            DatasetVW ds = dsManager.getDatasetByID(dataId);
             dataUser = ds.getUser().getMail();
-        } else if (aClass == VariantSQL.class) {
-            VariantSQL ds = variantManager.get(dataId);
+        } else if (aClass == Variant.class) {
+            Variant ds = variantManager.get(dataId);
             dataUser = ds.getDataset().getUser().getMail();
-        } else if (aClass == VariantStatusSQL.class) {
-            VariantStatusSQL ds = variantStatusManager.get(dataId);
+        } else if (aClass == VariantStatus.class) {
+            VariantStatus ds = variantStatusManager.get(dataId);
             dataUser = ds.getUser().getMail();
-        } else if (aClass == MatchVariantSQL.class) {
-            MatchVariantSQL ds = matchVariantDataManager.getVariantMatch(dataId);
+        } else if (aClass == MatchVariant.class) {
+            MatchVariant ds = matchVariantDataManager.getVariantMatch(dataId);
             Long variantId = ds.getVariantId();
-            VariantSQL variant = variantManager.get(variantId);
+            Variant variant = variantManager.get(variantId);
             dataUser = variant.getDataset().getUser().getMail();
         }
         if (dataUser == null) {

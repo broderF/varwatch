@@ -8,18 +8,16 @@ package com.ikmb.matching;
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import com.ikmb.varwatchsql.data.reference_db.RefDatabaseSQL;
-import com.ikmb.varwatchsql.data.reference_db.ReferenceDBDataManager;
-import com.ikmb.varwatchsql.matching.MatchSQL;
-import com.ikmb.varwatchsql.matching.MatchVariantDataManager;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.matching.MatchVariantDataManager;
+import com.ikmb.core.data.reference_db.RefDatabase;
+import com.ikmb.core.data.reference_db.ReferenceDBDataManager;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.job.JobManager;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
 import com.ikmb.varwatchworker.Worker;
 import java.util.List;
 import org.slf4j.Logger;
@@ -32,11 +30,11 @@ import org.slf4j.LoggerFactory;
 public class BeaconCollectorWorker implements Worker {
 
     private final Logger logger = LoggerFactory.getLogger(BeaconCollectorWorker.class);
-    protected AnalysisWorkerSQL _workerSQL;
-    protected AnalysisSQL _analysisSQL;
-    protected AnalysisJobSQL _analysisJobSQL;
+    protected AnalysisWorker _workerSQL;
+    protected Analysis _analysisSQL;
+    protected AnalysisJob _analysisJobSQL;
 
-    private DatasetVWSQL _dataset;
+    private DatasetVW _dataset;
 
 //    private byte[] _rawData;
 //    private String _rawDataType;
@@ -85,8 +83,8 @@ public class BeaconCollectorWorker implements Worker {
         parseInput();
 
         //check precond
-        List<AnalysisJobSQL> referenceDBJobs = jobManager.getBeaconScreeningJobs(_dataset);
-        for (AnalysisJobSQL analysisJob : referenceDBJobs) {
+        List<AnalysisJob> referenceDBJobs = jobManager.getBeaconScreeningJobs(_dataset);
+        for (AnalysisJob analysisJob : referenceDBJobs) {
             if (!analysisJob.getStatus().equals("SUCCESSFUL")) {
                 jobProcessStatus = WorkFlowManager.JobProcessStatus.PRECONDITION_FAILED;
                 return;
@@ -105,13 +103,13 @@ public class BeaconCollectorWorker implements Worker {
 //
 //        matchVariantDM.deleteBeaconMatchedVariants(_dataset);
         if (_analysisJobSQL.getAction().equals("NEW")) {
-            List<RefDatabaseSQL> referenceDBs = refDBDataManager.getActiveDatabases();
-            for (RefDatabaseSQL referenceDB : referenceDBs) {
+            List<RefDatabase> referenceDBs = refDBDataManager.getActiveDatabases();
+            for (RefDatabase referenceDB : referenceDBs) {
 //            if (referenceDB.getImplementation().equals("varwatch")) {
 //                jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.SCREENING, referenceDB.getId().toString(), false);
 //            } else
                 if (referenceDB.getImplementation().equals("hgmd_match")) {
-                    jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.SCREENING_HGMD, referenceDB.getId().toString(), AnalysisJobSQL.JobAction.NEW.toString());
+                    jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.SCREENING_HGMD, referenceDB.getId().toString(), AnalysisJob.JobAction.NEW.toString());
                 }
             }
         }
@@ -121,17 +119,17 @@ public class BeaconCollectorWorker implements Worker {
     }
 
     @Override
-    public void setWorkerSQL(AnalysisWorkerSQL workerSQL) {
+    public void setWorker(AnalysisWorker workerSQL) {
         _workerSQL = workerSQL;
     }
 
     @Override
-    public void setAnalysisSQL(AnalysisSQL analysisSQL) {
+    public void setAnalysis(Analysis analysisSQL) {
         _analysisSQL = analysisSQL;
     }
 
     @Override
-    public void setAnalysisJobSQL(AnalysisJobSQL analysisJobSQL) {
+    public void setAnalysisJob(AnalysisJob analysisJobSQL) {
         _analysisJobSQL = analysisJobSQL;
     }
 

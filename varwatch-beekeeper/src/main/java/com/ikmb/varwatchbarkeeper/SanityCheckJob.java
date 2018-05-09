@@ -6,8 +6,8 @@
 package com.ikmb.varwatchbarkeeper;
 
 import com.google.inject.Injector;
+import com.ikmb.core.workflow.job.JobManager;
 import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

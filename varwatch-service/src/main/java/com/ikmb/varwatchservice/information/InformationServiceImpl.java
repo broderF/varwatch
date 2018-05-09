@@ -9,18 +9,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
-import com.ikmb.varwatchcommons.entities.Dataset;
-import com.ikmb.varwatchcommons.entities.RejectedVariant;
-import com.ikmb.varwatchcommons.entities.Variant;
+import com.ikmb.core.auth.RegistrationResponse;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.varwatchcommons.entities.Dataset;
+import com.ikmb.core.varwatchcommons.entities.RejectedVariant;
 import com.ikmb.varwatchservice.HTTPTokenValidator;
-import com.ikmb.varwatchsql.auth.RegistrationResponse;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
-import com.ikmb.varwatchsql.entities.DatasetVWSQL;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantBuilder;
-import com.ikmb.varwatchsql.variant_data.variant.VariantDataManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantSQL;
-import com.ikmb.varwatchsql.status.variant.VariantStatusManager;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantBuilder;
+import com.ikmb.core.data.variant.VariantDataManager;
+import com.ikmb.core.data.variant.VariantStatusManager;
 import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -55,7 +54,7 @@ public class InformationServiceImpl implements InformationService {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
         List<Dataset> simpleDatasetByUserId = dsManager.getSimpleDatasetByUserId(user.getId());
 
         JsonArray result = (JsonArray) new Gson().toJsonTree(simpleDatasetByUserId,
@@ -68,7 +67,7 @@ public class InformationServiceImpl implements InformationService {
     @Override
     public Response getDataset(String header, Long datasetId) {
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(datasetId, DatasetVWSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(datasetId, DatasetVW.class);
         if (!tokenValid) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
@@ -81,7 +80,7 @@ public class InformationServiceImpl implements InformationService {
     @Override
     public Response getVariants(String header, Long datasetId) {
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(datasetId, DatasetVWSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(datasetId, DatasetVW.class);
         if (!tokenValid) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
@@ -98,7 +97,7 @@ public class InformationServiceImpl implements InformationService {
     @Override
     public Response getErrorVariants(String header, Long datasetId) {
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(datasetId, DatasetVWSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(datasetId, DatasetVW.class);
         if (!tokenValid) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
@@ -121,14 +120,14 @@ public class InformationServiceImpl implements InformationService {
     public Response getVariantById(String header, Long variantId) {
         logger.info("get variant information by id {}", variantId);
         tokenValidator.setHeader(header);
-        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantId, VariantSQL.class);
+        Boolean tokenValid = tokenValidator.hasUserReadPermissions(variantId, Variant.class);
         if (!tokenValid) {
             logger.error("token is not valid");
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
 
-        VariantSQL variantSql = variantManager.get(variantId);
-        Variant variant = variantBuilder.withSQLVariant(variantSql).build();
+        Variant variantSql = variantManager.get(variantId);
+        Variant variant = variantBuilder.withVariant(variantSql).build();
 
         String currentOutput = new Gson().toJson(variant, Variant.class);
         return Response.status(Response.Status.OK).entity(currentOutput).build();

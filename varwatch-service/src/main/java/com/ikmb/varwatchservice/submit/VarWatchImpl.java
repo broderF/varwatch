@@ -6,22 +6,22 @@
 package com.ikmb.varwatchservice.submit;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchsql.auth.RegistrationResponse;
-import com.ikmb.varwatchcommons.entities.VWMatchRequest;
-import com.ikmb.varwatchcommons.entities.Dataset;
+import com.ikmb.core.auth.RegistrationResponse;
+import com.ikmb.core.auth.client.AuthClient;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.varwatchcommons.entities.VWMatchRequest;
+import com.ikmb.core.varwatchcommons.entities.Dataset;
 import com.ikmb.varwatchservice.HTTPTokenValidator;
 import com.ikmb.varwatchservice.ResponseBuilder;
 import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetBuilder;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.workflow.job.JobManager;
-import com.ikmb.varwatchsql.status.dataset.DatasetStatusBuilder;
+import com.ikmb.core.data.dataset.DatasetBuilder;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetStatusBuilder;
 import com.ikmb.varwatchservice.VarWatchInputConverter;
 import com.ikmb.varwatchservice.VarWatchInputConverter.HTTPParsingResponse;
-import com.ikmb.varwatchsql.auth.client.AuthClientSQL;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
-import com.ikmb.varwatchsql.status.dataset.DatasetStatusManager;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
+import com.ikmb.core.data.dataset.DatasetStatusManager;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.job.JobManager;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
@@ -68,12 +68,12 @@ public class VarWatchImpl implements VarWatch {
             return new ResponseBuilder().withVwError().withVwMessage(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
 
         if (!user.getActive()) {
             return new ResponseBuilder().withVwError().withVwMessage(RegistrationResponse.USER_NOT_ACTIVE.getDescription()).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
-        AuthClientSQL client = tokenValidator.getClient();
+        AuthClient client = tokenValidator.getClient();
         Long datasetID = datasetManager.persistRawData(submitRequest, user, client, DatasetBuilder.RawDataType.VCF);
         String response = SubmitResponse.SUBMIT_SUCCESFULL.getDescription();
         if (datasetID == null) {
@@ -81,7 +81,7 @@ public class VarWatchImpl implements VarWatch {
             return new ResponseBuilder().withVwError().withVwMessage(response).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
 
-        jobManager.createJob(datasetID, AnalysisBuilder.ModuleName.EXTRACT_VARIANTS, null, AnalysisJobSQL.JobAction.NEW.toString());
+        jobManager.createJob(datasetID, AnalysisBuilder.ModuleName.EXTRACT_VARIANTS, null, AnalysisJob.JobAction.NEW.toString());
         statusManager.createNewStatus(datasetID, DatasetStatusBuilder.DatasetStatusType.SUBMITTED);
         return new ResponseBuilder().withVwSuccessful().withVwMessage(response).withStatusType(Response.Status.OK).build();
 
@@ -103,12 +103,12 @@ public class VarWatchImpl implements VarWatch {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
         
         if (!user.getActive()) {
             return new ResponseBuilder().withVwError().withVwMessage(RegistrationResponse.USER_NOT_ACTIVE.getDescription()).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
-        AuthClientSQL client = tokenValidator.getClient();
+        AuthClient client = tokenValidator.getClient();
         Long datasetID = datasetManager.persistRawData(submitRequest, user, client, DatasetBuilder.RawDataType.NORMAL);
         String response = SubmitResponse.SUBMIT_SUCCESFULL.getDescription();
         if (datasetID == null) {
@@ -116,7 +116,7 @@ public class VarWatchImpl implements VarWatch {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
         }
 
-        jobManager.createJob(datasetID, AnalysisBuilder.ModuleName.EXTRACT_VARIANTS, null, AnalysisJobSQL.JobAction.NEW.toString());
+        jobManager.createJob(datasetID, AnalysisBuilder.ModuleName.EXTRACT_VARIANTS, null, AnalysisJob.JobAction.NEW.toString());
         statusManager.createNewStatus(datasetID, DatasetStatusBuilder.DatasetStatusType.SUBMITTED);
         return Response.status(Response.Status.OK).entity(SubmitResponse.SUBMIT_SUCCESFULL.getDescription()).build();
     }
@@ -137,13 +137,13 @@ public class VarWatchImpl implements VarWatch {
             return new ResponseBuilder().withVwError().withVwMessage(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
         
         
         if (!user.getActive()) {
             return new ResponseBuilder().withVwError().withVwMessage(RegistrationResponse.USER_NOT_ACTIVE.getDescription()).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
-        AuthClientSQL client = tokenValidator.getClient();
+        AuthClient client = tokenValidator.getClient();
         Long datasetID = datasetManager.persistRawData(submitRequest, user, client, DatasetBuilder.RawDataType.HGVS);
         String response = SubmitResponse.SUBMIT_SUCCESFULL.getDescription();
         if (datasetID == null) {
@@ -151,7 +151,7 @@ public class VarWatchImpl implements VarWatch {
             return new ResponseBuilder().withVwError().withVwMessage(response).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
 
-        jobManager.createJob(datasetID, AnalysisBuilder.ModuleName.EXTRACT_VARIANTS, null, AnalysisJobSQL.JobAction.NEW.toString());
+        jobManager.createJob(datasetID, AnalysisBuilder.ModuleName.EXTRACT_VARIANTS, null, AnalysisJob.JobAction.NEW.toString());
         statusManager.createNewStatus(datasetID, DatasetStatusBuilder.DatasetStatusType.SUBMITTED);
         return new ResponseBuilder().withVwSuccessful().withVwMessage(response).withStatusType(Response.Status.OK).build();
     }

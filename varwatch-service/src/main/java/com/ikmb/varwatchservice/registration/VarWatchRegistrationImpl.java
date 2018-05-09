@@ -7,22 +7,22 @@ package com.ikmb.varwatchservice.registration;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import com.ikmb.varwatchcommons.entities.VWResponse;
-import com.ikmb.varwatchcommons.entities.DefaultUser;
-import com.ikmb.varwatchcommons.entities.RegistrationUser;
-import com.ikmb.varwatchcommons.entities.Client;
-import com.ikmb.varwatchcommons.entities.PasswordReset;
-import com.ikmb.varwatchcommons.notification.NotificationSubmitter;
-import com.ikmb.varwatchcommons.utils.PdfCreator;
+import com.ikmb.core.auth.RegistrationResponse;
+import com.ikmb.core.auth.user.User;
+import com.ikmb.core.auth.user.UserBuilder;
+import com.ikmb.core.auth.user.UserManager;
+import com.ikmb.core.varwatchcommons.entities.VWResponse;
+import com.ikmb.core.varwatchcommons.entities.DefaultUser;
+import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
+import com.ikmb.core.varwatchcommons.entities.Client;
+import com.ikmb.core.varwatchcommons.entities.PasswordReset;
+import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
+import com.ikmb.core.varwatchcommons.utils.PdfCreator;
 import com.ikmb.varwatchservice.HTTPTokenValidator;
 import com.ikmb.varwatchservice.OAuthRequestWrapper;
 import com.ikmb.varwatchservice.ResponseBuilder;
 import com.ikmb.varwatchservice.VarWatchInputConverter;
 import com.ikmb.varwatchservice.VarWatchInputConverter.HTTPParsingResponse;
-import com.ikmb.varwatchsql.auth.RegistrationResponse;
-import com.ikmb.varwatchsql.auth.user.UserBuilder;
-import com.ikmb.varwatchsql.auth.user.UserManager;
-import com.ikmb.varwatchsql.auth.user.UserSQL;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -201,8 +201,8 @@ public class VarWatchRegistrationImpl implements VarWatchRegistration {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
-        DefaultUser contact = userBuilder.withContactSql(user).buildVWContactWoPassword();
+        User user = tokenValidator.getUser();
+        DefaultUser contact = userBuilder.withUser(user).buildVWContactWoPassword();
         String contactJson = new Gson().toJson(contact, DefaultUser.class);
         return Response.status(Response.Status.ACCEPTED).entity(contactJson).build();
     }
@@ -218,7 +218,7 @@ public class VarWatchRegistrationImpl implements VarWatchRegistration {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
         }
 
-        UserSQL user = tokenValidator.getUser();
+        User user = tokenValidator.getUser();
         String newPw = null;
         String oldPw = null;
         try {
@@ -262,7 +262,7 @@ public class VarWatchRegistrationImpl implements VarWatchRegistration {
         }
 
         String newPW = RandomStringUtils.randomAlphabetic(10);
-        UserSQL user = userManager.getUser(contact);
+        User user = userManager.getUser(contact);
         Integer userID = user.getId();
         userManager.setNewPassword(userID, newPW);
         String subject = "Passwort wurde zurückgesetzt";

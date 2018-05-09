@@ -6,13 +6,11 @@
 package com.ikmb;
 
 import com.google.inject.Inject;
-import com.ikmb.varwatchsql.entities.AnalysisSQL;
-import com.ikmb.varwatchsql.entities.AnalysisWorkerSQL;
-import com.ikmb.varwatchsql.workflow.job.AnalysisJobSQL;
+import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.workflow.worker.AnalysisWorker;
 import com.ikmb.utils.WorkerTimer;
-import com.ikmb.varwatchsql.variant_data.dataset.DatasetManager;
-import com.ikmb.varwatchsql.variant_data.variant.VariantDataManager;
-import com.ikmb.varwatchsql.workflow.WorkerManager;
+import com.ikmb.core.workflow.worker.WorkerManager;
 import com.ikmb.varwatchworker.Worker;
 import com.ikmb.varwatchworker.WorkerFactory;
 import org.slf4j.Logger;
@@ -37,14 +35,14 @@ public class WorkFlowHandler {
 
     public void run(Long workerID) {
 
-        AnalysisWorkerSQL workerSQL = workerManager.getWorker(workerID);
+        AnalysisWorker workerSQL = workerManager.getWorker(workerID);
 //        Long workerID = workerSQL.getId();
 //        long startWorkerTime = System.currentTimeMillis();
         workerTimer.setRunningTime(300000);
 //        workerTimer.setRunningTime(30000);
         workerTimer.start();
 //        String deadReason = null;
-        AnalysisJobSQL jobSQL = null;
+        AnalysisJob jobSQL = null;
         Worker worker = null;
 
         while (!workerTimer.isFinish()) {
@@ -71,7 +69,7 @@ public class WorkFlowHandler {
                 }
 
                 logger.info("Start new job with id {}", jobSQL.getId());
-                AnalysisSQL analysis = jobSQL.getAnalysis();
+                Analysis analysis = jobSQL.getAnalysis();
                 worker = WorkerFactory.getWorker(workerSQL, analysis, jobSQL);
                 workerTimer.startJob();
 
