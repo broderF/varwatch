@@ -24,8 +24,6 @@ public class GeneDataManager {
     @Inject
     private VariantDao variantDao;
     
-//    @Inject
-//    private GeneBuilder geneBuilder;
 
     @Transactional
     public List<Gene> getGenes(Long variantId) {
@@ -35,12 +33,6 @@ public class GeneDataManager {
             Gene gene = variantEffect.getTranscript().getGene();
             genesSql.add(gene);
         }
-//        List<Gene> genes = new ArrayList<>();
-//        for(Gene currentGene: genesSql){
-//            Gene pathway = geneBuilder.withGeneSql(currentGene).build();
-//            genes.add(pathway);
-//        }
-//        
         return new ArrayList<>(genesSql);
     }
 

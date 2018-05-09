@@ -19,7 +19,7 @@ import com.ikmb.core.workflow.job.AnalysisJob;
 import com.ikmb.core.workflow.job.JobManager;
 import com.ikmb.core.workflow.worker.AnalysisWorker;
 import com.ikmb.core.workflow.worker.WorkerManager;
-import com.ikmb.varwatchsql.guice.VarWatchInjector;
+import com.ikmb.varwatchsql.guice.VarWatchMainModule;
 import com.ikmb.varwatchsql.guice.VarWatchPersist;
 import com.ikmb.varwatchworker.Worker;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class SanityWorker implements Worker {
     private JobManager jobManager;
 
     public static void main(String[] args) {
-        Injector inj = Guice.createInjector(new VarWatchInjector(), new JpaPersistModule("varwatch_dev"));
+        Injector inj = Guice.createInjector(new VarWatchMainModule(), new JpaPersistModule("varwatch_dev"));
         VarWatchPersist init = inj.getInstance(VarWatchPersist.class);
         SanityWorker vdm = inj.getInstance(SanityWorker.class);
         vdm.runJob();

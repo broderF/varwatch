@@ -70,12 +70,12 @@ public class VariantDataManager {
     }
 
     @Transactional
-    public List<Variant> getVariantsByDataset(Long datasetId) {
+    public List<com.ikmb.core.varwatchcommons.entities.Variant> getVariantsByDataset(Long datasetId) {
         DatasetVW dataset = datasetDao.getDataset(datasetId);
         List<Variant> variantsSql = variantDao.getVariantsByDataset(dataset);
-        List<Variant> variants = new ArrayList<>();
+        List<com.ikmb.core.varwatchcommons.entities.Variant> variants = new ArrayList<>();
         for (Variant variantSql : variantsSql) {
-            Variant variant = variantBuilder.withVariant(variantSql).build();
+            com.ikmb.core.varwatchcommons.entities.Variant variant = variantBuilder.withVariant(variantSql).build();
             variants.add(variant);
         }
         return variants;

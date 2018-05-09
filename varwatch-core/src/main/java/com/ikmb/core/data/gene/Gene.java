@@ -5,11 +5,11 @@
  */
 package com.ikmb.core.data.gene;
 
+import com.google.gson.annotations.Expose;
 import com.ikmb.core.data.ensembl.Ensembl;
 import com.ikmb.core.data.family.GeneFamily;
 import com.ikmb.core.data.pathway.Pathway;
 import com.ikmb.core.data.transcript.Transcript;
-import com.ikmb.core.varwatchcommons.entities.Family;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +38,7 @@ public class Gene implements Serializable {
     @GeneratedValue
     private Integer id;
     @Column(name = "name")
+    @Expose
     private String name;
     @Column(name = "symbol")
     private String symbol;
@@ -64,7 +65,7 @@ public class Gene implements Serializable {
                 @JoinColumn(name = "family_id",
                         nullable = false, updatable = false)})
     private Set<GeneFamily> families = new HashSet<>();
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "gene")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "gene")
     private Set<Transcript> transcripts = new HashSet<>();
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "gene")
     private Set<GeneMorbid> morbids = new HashSet<>();

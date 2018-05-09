@@ -93,7 +93,7 @@ public class AnnotationWorker implements Worker {
             List<VariantEffect> variantEffects = vep.run(variant);
             for (VariantEffect curEffect : variantEffects) {
                 if (curEffect.getTranscriptName().startsWith("ENST") && isImpactfull(curEffect.getConsequence())) {
-                    filteredvariantEffects.add(VariantEffect.get(curEffect));
+                    filteredvariantEffects.add(curEffect);
                     variant.setUploadedVariantion(curEffect.getUploaded_variation());
                 }
             }

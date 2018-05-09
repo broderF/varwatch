@@ -14,7 +14,7 @@ import com.ikmb.core.auth.user.UserManager;
 import com.ikmb.core.data.wipe.WipeDataManager;
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
 import com.ikmb.core.varwatchcommons.utils.PdfCreator;
-import com.ikmb.varwatchsql.guice.VarWatchInjector;
+import com.ikmb.varwatchsql.guice.VarWatchMainModule;
 import com.ikmb.varwatchsql.guice.VarWatchPersist;
 
 /**
@@ -24,7 +24,7 @@ import com.ikmb.varwatchsql.guice.VarWatchPersist;
 public class RegistrationFileCreator {
 
     public static void main(String[] args) {
-        Injector inj = Guice.createInjector(new VarWatchInjector(), new JpaPersistModule("varwatch_dev"));
+        Injector inj = Guice.createInjector(new VarWatchMainModule(), new JpaPersistModule("varwatch_dev"));
         VarWatchPersist init = inj.getInstance(VarWatchPersist.class);
         WipeDataManager vdm = inj.getInstance(WipeDataManager.class);
         UserManager udm = inj.getInstance(UserManager.class);

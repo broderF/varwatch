@@ -47,7 +47,7 @@ public class Variant implements Serializable {
     @Column(name = "filter")
     private String filter;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dataset_id", nullable = false)
     private DatasetVW dataset_vw;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "variant")

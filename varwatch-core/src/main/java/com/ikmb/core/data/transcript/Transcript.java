@@ -35,7 +35,7 @@ public class Transcript implements Serializable {
     private String protein;
     @Column(name = "canonical")
     private Boolean canonical;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gene_id")
     private Gene gene;
 

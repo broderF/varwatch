@@ -10,6 +10,7 @@ import com.google.inject.Provider;
 import com.ikmb.core.data.dataset.Dataset;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetStatus;
+import com.ikmb.core.data.dataset.DatasetStatusDao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -18,7 +19,7 @@ import javax.persistence.TypedQuery;
  *
  * @author broder
  */
-public class DatasetStatusDao {
+public class DatasetStatusDaoSQL implements DatasetStatusDao {
 
     @Inject
 //    private EntityManager em;

@@ -6,6 +6,7 @@
 package com.ikmb.varwatchservice.annotation;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
@@ -15,6 +16,7 @@ import com.ikmb.varwatchservice.HTTPTokenValidator;
 import com.ikmb.core.data.family.FamilyDataManager;
 import com.ikmb.core.data.family.GeneFamily;
 import com.ikmb.core.data.gene.Gene;
+import com.ikmb.core.data.gene.GeneBuilder;
 import com.ikmb.core.data.gene.GeneDataManager;
 import com.ikmb.core.data.hpo.HPOTerm;
 import com.ikmb.core.data.hpo.PhenotypeDataManager;
@@ -39,6 +41,8 @@ public class AnnotationServiceImpl implements AnnotationService {
     private GeneDataManager geneManager;
     @Inject
     private FamilyDataManager familyManager;
+    @Inject
+    private GeneBuilder geneBuilder;
 
     @Override
     public Response getDatasetAnnotation(String header, Long datasetId) {
@@ -83,8 +87,7 @@ public class AnnotationServiceImpl implements AnnotationService {
         }
 
         List<Gene> genes = geneManager.getGenes(variantId);
-
-        JsonArray result = (JsonArray) new Gson().toJsonTree(genes,
+        JsonArray result = (JsonArray) new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJsonTree(genes,
                 new TypeToken<List<Gene>>() {
                 }.getType());
         String currentOutput = result.toString();

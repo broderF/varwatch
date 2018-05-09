@@ -22,7 +22,7 @@ import com.ikmb.core.data.reference_db.ReferenceDBDataManager;
 import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.data.variant.VariantStatusManager;
 import com.ikmb.core.data.varianteffect.VariantEffect;
-import com.ikmb.varwatchsql.guice.VarWatchInjector;
+import com.ikmb.varwatchsql.guice.VarWatchMainModule;
 import com.ikmb.varwatchsql.guice.VarWatchPersist;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -278,7 +278,7 @@ public class HGMDScreenerNew implements DatabaseScreener {
     }
 
     public static void main(String[] args) {
-        Injector inj = Guice.createInjector(new VarWatchInjector(), new JpaPersistModule("varwatch_dev"));
+        Injector inj = Guice.createInjector(new VarWatchMainModule(), new JpaPersistModule("varwatch_dev"));
         VarWatchPersist init = inj.getInstance(VarWatchPersist.class);
         HGMDScreenerNew hgmd = inj.getInstance(HGMDScreenerNew.class);
         DatasetManager dsManager = inj.getInstance(DatasetManager.class);

@@ -85,10 +85,10 @@ public class InformationServiceImpl implements InformationService {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.TOKEN_NOT_VALID.getDescription()).build();
         }
 
-        List<Variant> variants = variantManager.getVariantsByDataset(datasetId);
+        List<com.ikmb.core.varwatchcommons.entities.Variant> variants = variantManager.getVariantsByDataset(datasetId);
 
         JsonArray result = (JsonArray) new Gson().toJsonTree(variants,
-                new TypeToken<List<Variant>>() {
+                new TypeToken<List<com.ikmb.core.varwatchcommons.entities.Variant>>() {
                 }.getType());
         String currentOutput = result.toString();
         return Response.status(Response.Status.OK).entity(currentOutput).build();
@@ -127,9 +127,9 @@ public class InformationServiceImpl implements InformationService {
         }
 
         Variant variantSql = variantManager.get(variantId);
-        Variant variant = variantBuilder.withVariant(variantSql).build();
+        com.ikmb.core.varwatchcommons.entities.Variant variant = variantBuilder.withVariant(variantSql).build();
 
-        String currentOutput = new Gson().toJson(variant, Variant.class);
+        String currentOutput = new Gson().toJson(variant, com.ikmb.core.varwatchcommons.entities.Variant.class);
         return Response.status(Response.Status.OK).entity(currentOutput).build();
     }
 

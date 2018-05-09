@@ -7,7 +7,10 @@ package com.ikmb.core.data.hpo;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.ikmb.core.data.dataset.DatasetDao;
+import com.ikmb.core.data.dataset.DatasetVW;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -19,6 +22,8 @@ public class PhenotypeDataManager {
     private PhenotypeDao phenotypeDao;
     @Inject
     private HPOTermBuilder hpoTermBuilder;
+    @Inject
+    private DatasetDao datasetDao;
 
     @Transactional
     public HPOTerm getHPOTermByName(String hpoName) {
@@ -28,9 +33,9 @@ public class PhenotypeDataManager {
 
     @Transactional
     public List<HPOTerm> getPhenotypes(Long datasetId) {
-//        DatasetVWSQL dataset = datasetDao.getDataset(datasetId);
-//        Set<PhenotypeSQL> hpoTermsSql = dataset.getPhenotypes();
-//        List<com.ikmb.varwatchcommons.entities.HPOTerm> hpoTerms = hpoTermBuilder.addFeatures(hpoTermsSql).buildList();
-        return null;
+        DatasetVW dataset = datasetDao.getDataset(datasetId);
+        Set<Phenotype> hpoTermsSql = dataset.getPhenotypes();
+        List<HPOTerm> hpoTerms = hpoTermBuilder.addFeatures(hpoTermsSql).buildList();
+        return hpoTerms;
     }
 }

@@ -23,7 +23,7 @@ public class VWInjectionInit {
     private VWInjectionInit(String configPath) {
         configuration = new VWConfiguration(configPath);
         String persistanceUnitName = configuration.getDatabase();
-        vwInjector = Guice.createInjector(new VarWatchInjector(), new JpaPersistModule(persistanceUnitName));
+        vwInjector = Guice.createInjector(new VarWatchMainModule(),new SQLModule(), new JpaPersistModule(persistanceUnitName));
         VarWatchPersist init = vwInjector.getInstance(VarWatchPersist.class);
     }
 

@@ -5,6 +5,7 @@
  */
 package com.ikmb.core.data.variant;
 
+import com.google.common.collect.Lists;
 import com.ikmb.core.varwatchcommons.entities.MetaData;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
 
@@ -21,7 +22,7 @@ public class VariantBuilder {
     String refBase;
     private long id;
     private String datasetId;
-    
+
     public VariantBuilder withChromosome(String chromosome) {
         this.chromName = chromosome;
         return this;
@@ -56,7 +57,9 @@ public class VariantBuilder {
         variantSQL.setAlternateBase(altBase);
         variantSQL.setChromosomeName(chromName);
         variantSQL.setChromosomePos(chromPos);
-        variantSQL.setVEPIdentifier(vepIdent);
+        if (vepIdent != null) {
+            variantSQL.setVEPIdentifier(vepIdent);
+        }
         variantSQL.setReferenceBase(refBase);
         return variantSQL;
     }
@@ -84,19 +87,21 @@ public class VariantBuilder {
         return this;
     }
 
-    public Variant build() {
-        Variant variant = new Variant();
+    public com.ikmb.core.varwatchcommons.entities.Variant build() {
+        com.ikmb.core.varwatchcommons.entities.Variant variant = new com.ikmb.core.varwatchcommons.entities.Variant();
         variant.setAlternateBase(altBase);
         variant.setChromosomeName(chromName);
-        variant.setId(id);
-        variant.setChromosomePos(chromPos);
+        variant.setId(String.valueOf(id));
+        variant.setPosition(chromPos);
         variant.setReferenceBase(refBase);
+        variant.setDatasetId(datasetId);
         if (vepIdent != null) {
             MetaData meta = new MetaData();
             meta.setDataKey("raw_variant");
             meta.setDataValue(vepIdent);
-//            variant.setMetaData(Lists.newArrayList(meta));
+            variant.setMetaData(Lists.newArrayList(meta));
         }
         return variant;
+
     }
 }

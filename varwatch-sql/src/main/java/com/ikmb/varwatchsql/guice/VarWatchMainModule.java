@@ -45,34 +45,13 @@ import com.ikmb.varwatchsql.workflow.WorkerDaoSQL;
  *
  * @author broder
  */
-public class VarWatchInjector extends AbstractModule {
+public class VarWatchMainModule extends AbstractModule {
 
-    public VarWatchInjector() {
+    public VarWatchMainModule() {
     }
 
     @Override
     protected void configure() {
-        bind(WorkerDao.class).to(WorkerDaoSQL.class);
-        bind(AnalysisDao.class).to(AnalysisDaoSQL.class);
-        bind(JobDao.class).to(JobDaoSQL.class);
-
-        bind(DatasetDao.class).to(DatasetDaoSQL.class);
-        bind(EnsemblDao.class).to(EnsemblDaoSQL.class);
-
-        bind(HPOTermDao.class).to(HPOTermDaoSQL.class);
-        bind(PhenotypeDao.class).to(PhenotypeDaoSQL.class);
-        bind(MatchVariantDao.class).to(MatchVariantDaoSQL.class);
-        bind(ReferenceDBDao.class).to(ReferenceDBDaoSQL.class);
-        bind(TranscriptDao.class).to(TranscriptDaoSQL.class);
-        bind(VariantDao.class).to(VariantDaoSQL.class);
-        bind(VariantStatusDao.class).to(VariantStatusDaoSQL.class);
-        bind(VariantEffectDao.class).to(VariantEffectDaoSQL.class);
-
-        bind(WipeDataDao.class).to(WipeDataDaoSQL.class);
-        bind(ClientDao.class).to(ClientDaoSQL.class);
-        bind(TokenDao.class).to(TokenDaoSQL.class);
-        bind(UserDao.class).to(UserDaoSQL.class);
-        bind(MatchVariantDao.class).to(MatchVariantDaoSQL.class);
         
     }
 }

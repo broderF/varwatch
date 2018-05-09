@@ -18,8 +18,8 @@ import org.junit.Test;
 public class CrossMapTest {
 
     //22:46615880 T / C
-    Variant grch37Variant = new VariantBuilder().withChromosome("22").withPosition(46615880).withRefBase("T").withAltBase("C").build();
-    Variant grch38Variant = new VariantBuilder().withChromosome("22").withPosition(46219983).build();
+    Variant grch37Variant = new VariantBuilder().withChromosome("22").withPosition(46615880).withRefBase("T").withAltBase("C").buildSql();
+    Variant grch38Variant = new VariantBuilder().withChromosome("22").withPosition(46219983).buildSql();
     CrossMap crossMap = new CrossMap();
     String assemblyFrom = "GRCh37";
     String assemblyTo = "GRCh38";

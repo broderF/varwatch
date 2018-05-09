@@ -68,7 +68,7 @@ public class MatchBuilder {
     }
 
     public MatchBuilder withVariantSql(Variant variant) {
-        matchedVariant = variantBuilder.withVariant(variant).build();
+        matchedVariant = variantBuilder.withVariant(variant).buildSql();
         return this;
     }
 

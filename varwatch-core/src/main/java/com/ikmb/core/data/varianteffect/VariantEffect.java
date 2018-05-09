@@ -26,19 +26,6 @@ import javax.persistence.Transient;
 @Table(name = "variant_effect")
 public class VariantEffect implements Serializable {
 
-    public static VariantEffect get(VariantEffect curEffect) {
-        VariantEffect effectSql = new VariantEffect();
-        effectSql.setUploaded_variation(curEffect.getUploaded_variation());
-        effectSql.setImpactFactor(curEffect.getImpactFactor());
-        effectSql.setHgvs_c(curEffect.getHgvs_c());
-        effectSql.setFeatureName(curEffect.getTranscriptName());
-        effectSql.setConsequence(curEffect.getConsequence());
-        effectSql.setCds_start(curEffect.getCds_start());
-        effectSql.setCds_end(curEffect.getCds_end());
-        effectSql.setCanonicalTranscript(curEffect.getCanonicalTranscript());
-        return effectSql;
-    }
-
     @Id
     @GeneratedValue
     private Long id;

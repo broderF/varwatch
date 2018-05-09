@@ -38,7 +38,7 @@ public class VWCrossMapper {
     public void crossmap() {
         for (VWVariant variant : variantList) {
             VariantBuilder build = new VariantBuilder();
-            Variant curVar = build.withVWVariant(variant).build();
+            Variant curVar = build.withVWVariant(variant).buildSql();
             Optional<Variant> resultVariant = crossMap.run(curVar, assembly, VWConfiguration.STANDARD_COORDS);
             parsedVariants.add(vbuilder.withVariant(resultVariant.get()).buildVW());
         }
