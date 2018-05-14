@@ -6,10 +6,10 @@
 package com.ikmb;
 
 import com.google.inject.Inject;
-import com.ikmb.core.workflow.job.AnalysisJob;
-import com.ikmb.core.workflow.job.JobManager;
-import com.ikmb.core.workflow.worker.AnalysisWorker;
-import com.ikmb.core.workflow.worker.WorkerManager;
+import com.ikmb.core.data.workflow.job.AnalysisJob;
+import com.ikmb.core.data.workflow.job.JobManager;
+import com.ikmb.core.data.workflow.worker.AnalysisWorker;
+import com.ikmb.core.data.workflow.worker.WorkerManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityNotFoundException;

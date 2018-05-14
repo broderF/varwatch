@@ -6,7 +6,7 @@
 package com.ikmb.varwatchservice.registration;
 
 import com.google.inject.Inject;
-import com.ikmb.core.auth.token.TokenManager;
+import com.ikmb.core.data.auth.token.TokenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

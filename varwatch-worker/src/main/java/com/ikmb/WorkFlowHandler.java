@@ -6,11 +6,11 @@
 package com.ikmb;
 
 import com.google.inject.Inject;
-import com.ikmb.core.workflow.analysis.Analysis;
-import com.ikmb.core.workflow.job.AnalysisJob;
-import com.ikmb.core.workflow.worker.AnalysisWorker;
+import com.ikmb.core.data.workflow.analysis.Analysis;
+import com.ikmb.core.data.workflow.job.AnalysisJob;
+import com.ikmb.core.data.workflow.worker.AnalysisWorker;
 import com.ikmb.utils.WorkerTimer;
-import com.ikmb.core.workflow.worker.WorkerManager;
+import com.ikmb.core.data.workflow.worker.WorkerManager;
 import com.ikmb.varwatchworker.Worker;
 import com.ikmb.varwatchworker.WorkerFactory;
 import org.slf4j.Logger;

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.workflow.job;
+package com.ikmb.core.data.workflow.job;
 
 import com.ikmb.core.data.dataset.DatasetVW;
-import com.ikmb.core.workflow.analysis.Analysis;
+import com.ikmb.core.data.workflow.analysis.Analysis;
 import org.joda.time.DateTime;
 
 /**

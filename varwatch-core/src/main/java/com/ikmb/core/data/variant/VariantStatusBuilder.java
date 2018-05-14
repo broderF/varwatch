@@ -5,7 +5,7 @@
  */
 package com.ikmb.core.data.variant;
 
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.matching.MatchVariant;
 import com.ikmb.core.varwatchcommons.entities.VWStatus;

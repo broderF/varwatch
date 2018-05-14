@@ -5,7 +5,7 @@
  */
 package com.ikmb.annotation;
 
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;

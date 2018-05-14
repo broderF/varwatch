@@ -7,7 +7,7 @@ package com.ikmb.varwatchsql.data.matching;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetHGMD;
 import com.ikmb.core.data.family.GeneFamily;
 import com.ikmb.core.data.gene.Gene;

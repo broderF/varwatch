@@ -6,8 +6,8 @@
 package com.ikmb.core.data.matching;
 
 import com.google.inject.Inject;
-import com.ikmb.core.auth.user.User;
-import com.ikmb.core.auth.user.UserBuilder;
+import com.ikmb.core.data.auth.user.User;
+import com.ikmb.core.data.auth.user.UserBuilder;
 import com.ikmb.core.data.gene.Gene;
 import com.ikmb.core.data.hpo.HPOTerm;
 import com.ikmb.core.varwatchcommons.entities.Contact;

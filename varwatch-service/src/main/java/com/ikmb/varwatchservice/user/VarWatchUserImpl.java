@@ -6,8 +6,8 @@ package com.ikmb.varwatchservice.user;
  * and open the template in the editor.
  */
 import com.google.inject.Inject;
-import com.ikmb.core.auth.user.User;
-import com.ikmb.core.auth.user.UserManager;
+import com.ikmb.core.data.auth.user.User;
+import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.VWResponse;
 import com.ikmb.varwatchservice.HTTPTokenValidator;

@@ -6,9 +6,9 @@
 package com.ikmb.varwatchworker;
 
 import com.ikmb.WorkFlowManager.JobProcessStatus;
-import com.ikmb.core.workflow.analysis.Analysis;
-import com.ikmb.core.workflow.job.AnalysisJob;
-import com.ikmb.core.workflow.worker.AnalysisWorker;
+import com.ikmb.core.data.workflow.analysis.Analysis;
+import com.ikmb.core.data.workflow.job.AnalysisJob;
+import com.ikmb.core.data.workflow.worker.AnalysisWorker;
 
 /**
  *

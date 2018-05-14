@@ -15,10 +15,10 @@ import static com.ikmb.varwatchservice.registration.RegistrationManager.Registra
 import static com.ikmb.varwatchservice.registration.RegistrationManager.RegistrationResponse.REGISTRATION_ERROR_INFORMATIONS_MISSING;
 import static com.ikmb.varwatchservice.registration.RegistrationManager.RegistrationResponse.REGISTRATION_SUCCESFULL;
 import static com.ikmb.varwatchservice.registration.RegistrationManager.RegistrationResponse.UPDATE_SUCCESFULL;
-import com.ikmb.core.auth.client.ClientManager;
-import com.ikmb.core.auth.user.User;
-import com.ikmb.core.auth.user.UserBuilder;
-import com.ikmb.core.auth.user.UserManager;
+import com.ikmb.core.data.auth.client.ClientManager;
+import com.ikmb.core.data.auth.user.User;
+import com.ikmb.core.data.auth.user.UserBuilder;
+import com.ikmb.core.data.auth.user.UserManager;
 import javax.ws.rs.core.Response;
 
 /**

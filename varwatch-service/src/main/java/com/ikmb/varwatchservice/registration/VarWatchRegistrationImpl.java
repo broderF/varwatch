@@ -7,10 +7,10 @@ package com.ikmb.varwatchservice.registration;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import com.ikmb.core.auth.RegistrationResponse;
-import com.ikmb.core.auth.user.User;
-import com.ikmb.core.auth.user.UserBuilder;
-import com.ikmb.core.auth.user.UserManager;
+import com.ikmb.core.data.auth.RegistrationResponse;
+import com.ikmb.core.data.auth.user.User;
+import com.ikmb.core.data.auth.user.UserBuilder;
+import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.varwatchcommons.entities.VWResponse;
 import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;

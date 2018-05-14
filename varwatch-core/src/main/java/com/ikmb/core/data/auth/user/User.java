@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.auth.user;
+package com.ikmb.core.data.auth.user;
 
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetVW;
 import java.io.Serializable;
 import java.sql.Blob;

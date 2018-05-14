@@ -5,7 +5,7 @@
  */
 package com.ikmb.core.data.matching;
 
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetHGMD;
 import com.ikmb.core.data.variant.Variant;
 import java.util.Iterator;

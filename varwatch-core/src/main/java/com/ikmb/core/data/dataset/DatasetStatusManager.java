@@ -7,7 +7,7 @@ package com.ikmb.core.data.dataset;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetStatusBuilder.DatasetStatusType;
 import com.ikmb.core.varwatchcommons.entities.Status;
 import java.util.ArrayList;

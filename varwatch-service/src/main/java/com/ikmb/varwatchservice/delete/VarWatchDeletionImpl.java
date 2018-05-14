@@ -7,8 +7,8 @@ package com.ikmb.varwatchservice.delete;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import com.ikmb.core.auth.RegistrationResponse;
-import com.ikmb.core.auth.token.TokenManager;
+import com.ikmb.core.data.auth.RegistrationResponse;
+import com.ikmb.core.data.auth.token.TokenManager;
 import com.ikmb.core.data.wipe.WipeDataManager;
 import com.ikmb.core.varwatchcommons.entities.VWMatchRequest;
 import com.ikmb.varwatchservice.VarWatchInputConverter;

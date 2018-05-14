@@ -5,7 +5,7 @@
  */
 package com.ikmb.notification;
 
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.variant.Variant;
 
 

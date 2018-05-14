@@ -6,10 +6,10 @@
 package com.ikmb.varwatchbarkeeper;
 
 import com.google.inject.Injector;
-import com.ikmb.core.auth.user.User;
-import com.ikmb.core.auth.user.UserManager;
-import com.ikmb.core.workflow.job.JobManager;
-import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder;
+import com.ikmb.core.data.auth.user.User;
+import com.ikmb.core.data.auth.user.UserManager;
+import com.ikmb.core.data.workflow.job.JobManager;
+import com.ikmb.core.data.workflow.analysis.AnalysisBuilder;
 import java.util.List;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

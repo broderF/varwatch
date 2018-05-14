@@ -7,7 +7,7 @@ package com.ikmb.matching;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkerLauncher;
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.hpo.Phenotype;

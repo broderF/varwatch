@@ -7,10 +7,10 @@ package com.ikmb.core.data.dataset;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.ikmb.core.auth.client.AuthClient;
-import com.ikmb.core.auth.client.ClientDao;
-import com.ikmb.core.auth.user.User;
-import com.ikmb.core.auth.user.UserDao;
+import com.ikmb.core.data.auth.client.AuthClient;
+import com.ikmb.core.data.auth.client.ClientDao;
+import com.ikmb.core.data.auth.user.User;
+import com.ikmb.core.data.auth.user.UserDao;
 import com.ikmb.core.data.hpo.HPOTerm;
 import com.ikmb.core.varwatchcommons.entities.Feature;
 import com.ikmb.core.varwatchcommons.entities.VWMatchRequest;

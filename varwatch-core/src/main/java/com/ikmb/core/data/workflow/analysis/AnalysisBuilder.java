@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.varwatchsql.workflow.analysis;
+package com.ikmb.core.data.workflow.analysis;
 
 /**
  *

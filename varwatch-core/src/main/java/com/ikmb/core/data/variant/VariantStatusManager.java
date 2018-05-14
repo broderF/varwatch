@@ -7,8 +7,8 @@ package com.ikmb.core.data.variant;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.ikmb.core.auth.user.User;
-import com.ikmb.core.auth.user.UserDao;
+import com.ikmb.core.data.auth.user.User;
+import com.ikmb.core.data.auth.user.UserDao;
 import com.ikmb.core.data.dataset.DatasetDao;
 import com.ikmb.core.data.dataset.DatasetHGMD;
 import com.ikmb.core.data.dataset.DatasetVW;

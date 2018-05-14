@@ -6,9 +6,9 @@
 package com.ikmb.varwatchservice;
 
 import com.google.inject.Inject;
-import com.ikmb.core.auth.client.AuthClient;
-import com.ikmb.core.auth.token.TokenManager;
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.client.AuthClient;
+import com.ikmb.core.data.auth.token.TokenManager;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.varwatchcommons.entities.VWResponse;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetVW;

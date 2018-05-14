@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.auth.token;
+package com.ikmb.core.data.auth.token;
 
-import com.ikmb.core.auth.client.AuthClient;
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.client.AuthClient;
+import com.ikmb.core.data.auth.user.User;
 
 /**
  *

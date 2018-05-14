@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.auth.token;
+package com.ikmb.core.data.auth.token;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.ikmb.core.auth.client.AuthClient;
-import com.ikmb.core.auth.client.ClientDao;
-//import com.ikmb.auth.client.AuthClientSQL;
-//import com.ikmb.auth.client.ClientDao;
-import com.ikmb.core.auth.user.User;
-import com.ikmb.core.auth.user.UserDao;
+import com.ikmb.core.data.auth.client.AuthClient;
+import com.ikmb.core.data.auth.client.ClientDao;
+import com.ikmb.core.data.auth.user.User;
+import com.ikmb.core.data.auth.user.UserDao;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;

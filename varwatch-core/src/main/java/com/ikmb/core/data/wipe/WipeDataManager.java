@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.persist.Transactional;
 import com.google.inject.persist.jpa.JpaPersistModule;
-import com.ikmb.core.auth.user.UserManager;
+import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetVW;
 import java.util.List;

@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.workflow.worker;
+package com.ikmb.core.data.workflow.worker;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.data.workflow.job.AnalysisJob;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;

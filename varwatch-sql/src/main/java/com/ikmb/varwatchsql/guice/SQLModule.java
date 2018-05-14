@@ -6,9 +6,9 @@
 package com.ikmb.varwatchsql.guice;
 
 import com.google.inject.AbstractModule;
-import com.ikmb.core.auth.client.ClientDao;
-import com.ikmb.core.auth.token.TokenDao;
-import com.ikmb.core.auth.user.UserDao;
+import com.ikmb.core.data.auth.client.ClientDao;
+import com.ikmb.core.data.auth.token.TokenDao;
+import com.ikmb.core.data.auth.user.UserDao;
 import com.ikmb.core.data.dataset.DatasetDao;
 import com.ikmb.core.data.dataset.DatasetStatusDao;
 import com.ikmb.core.data.ensembl.EnsemblDao;
@@ -21,9 +21,9 @@ import com.ikmb.core.data.variant.VariantDao;
 import com.ikmb.core.data.variant.VariantStatusDao;
 import com.ikmb.core.data.varianteffect.VariantEffectDao;
 import com.ikmb.core.data.wipe.WipeDataDao;
-import com.ikmb.core.workflow.analysis.AnalysisDao;
-import com.ikmb.core.workflow.job.JobDao;
-import com.ikmb.core.workflow.worker.WorkerDao;
+import com.ikmb.core.data.workflow.analysis.AnalysisDao;
+import com.ikmb.core.data.workflow.job.JobDao;
+import com.ikmb.core.data.workflow.worker.WorkerDao;
 import com.ikmb.varwatchsql.data.client.ClientDaoSQL;
 import com.ikmb.varwatchsql.data.dataset.DatasetDaoSQL;
 import com.ikmb.varwatchsql.data.dataset.DatasetStatusDaoSQL;

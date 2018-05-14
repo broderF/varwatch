@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.auth.client;
+package com.ikmb.core.data.auth.client;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.ikmb.core.varwatchcommons.entities.Client;
 import com.ikmb.core.varwatchcommons.utils.PasswordValidator;
-import com.ikmb.core.auth.RegistrationResponse;
+import com.ikmb.core.data.auth.RegistrationResponse;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 

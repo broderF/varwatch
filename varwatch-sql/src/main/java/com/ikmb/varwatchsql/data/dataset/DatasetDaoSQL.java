@@ -7,7 +7,7 @@ package com.ikmb.varwatchsql.data.dataset;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetDao;
 import com.ikmb.core.data.dataset.DatasetHGMD;
 import com.ikmb.core.data.dataset.DatasetVW;

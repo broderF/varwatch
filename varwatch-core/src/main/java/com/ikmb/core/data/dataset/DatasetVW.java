@@ -5,8 +5,8 @@
  */
 package com.ikmb.core.data.dataset;
 
-import com.ikmb.core.auth.client.AuthClient;
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.client.AuthClient;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.hpo.HPOTerm;
 import com.ikmb.core.data.variant.Variant;

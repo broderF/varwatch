@@ -5,8 +5,8 @@
  */
 package com.ikmb.utils;
 
-import com.ikmb.core.workflow.analysis.Analysis;
-import com.ikmb.core.workflow.job.AnalysisJob;
+import com.ikmb.core.data.workflow.analysis.Analysis;
+import com.ikmb.core.data.workflow.job.AnalysisJob;
 import java.util.HashMap;
 import java.util.Map;
 

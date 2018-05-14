@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.workflow.job;
+package com.ikmb.core.data.workflow.job;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.ikmb.core.data.dataset.DatasetDao;
 import com.ikmb.core.data.dataset.DatasetVW;
-import com.ikmb.core.workflow.analysis.Analysis;
-import com.ikmb.core.workflow.analysis.AnalysisDao;
-import com.ikmb.core.workflow.worker.AnalysisWorker;
-import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder.ModuleName;
-import com.ikmb.core.workflow.worker.WorkerDao;
+import com.ikmb.core.data.workflow.analysis.Analysis;
+import com.ikmb.core.data.workflow.analysis.AnalysisDao;
+import com.ikmb.core.data.workflow.worker.AnalysisWorker;
+import com.ikmb.core.data.workflow.analysis.AnalysisBuilder.ModuleName;
+import com.ikmb.core.data.workflow.worker.WorkerDao;
 import java.util.List;
 import java.util.Random;
 import org.joda.time.DateTime;

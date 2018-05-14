@@ -5,7 +5,7 @@
  */
 package com.ikmb.core.data.dataset;
 
-import com.ikmb.core.auth.user.User;
+import com.ikmb.core.data.auth.user.User;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;

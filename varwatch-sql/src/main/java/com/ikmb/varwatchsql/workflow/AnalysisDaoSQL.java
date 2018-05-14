@@ -7,9 +7,9 @@ package com.ikmb.varwatchsql.workflow;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.ikmb.core.workflow.analysis.Analysis;
-import com.ikmb.core.workflow.analysis.AnalysisDao;
-import com.ikmb.varwatchsql.workflow.analysis.AnalysisBuilder.ModuleName;
+import com.ikmb.core.data.workflow.analysis.Analysis;
+import com.ikmb.core.data.workflow.analysis.AnalysisDao;
+import com.ikmb.core.data.workflow.analysis.AnalysisBuilder.ModuleName;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 

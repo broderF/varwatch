@@ -6,8 +6,8 @@ package com.ikmb.varwatchservice.client;
  * and open the template in the editor.
  */
 import com.google.inject.Inject;
-import com.ikmb.core.auth.client.AuthClient;
-import com.ikmb.core.auth.client.ClientManager;
+import com.ikmb.core.data.auth.client.AuthClient;
+import com.ikmb.core.data.auth.client.ClientManager;
 import com.ikmb.varwatchservice.ResponseBuilder;
 import com.ikmb.varwatchservice.registration.ClientChecker;
 import java.util.logging.Level;

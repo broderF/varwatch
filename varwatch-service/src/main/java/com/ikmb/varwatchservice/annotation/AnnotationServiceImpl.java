@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
-import com.ikmb.core.auth.RegistrationResponse;
+import com.ikmb.core.data.auth.RegistrationResponse;
 import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.varwatchservice.HTTPTokenValidator;
 import com.ikmb.core.data.family.FamilyDataManager;

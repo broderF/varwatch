@@ -7,8 +7,8 @@ package com.ikmb.varwatchservice.registration;
 
 import com.ikmb.core.varwatchcommons.utils.PasswordValidator;
 import com.google.inject.Inject;
-import com.ikmb.core.auth.user.User;
-import com.ikmb.core.auth.user.UserManager;
+import com.ikmb.core.data.auth.user.User;
+import com.ikmb.core.data.auth.user.UserManager;
 
 /**
  * Validates a user
