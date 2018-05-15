@@ -63,12 +63,6 @@ public class DatasetManager {
 
         User userSQL = userDao.getUserByID(user.getId());
 
-//        List<String> hpoTerms = hpoBuilder.addFeatures(submitrequest.getPatient().getFeatures()).buildStringList();
-//        Set<HPOTermSQL> hpoTermsSQL = new HashSet<HPOTermSQL>(hpoDao.getHPOTermsByNames(hpoTerms,"O"));
-//        if (hpoTermsSQL.isEmpty()) {
-//            errorMessage = "No valid HPO term";
-//            return null;
-//        }
         String assembly = submitrequest.getPatient().getAssembly();
         if (assembly == null || (!(assembly.equals("GRCh38") || assembly.equals("GRCh37")))) {
             logger.error("invalid assembly: {}", assembly);
@@ -77,7 +71,7 @@ public class DatasetManager {
         }
 
         Set<Phenotype> phenotypes = new HashSet<>();
-        Set<String> incorrectPhenotypes = new HashSet<String>();
+        Set<String> incorrectPhenotypes = new HashSet<>();
         for (Feature vwFeature : submitrequest.getPatient().getFeatures()) {
             String ageOfOnset = vwFeature.getAgeOfOnset();
             HPOTerm ageOfOnsetSql = hpoDao.getHPOTermByName(ageOfOnset, "C");
@@ -178,7 +172,6 @@ public class DatasetManager {
 //        DatasetVWSQL ds = vdm.getDatasetWithVariantsAndMatchesByID(107002l);
 //        System.out.println("finish");
 //    }
-
     @Transactional
     public DatasetHGMD getHGMDDatasetByID(long datasetID) {
         DatasetHGMD ds = datasetDao.getHGMDDataset(datasetID);
@@ -195,4 +188,17 @@ public class DatasetManager {
     public List<Long> getAllDatasetIds() {
         return datasetDao.getAllDatasetIds();
     }
+
+    @Transactional
+    public List<HPOTerm> getPhenotypes(Long datasetId) {
+        DatasetVW dataset = datasetDao.getDataset(datasetId);
+        Set<Phenotype> hpoTermsSql = dataset.getPhenotypes();
+        List<HPOTerm> hpoTerms = new HPOTermBuilder().addFeatures(hpoTermsSql).buildList();
+        return hpoTerms;
+    }
+
+    public void setDatasetDao(DatasetDao datasetDao) {
+        this.datasetDao = datasetDao;
+    }
+
 }

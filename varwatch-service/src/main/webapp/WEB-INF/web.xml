@@ -6,14 +6,14 @@
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>com.ikmb.varwatchservice</param-value>
+            <param-value>com.ikmb.rest</param-value>
         </init-param>
         <!--        <init-param>
             <param-name>javax.ws.rs.Application</param-name>
             <param-value>com.ikmb.varwatchservice.MyApplication</param-value>
         </init-param>-->
         <load-on-startup>1</load-on-startup>
-    </servlet>   
+    </servlet>
     <servlet-mapping>
         <servlet-name>varwatch service</servlet-name>
         <url-pattern>/api/*</url-pattern>
@@ -22,13 +22,13 @@
         <session-timeout>
             30
         </session-timeout>
-    </session-config>   
+    </session-config>
     <!--    <context-param>
         <param-name>config path</param-name>
         <param-value>/data/varwatch/VarWatchService/lib/config_service.txt</param-value>
     </context-param>  -->
     <listener>
-        <listener-class>com.ikmb.varwatchservice.guice.ServletConfig</listener-class>
+        <listener-class>com.ikmb.rest.guice.ServletConfig</listener-class>
     </listener>
     <!--    <listener>
         <listener-class>com.ikmb.varwatchservice.guice.VWServletConfig</listener-class>
@@ -37,7 +37,6 @@
         <filter-name>guiceFilter</filter-name>
         <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
     </filter>
-
     <filter-mapping>
         <filter-name>guiceFilter</filter-name>
         <url-pattern>/*</url-pattern>

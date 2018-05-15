@@ -21,8 +21,6 @@ public class PhenotypeDataManager {
     @Inject
     private PhenotypeDao phenotypeDao;
     @Inject
-    private HPOTermBuilder hpoTermBuilder;
-    @Inject
     private DatasetDao datasetDao;
 
     @Transactional
@@ -35,7 +33,7 @@ public class PhenotypeDataManager {
     public List<HPOTerm> getPhenotypes(Long datasetId) {
         DatasetVW dataset = datasetDao.getDataset(datasetId);
         Set<Phenotype> hpoTermsSql = dataset.getPhenotypes();
-        List<HPOTerm> hpoTerms = hpoTermBuilder.addFeatures(hpoTermsSql).buildList();
+        List<HPOTerm> hpoTerms = new HPOTermBuilder().addFeatures(hpoTermsSql).buildList();
         return hpoTerms;
     }
 }

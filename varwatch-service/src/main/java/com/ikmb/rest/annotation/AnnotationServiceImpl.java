@@ -1,0 +1,85 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.ikmb.rest.annotation;
+
+import com.google.inject.Inject;
+import com.ikmb.core.data.dataset.DatasetManager;
+import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.family.FamilyDataManager;
+import com.ikmb.core.data.family.GeneFamily;
+import com.ikmb.core.data.gene.Gene;
+import com.ikmb.core.data.gene.GeneDataManager;
+import com.ikmb.core.data.hpo.HPOTerm;
+import com.ikmb.core.data.pathway.Pathway;
+import com.ikmb.core.data.pathway.PathwayDataManager;
+import com.ikmb.core.data.variant.Variant;
+import com.ikmb.rest.util.DataPermissionRequestFilter.DataPermissionFilter;
+import com.ikmb.rest.util.ResponseBuilder;
+import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
+import java.util.List;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+@Path("annotation")
+@TokenFilter
+public class AnnotationServiceImpl {
+
+    @Inject
+    private DatasetManager datasetManager;
+    @Inject
+    private PathwayDataManager pathwayManager;
+    @Inject
+    private GeneDataManager geneManager;
+    @Inject
+    private FamilyDataManager familyManager;
+
+    @GET
+    @Path("datasets/{dataset_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @DataPermissionFilter(dataType = DatasetVW.class)
+    public Response getDatasetAnnotation(@HeaderParam("Authorization") String header, @PathParam("dataset_id") Long datasetId) {
+        List<HPOTerm> hpoTerms = datasetManager.getPhenotypes(datasetId);
+        return new ResponseBuilder().buildList(hpoTerms);
+    }
+
+    @GET
+    @Path("variants/{variant_id}/pathways")
+    @Produces(MediaType.APPLICATION_JSON)
+    @DataPermissionFilter(dataType = Variant.class)
+    public Response getVariantPathways(@HeaderParam("Authorization") String header, @PathParam("variant_id") Long variantId) {
+
+        List<Pathway> pathway = pathwayManager.getPathways(variantId);
+        return new ResponseBuilder().buildList(pathway);
+    }
+
+    @GET
+    @Path("variants/{variant_id}/genes")
+    @Produces(MediaType.APPLICATION_JSON)
+    @DataPermissionFilter(dataType = Variant.class)
+    public Response getVariantGenes(@HeaderParam("Authorization") String header, @PathParam("variant_id") Long variantId) {
+
+        List<Gene> genes = geneManager.getGenes(variantId);
+        return new ResponseBuilder().buildList(genes);
+    }
+
+    @GET
+    @Path("variants/{variant_id}/families")
+    @Produces(MediaType.APPLICATION_JSON)
+    @DataPermissionFilter(dataType = Variant.class)
+    public Response getVariantFamilies(@HeaderParam("Authorization") String header, @PathParam("variant_id") Long variantId) {
+        List<GeneFamily> families = familyManager.getFamilies(variantId);
+        return new ResponseBuilder().buildList(families);
+    }
+
+    public void setDatasetManager(DatasetManager datasetManager) {
+        this.datasetManager = datasetManager;
+    }
+}

@@ -5,6 +5,7 @@
  */
 package com.ikmb.core.data.hpo;
 
+import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +29,7 @@ public class HPOTerm implements Serializable {
     @GeneratedValue
     private Long id;
     @Column(name = "identifier")
+    @Expose
     private String identifier;
     @Column(name = "description")
     private String description;

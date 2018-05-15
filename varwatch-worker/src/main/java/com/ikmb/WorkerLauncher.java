@@ -5,7 +5,7 @@
  */
 package com.ikmb;
 
-import com.ikmb.varwatchsql.guice.VWInjectionInit;
+import com.ikmb.sql.guice.VWInjectionInit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;

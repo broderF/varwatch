@@ -61,8 +61,8 @@ public class Variant implements Serializable {
 //    protected Set<MatchSQL> matches = new HashSet<MatchSQL>();
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "variant")
     private Set<VariantStatus> variantStatus = new HashSet<VariantStatus>();
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "variant")
-    private Set<VariantMetaData> variantMetaData = new HashSet<VariantMetaData>();
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "variant")
+//    private Set<VariantMetaData> variantMetaData = new HashSet<VariantMetaData>();
     @Transient
     private String uploaded_variant;
 
@@ -162,13 +162,13 @@ public class Variant implements Serializable {
         this.variantStatus = variantStatus;
     }
 
-    public Set<VariantMetaData> getVariantMetaData() {
-        return variantMetaData;
-    }
-
-    public void setVariantMetaData(Set<VariantMetaData> variantMetaData) {
-        this.variantMetaData = variantMetaData;
-    }
+//    public Set<VariantMetaData> getVariantMetaData() {
+//        return variantMetaData;
+//    }
+//
+//    public void setVariantMetaData(Set<VariantMetaData> variantMetaData) {
+//        this.variantMetaData = variantMetaData;
+//    }
 
     public String toString() {
         return chromosomeName + "," + chromosomePos + "," + referenceBase + "," + alternateBase;

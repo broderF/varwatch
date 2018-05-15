@@ -10,7 +10,7 @@ import com.ikmb.core.varwatchcommons.VWConfiguration;
 import com.ikmb.core.data.workflow.job.JobManager;
 import com.ikmb.core.data.workflow.worker.AnalysisWorker;
 import com.ikmb.core.data.workflow.worker.WorkerManager;
-import com.ikmb.varwatchsql.guice.VWInjectionInit;
+import com.ikmb.sql.guice.VWInjectionInit;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;

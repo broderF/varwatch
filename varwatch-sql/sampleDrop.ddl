@@ -1,0 +1,63 @@
+alter table analysis_job drop constraint FK_37mwr9asebb8wmiha2cr53ugm
+alter table analysis_job drop constraint FK_m4499xr5qo701obn38suwqru
+alter table analysis_job drop constraint FK_ixd7j35603xli7hhpw58x4vlt
+alter table auth_token drop constraint FK_f3260vionv7uon0q2p4gchty7
+alter table auth_token drop constraint FK_aiqc20kpjasth5bxogsragoif
+alter table dataset2hpo drop constraint FK_av7s4av5kjcmlxewrm08cxm52
+alter table dataset2hpo drop constraint FK_dbmlohyyrya8kpnoa92tktsxx
+alter table dataset2hpo drop constraint FK_aadpjxn2xly8ys0l833i6a6fs
+alter table dataset_hgmd drop constraint FK_2axo6el7k4msi4l50on6pd2o2
+alter table dataset_hgmd drop constraint FK_t7np209ftbyj64yndias8pnrg
+alter table dataset_status drop constraint FK_oa5x9pe2gughi3vb6njymdv1w
+alter table dataset_status drop constraint FK_sn3d6cx7w7s4q87kexxeobicg
+alter table dataset_vw drop constraint FK_i75ejyth12evbjqgnbxtwum0b
+alter table dataset_vw drop constraint FK_k528x05aus9nxbo725ldn8vtc
+alter table dataset_vw drop constraint FK_iu7pmstw0m67ovvbx29j1bg6f
+alter table dataset_vw drop constraint FK_jn8bs1aqb7gfwen4gisnqamf6
+alter table dataset_vw drop constraint FK_jgrjbeqna9iwb0ros7rsueer5
+alter table gene drop constraint FK_dx955rfy1pjr5gc051lx040h0
+alter table gene2family drop constraint FK_7o581vwv8ht74ivfinvn9ma5y
+alter table gene2family drop constraint FK_dc9phlbsk4fxp2hd1lhnw2l0u
+alter table gene2pathway drop constraint FK_dsvj4uls5kgp886e2v6bj3neg
+alter table gene2pathway drop constraint FK_gdl6l6vi5syb6d0ptijtdj0tj
+alter table gene_morbid drop constraint FK_tmp7xedkcenengnwdyx52fhir
+alter table hpo_alternative drop constraint FK_2pxaogse9j1iehmsha20ddu03
+alter table match2variant drop constraint FK_tnbf3w1frerj8rkg7mxlehmpf
+alter table match2variant drop constraint FK_mvorae0xcmoohykjbvdmg3ipo
+alter table match2variant drop constraint FK_b7eaf3fhw2lkg3ygh5dexilwf
+alter table match_pair drop constraint FK_mt3581mo780s51cpiuqnjlg7j
+alter table transcript drop constraint FK_7d1snswlq2vseapf0owp7innw
+alter table variant drop constraint FK_o5jl0e0h8m1jyuria31svantj
+alter table variant_effect drop constraint FK_3il0p9u5cwc2uta4r6738s5ur
+alter table variant_effect drop constraint FK_rgbd3nf3p15esg7j9ncanjjc1
+alter table variant_status drop constraint FK_auufbcx1jnh7ycorwiu72r6xb
+alter table variant_status drop constraint FK_2m2akqgnw86vbfxelinv8693k
+alter table variant_status drop constraint FK_2rg63mc250g0fo66oqhgph77g
+alter table variant_status drop constraint FK_qryg6hb62o0v9nlx7wjhp5vxy
+drop table analysis
+drop table analysis_job
+drop table analysis_worker
+drop table auth_client
+drop table auth_token
+drop table auth_user
+drop table dataset
+drop table dataset2hpo
+drop table dataset_hgmd
+drop table dataset_status
+drop table dataset_vw
+drop table ensembl_version
+drop table family
+drop table gene
+drop table gene2family
+drop table gene2pathway
+drop table gene_morbid
+drop table hpo
+drop table hpo_alternative
+drop table match2variant
+drop table match_pair
+drop table pathway
+drop table ref_database
+drop table transcript
+drop table variant
+drop table variant_effect
+drop table variant_status
