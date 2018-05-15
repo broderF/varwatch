@@ -30,10 +30,10 @@ public class AuthClient implements Serializable {
     private String name;
     @Column(name = "secret")
     private String secret;
-    @Column(name = "redirect")
-    private String redirect;
     @Column(name = "real_name")
     private String real_name;
+    @Column(name = "redirect")
+    private String redirect;
     @Column(name = "valid")
     private Boolean valid;
     @Column(name = "timestamp")

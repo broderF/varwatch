@@ -70,7 +70,7 @@ public class DatasetVW extends Dataset implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "age_of_onset_id", nullable = true)
     private HPOTerm ageOfOnset;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dataset_vw")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "dataset_vw")
     private Set<Variant> variants = new HashSet<Variant>();
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "dataset_vw")
     private Set<VariantStatus> variantStatus = new HashSet<VariantStatus>();

@@ -65,7 +65,7 @@ public class VariantEffectDataManager {
 
     @Transactional(rollbackOn = {PersistenceException.class})
     public List<VariantEffect> persistSQLVariantEffects(List<VariantEffect> variantEffects, DatasetVW dataset) {
-        List<VariantEffect> variantEffectsSQL = new ArrayList<VariantEffect>();
+        List<VariantEffect> variantEffectsSQL = new ArrayList<>();
         dataset = datasetDao.getDataset(dataset.getId());
 
         List<Variant> variants = variantDao.getVariantsByDataset(dataset);
@@ -151,4 +151,50 @@ public class VariantEffectDataManager {
         return false;
     }
 
+    public void persistSQLVariantEffect(Variant curVar, List<VariantEffect> curVariantEffects) {
+
+        DatasetVW dataset = curVar.getDataset();
+        if (curVariantEffects.isEmpty()) {
+            VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.IMPACT_TOO_LOW.getMessage()).buildVWStatus();
+            VWVariant buildVW = variantBuilder.withVariant(curVar).buildVW();
+            String variantHash = variantHasher.getVariantHash(buildVW, hpoTermBuilder.addFeatures(dataset.getPhenotypes()).buildStringSet());
+            variantStatusManager.save2(dataset, null, variantHash, status);
+            variantDao.remove(curVar);
+
+        } else if (!foundTranscripts(curVariantEffects)) {
+            for (VariantEffect variantEffect : curVariantEffects) {
+                Transcript transcriptSQL = transcriptDao.getByName(variantEffect.getTranscriptName());
+                if (transcriptSQL == null) {
+                    logger.info(" no transcript found for: {}", variantEffect.getTranscriptName());
+                    VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.NO_TRANSCRIPT_FOUND.getMessage()).withMessageAddition(variantEffect.getTranscriptName()).buildVWStatus();
+                    VWVariant buildVW = variantBuilder.withVariant(curVar).buildVW();
+                    String variantHash = variantHasher.getVariantHash(buildVW, hpoTermBuilder.addFeatures(dataset.getPhenotypes()).buildStringSet());
+                    variantStatusManager.save2(dataset, null, variantHash, status);
+                    continue;
+                }
+            }
+            variantDao.remove(curVar);
+        } else {
+            for (VariantEffect variantEffect : curVariantEffects) {
+                Transcript transcriptSQL = transcriptDao.getByName(variantEffect.getTranscriptName());
+                if (transcriptSQL == null) {
+                    logger.info(" no transcript found for: {}", variantEffect.getTranscriptName());
+                    VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.NO_TRANSCRIPT_FOUND.getMessage()).withMessageAddition(variantEffect.getTranscriptName()).buildVWStatus();
+                    VWVariant buildVW = variantBuilder.withVariant(curVar).buildVW();
+                    String variantHash = variantHasher.getVariantHash(buildVW, hpoTermBuilder.addFeatures(dataset.getPhenotypes()).buildStringSet());
+                    variantStatusManager.save(dataset, null, variantHash, curVar, status);
+                    continue;
+                }
+
+                VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.STORED).withMessage(VariantStatusBuilder.VariantStatusMessage.STORED_IN_VARWATCH.getMessage()).buildVWStatus();
+                VWVariant buildVW = variantBuilder.withVariant(curVar).buildVW();
+                String variantHash = variantHasher.getVariantHash(buildVW, hpoTermBuilder.addFeatures(dataset.getPhenotypes()).buildStringSet());
+                variantStatusManager.save(dataset, null, variantHash, curVar, status);
+
+                variantEffect.setVariant(curVar);
+                variantEffect.setTranscript(transcriptSQL);
+                variantEffectDao.persist(variantEffect);
+            }
+        }
+    }
 }

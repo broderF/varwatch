@@ -43,6 +43,7 @@ public class VariantDaoSQL implements VariantDao {
     }
 
     public void remove(Variant variant) {
+        emProvider.get().merge(variant);
         emProvider.get().refresh(variant);
         emProvider.get().remove(variant);
     }

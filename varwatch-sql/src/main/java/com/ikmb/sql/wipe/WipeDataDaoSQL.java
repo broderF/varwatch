@@ -46,14 +46,14 @@ public class WipeDataDaoSQL implements WipeDataDao{
         }
 //            TypedQuery<DatasetSQL> dsquery = _em.createQuery("SELECT u FROM DatasetSQL u WHERE u.id = :id", DatasetSQL.class);
 //            DatasetSQL ds = dsquery.setParameter("id", curDS.getId()).getSingleResult();
-        Query q = emProvider.get().createQuery("Delete FROM DatasetSQL u WHERE u.id = :id").setParameter("id", dataset.getId());
+        Query q = emProvider.get().createQuery("Delete FROM Dataset u WHERE u.id = :id").setParameter("id", dataset.getId());
         q.executeUpdate();
 
         Query jobq = emProvider.get().createNativeQuery("Delete FROM analysis_job WHERE dataset_id = :id").setParameter("id", dataset.getId());
         jobq.executeUpdate();
 
         for (Long matchId : matchIds) {
-            Query qM = emProvider.get().createQuery("Delete FROM MatchSQL u WHERE u.id = :id").setParameter("id", matchId);
+            Query qM = emProvider.get().createQuery("Delete FROM Match u WHERE u.id = :id").setParameter("id", matchId);
             qM.executeUpdate();
         }
     }
@@ -99,7 +99,7 @@ public class WipeDataDaoSQL implements WipeDataDao{
 //        }
 //    }
     public void wipeVariantsByDataset(DatasetVW dataset) {
-        Query q = emProvider.get().createQuery("Delete FROM VariantSQL u WHERE u.dataset_vw = :ds").setParameter("ds", dataset);
+        Query q = emProvider.get().createQuery("Delete FROM Variant u WHERE u.dataset_vw = :ds").setParameter("ds", dataset);
         q.executeUpdate();
     }
 }

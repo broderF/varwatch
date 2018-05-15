@@ -58,11 +58,20 @@ public class ResponseBuilder {
         return this;
     }
 
-    public Response buildList(List<?> value) {
+    public Response buildListWithExpose(List<?> value) {
         JsonArray result = (JsonArray) new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJsonTree(value,
                 new TypeToken<List<?>>() {
                 }.getType());
         String currentOutput = result.toString();
+        System.out.println(currentOutput);
+        return Response.status(Response.Status.OK).entity(currentOutput).build();
+    }
+        public Response buildList(List<?> value) {
+        JsonArray result = (JsonArray) new GsonBuilder().create().toJsonTree(value,
+                new TypeToken<List<?>>() {
+                }.getType());
+        String currentOutput = result.toString();
+        System.out.println(currentOutput);
         return Response.status(Response.Status.OK).entity(currentOutput).build();
     }
 }

@@ -47,7 +47,7 @@ public class AnnotationServiceImpl {
     @DataPermissionFilter(dataType = DatasetVW.class)
     public Response getDatasetAnnotation(@HeaderParam("Authorization") String header, @PathParam("dataset_id") Long datasetId) {
         List<HPOTerm> hpoTerms = datasetManager.getPhenotypes(datasetId);
-        return new ResponseBuilder().buildList(hpoTerms);
+        return new ResponseBuilder().buildListWithExpose(hpoTerms);
     }
 
     @GET
@@ -67,7 +67,7 @@ public class AnnotationServiceImpl {
     public Response getVariantGenes(@HeaderParam("Authorization") String header, @PathParam("variant_id") Long variantId) {
 
         List<Gene> genes = geneManager.getGenes(variantId);
-        return new ResponseBuilder().buildList(genes);
+        return new ResponseBuilder().buildListWithExpose(genes);
     }
 
     @GET

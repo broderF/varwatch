@@ -7,7 +7,6 @@ package com.ikmb.rest.annotation;
 
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.hpo.HPOTerm;
-import com.ikmb.core.data.hpo.PhenotypeDataManager;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.Response;

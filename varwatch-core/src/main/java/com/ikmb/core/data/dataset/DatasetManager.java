@@ -139,6 +139,7 @@ public class DatasetManager {
     public List<Dataset> getSimpleDatasetByUserId(Integer userId) {
         User user = userDao.getUserByID(userId);
         List<DatasetVW> datasetsSql = datasetDao.getDatasetsByUser(user);
+        logger.info("nr of sql datasets {}",datasetsSql.size());
         List<Dataset> datasets = datasetBuilder.withDatasetsSQL(datasetsSql).buildSimpleVW();
         return datasets;
     }

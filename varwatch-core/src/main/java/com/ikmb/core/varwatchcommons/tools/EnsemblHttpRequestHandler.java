@@ -40,7 +40,7 @@ public class EnsemblHttpRequestHandler {
             httpConnection = (HttpURLConnection) connection;
 
             httpConnection.setRequestMethod("GET");
-            httpConnection.setRequestProperty("Content-Type", "application/json");
+            httpConnection.setRequestProperty("content-type", "application/json");
 
             InputStream response = httpConnection.getInputStream();
             int responseCode = httpConnection.getResponseCode();

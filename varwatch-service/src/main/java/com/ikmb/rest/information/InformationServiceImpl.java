@@ -65,7 +65,7 @@ public class InformationServiceImpl {
     public Response getDatasetsByUser(@HeaderParam("Authorization") String header) {
         User user = tokenConverter.getUserFromHeader(header);
         List<Dataset> simpleDatasetByUserId = dsManager.getSimpleDatasetByUserId(user.getId());
-
+        logger.info("nr of datasets {}",simpleDatasetByUserId.size());
         return new ResponseBuilder().buildList(simpleDatasetByUserId);
     }
 

@@ -20,7 +20,7 @@ public class VariantBuilder {
     Integer chromPos;
     String vepIdent;
     String refBase;
-    private long id;
+    private Long id;
     private String datasetId;
 
     public VariantBuilder withChromosome(String chromosome) {

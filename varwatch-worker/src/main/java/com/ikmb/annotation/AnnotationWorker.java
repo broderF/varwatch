@@ -88,8 +88,8 @@ public class AnnotationWorker implements Worker {
 //        List<VariantEffectSQ> variantEffects = vepAnnotator.getVariantEffects();
         Set<Variant> variants = _dataset.getVariants();
 //        List<GenomicFeature> variantInfoFromByteArray = ParserHelper.getVariantInfoFromByteArray(vcfFile);
-        List<VariantEffect> filteredvariantEffects = new ArrayList<>();
         for (Variant variant : variants) {
+            List<VariantEffect> filteredvariantEffects = new ArrayList<>();
             List<VariantEffect> variantEffects = vep.run(variant);
             for (VariantEffect curEffect : variantEffects) {
                 if (curEffect.getTranscriptName().startsWith("ENST") && isImpactfull(curEffect.getConsequence())) {
@@ -97,18 +97,17 @@ public class AnnotationWorker implements Worker {
                     variant.setUploadedVariantion(curEffect.getUploaded_variation());
                 }
             }
+            logger.info("{} canonical variants with high or moderate impact factor", filteredvariantEffects.size());
+            variantEffDataManager.persistSQLVariantEffect(variant, filteredvariantEffects);
         }
+//        variantEffDataManager.persistSQLVariantEffects(filteredvariantEffects, _dataset);
 //        variantEffects = filteredvariantEffects;
-        logger.info("{} canonical variants with high or moderate impact factor", filteredvariantEffects.size());
 //        byte[] vepFile = vepAnnotator.getVEPFile();
 
-        variantEffDataManager.persistSQLVariantEffects(filteredvariantEffects, _dataset);
-
-        datasetManager.refresh(_dataset);
+//        datasetManager.refresh(_dataset);
 //        _dataset.setVepFile(vepFile);
 //        _dataset.setCompleted(true);
-        datasetManager.updateDataset(_dataset);
-
+//        datasetManager.updateDataset(_dataset);
         submissionNoti.notifySubmission(_dataset);
         List<RefDatabase> referenceDBs = refDBDataManager.getActiveDatabases();
         for (RefDatabase referenceDB : referenceDBs) {

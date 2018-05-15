@@ -59,6 +59,7 @@ public class DatasetDaoSQL implements DatasetDao {
     }
 
     public void refresh(DatasetVW dataset) {
+        emProvider.get().merge(dataset);
         emProvider.get().refresh(dataset);
     }
 

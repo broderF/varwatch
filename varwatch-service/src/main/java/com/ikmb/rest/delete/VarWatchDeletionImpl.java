@@ -7,7 +7,6 @@ package com.ikmb.rest.delete;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import com.ikmb.core.data.auth.token.TokenManager;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.wipe.WipeDataManager;
 import com.ikmb.rest.util.HTTPTokenConverter;
@@ -22,7 +21,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/wipe")
 @TokenFilter
-public class VarWatchDeletionImpl implements VarWatchDeletion {
+public class VarWatchDeletionImpl  {
 
     @Inject
     private VarWatchInputConverter inputConverter;

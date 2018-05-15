@@ -93,7 +93,8 @@ public class User implements Serializable {
     private DateTime lastReport;
     @Column(name = "active")
     private Boolean active;
-
+    @Column(name = "variant_cont")
+    private Integer variantCont;
     @Column(name = "registration_form")
     @Lob
     private Blob registrationForm;
@@ -251,6 +252,14 @@ public class User implements Serializable {
 
     public void setReportSchedule(String reportSchedule) {
         this.reportSchedule = reportSchedule;
+    }
+
+    public Integer getVariantCont() {
+        return variantCont;
+    }
+
+    public void setVariantCont(Integer variantCont) {
+        this.variantCont = variantCont;
     }
 
     public Blob getRegistrationForm() {
