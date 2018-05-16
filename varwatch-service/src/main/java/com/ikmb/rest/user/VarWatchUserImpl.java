@@ -13,9 +13,8 @@ import com.ikmb.core.varwatchcommons.entities.VWResponse;
 import com.ikmb.core.varwatchcommons.utils.VarWatchException;
 import com.ikmb.rest.HTTPVarWatchResponse;
 import com.ikmb.rest.util.ResponseBuilder;
-import com.ikmb.rest.util.VarWatchInputConverter;
+import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import com.ikmb.rest.registration.RegistrationManager;
-import com.ikmb.rest.util.HTTPTokenConverter;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,11 +45,11 @@ public class VarWatchUserImpl {
     private static final Logger logger = LoggerFactory.getLogger(VarWatchUserImpl.class);
 
     @Inject
-    private VarWatchInputConverter inputConverter;
+    private HTTPVarWatchInputConverter inputConverter;
     @Inject
     private RegistrationManager registrationManager;
-    @Inject
-    private HTTPTokenConverter tokenConverter;
+//    @Inject
+//    private HTTPTokenConverter tokenConverter;
     @Inject
     private UserManager userManager;
 
@@ -60,7 +59,7 @@ public class VarWatchUserImpl {
     public Response setUserReportSchedule(@HeaderParam("Authorization") String header, @QueryParam("schedule") String reportSchedule) {
 
 
-        User user = tokenConverter.getUserFromHeader(header);
+        User user = inputConverter.getUserFromHeader(header);
         try {
             ReportSchedule.valueOf(reportSchedule);
         } catch (IllegalArgumentException ex) {
@@ -95,7 +94,7 @@ public class VarWatchUserImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@HeaderParam("Authorization") String header, @Context HttpServletRequest request) {
 
-        User user = tokenConverter.getUserFromHeader(header);
+        User user = inputConverter.getUserFromHeader(header);
         DefaultUser contact;
         try {
             inputConverter.setHTTPRequest(request, DefaultUser.class);

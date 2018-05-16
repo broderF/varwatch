@@ -16,12 +16,11 @@ import com.ikmb.core.data.workflow.analysis.AnalysisBuilder;
 import com.ikmb.core.data.dataset.DatasetBuilder;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetStatusBuilder;
-import com.ikmb.rest.util.VarWatchInputConverter;
+import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import com.ikmb.core.data.dataset.DatasetStatusManager;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;
 import com.ikmb.core.varwatchcommons.utils.VarWatchException;
-import com.ikmb.rest.util.HTTPTokenConverter;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
 import com.ikmb.rest.util.UserActiveRequestFilter.UserActiveFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -42,12 +41,12 @@ import javax.ws.rs.core.Response;
 @Path("submit")
 @TokenFilter
 @UserActiveFilter
-public class VarWatchImpl {
+public class VarWatchSubmission {
 
     @Inject
-    private VarWatchInputConverter inputConverter;
-    @Inject
-    private HTTPTokenConverter tokenConverter;
+    private HTTPVarWatchInputConverter inputConverter;
+//    @Inject
+//    private HTTPTokenConverter tokenConverter;
     @Inject
     private DatasetManager datasetManager;
     @Inject
@@ -86,8 +85,8 @@ public class VarWatchImpl {
     private Response parsistSubmissionData(HttpServletRequest request, String header, DatasetBuilder.RawDataType rawDataType) {
         try {
             VWMatchRequest submitRequest = inputConverter.getVWMatchRequest(request, Dataset.class);
-            User user = tokenConverter.getUserFromHeader(header);
-            AuthClient client = tokenConverter.getClientFromHeader(header);
+            User user = inputConverter.getUserFromHeader(header);
+            AuthClient client = inputConverter.getClientFromHeader(header);
             Long datasetID = datasetManager.persistRawData(submitRequest, user, client, rawDataType);
 
             jobManager.createJob(datasetID, AnalysisBuilder.ModuleName.EXTRACT_VARIANTS, null, AnalysisJob.JobAction.NEW.toString());

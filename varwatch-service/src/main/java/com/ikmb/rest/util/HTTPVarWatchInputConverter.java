@@ -7,6 +7,9 @@ package com.ikmb.rest.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import com.ikmb.core.data.auth.client.AuthClient;
+import com.ikmb.core.data.auth.token.TokenManager;
+import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
 import com.ikmb.core.varwatchcommons.entities.Client;
@@ -30,14 +33,34 @@ import org.slf4j.LoggerFactory;
  *
  * @author broder
  */
-public class VarWatchInputConverter {
+public class HTTPVarWatchInputConverter {
 
     private static final Logger logger = LoggerFactory.getLogger(VarWatchRegistrationImpl.class);
     private String inputString = null;
     private Class inputClass = null;
 
-    @Inject
     private ObjectMapper mapper = new ObjectMapper();
+
+    @Inject
+    TokenManager tokenManager;
+
+    public String getToken(String header) {
+        String accessToken = null;
+        if (header != null && header.split(" ") != null) {
+            accessToken = header.split(" ")[1];
+        }
+        return accessToken;
+    }
+
+    public User getUserFromHeader(String header) {
+        String token = getToken(header);
+        return tokenManager.getUserByToken(token);
+    }
+
+    public AuthClient getClientFromHeader(String header) {
+        String token = getToken(header);
+        return tokenManager.getClientByToken(token);
+    }
 
     public void setHTTPRequest(HttpServletRequest request, Class inputClass) throws VarWatchException {
         try {
@@ -61,11 +84,6 @@ public class VarWatchInputConverter {
     }
 
     public Client getVWClient() throws VarWatchException {
-//        Client client = null;
-//        if (inputClass.equals(Client.class)) {
-//            client = mapper.reader().forType(Client.class).readValue(inputString);
-//        }
-//        return client;
         return getObject(inputString, Client.class);
     }
 

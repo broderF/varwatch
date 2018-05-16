@@ -9,9 +9,8 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.wipe.WipeDataManager;
-import com.ikmb.rest.util.HTTPTokenConverter;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
-import com.ikmb.rest.util.VarWatchInputConverter;
+import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -24,9 +23,9 @@ import javax.ws.rs.core.Response;
 public class VarWatchDeletionImpl  {
 
     @Inject
-    private VarWatchInputConverter inputConverter;
-    @Inject
-    private HTTPTokenConverter tokenConverter;
+    private HTTPVarWatchInputConverter inputConverter;
+//    @Inject
+//    private HTTPTokenConverter tokenConverter;
     @Inject
     private WipeDataManager wipeDb;
 
@@ -35,7 +34,7 @@ public class VarWatchDeletionImpl  {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response wipeUserData(@HeaderParam("Authorization") String header) {
 
-        User user = tokenConverter.getUserFromHeader(header);
+        User user = inputConverter.getUserFromHeader(header);
         String response = wipeDb.wipeDataByUser(user.getMail());
         return Response.status(Response.Status.OK).entity(new Gson().toJson(response)).build();
     }

@@ -15,7 +15,7 @@ import com.ikmb.core.data.matching.MatchVariantDataManager;
 import com.ikmb.core.varwatchcommons.entities.MatchInformation;
 import com.ikmb.core.varwatchcommons.entities.Variant;
 import com.ikmb.rest.util.DataPermissionRequestFilter.DataPermissionFilter;
-import com.ikmb.rest.util.HTTPTokenConverter;
+import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
 import java.util.List;
 import javax.ws.rs.GET;
@@ -40,7 +40,7 @@ public class MatchingServiceImpl {
     private final Logger logger = LoggerFactory.getLogger(MatchingServiceImpl.class);
 
     @Inject
-    private HTTPTokenConverter tokenConverter;
+    private HTTPVarWatchInputConverter inputConverter;
     @Inject
     private MatchVariantDataManager variantmatchingManager;
 
@@ -59,10 +59,10 @@ public class MatchingServiceImpl {
     @GET
     @Path("matches/{match_id}")
     @Produces(MediaType.APPLICATION_JSON)
-     @DataPermissionFilter(dataType = MatchVariant.class)
+    @DataPermissionFilter(dataType = MatchVariant.class)
     public Response getMatchingDetail(@HeaderParam("Authorization") String header, @PathParam("match_id") Long matchID) {
 
-        MatchInformation matchInformation = variantmatchingManager.getMatchInformation(matchID, tokenConverter.getUserFromHeader(header));
+        MatchInformation matchInformation = variantmatchingManager.getMatchInformation(matchID, inputConverter.getUserFromHeader(header));
 
         String currentOutput = new Gson().toJson(matchInformation);
         return Response.status(Response.Status.OK).entity(currentOutput).build();
@@ -73,7 +73,7 @@ public class MatchingServiceImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNewMatches(@HeaderParam("Authorization") String header) {
 
-        User user = tokenConverter.getUserFromHeader(header);
+        User user = inputConverter.getUserFromHeader(header);
         List<MatchInformation> matchInformations = variantmatchingManager.getNewMatchInformation(user);
         JsonArray result = (JsonArray) new Gson().toJsonTree(matchInformations,
                 new TypeToken<List<MatchInformation>>() {
@@ -88,7 +88,7 @@ public class MatchingServiceImpl {
     public Response setMatchAck(@HeaderParam("Authorization") String header, @PathParam("match_id") Long matchStatusID) {
         logger.info("ack match with match status id {}", matchStatusID);
 
-        User user = tokenConverter.getUserFromHeader(header);
+        User user = inputConverter.getUserFromHeader(header);
         variantmatchingManager.setMatchAck(matchStatusID, user);
 
         return Response.status(Response.Status.OK).entity("match acknowledged").build();
@@ -98,7 +98,7 @@ public class MatchingServiceImpl {
     @Path("ack")
     public Response setMatchesAck(@HeaderParam("Authorization") String header) {
 
-        User user = tokenConverter.getUserFromHeader(header);
+        User user = inputConverter.getUserFromHeader(header);
         variantmatchingManager.setMatchesAck(user);
 
         return Response.status(Response.Status.OK).entity("matches acknowledged").build();

@@ -21,7 +21,7 @@ import com.ikmb.core.data.variant.VariantBuilder;
 import com.ikmb.core.data.variant.VariantDataManager;
 import com.ikmb.core.data.variant.VariantStatusManager;
 import com.ikmb.rest.util.DataPermissionRequestFilter.DataPermissionFilter;
-import com.ikmb.rest.util.HTTPTokenConverter;
+import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import com.ikmb.rest.util.ResponseBuilder;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
 import java.util.List;
@@ -47,7 +47,7 @@ public class InformationServiceImpl {
     private final Logger logger = LoggerFactory.getLogger(InformationServiceImpl.class);
 
     @Inject
-    private HTTPTokenValidator tokenValidator;
+    private HTTPVarWatchInputConverter inputConverter;
     @Inject
     private DatasetManager dsManager;
     @Inject
@@ -56,14 +56,14 @@ public class InformationServiceImpl {
     private VariantStatusManager variantStatusManager;
     @Inject
     private VariantBuilder variantBuilder;
-    @Inject
-    private HTTPTokenConverter tokenConverter;
+//    @Inject
+//    private HTTPTokenConverter tokenConverter;
 
     @GET
     @Path("datasets")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDatasetsByUser(@HeaderParam("Authorization") String header) {
-        User user = tokenConverter.getUserFromHeader(header);
+        User user = inputConverter.getUserFromHeader(header);
         List<Dataset> simpleDatasetByUserId = dsManager.getSimpleDatasetByUserId(user.getId());
         logger.info("nr of datasets {}",simpleDatasetByUserId.size());
         return new ResponseBuilder().buildList(simpleDatasetByUserId);

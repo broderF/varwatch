@@ -30,7 +30,7 @@ public class UserActiveRequestFilter implements ContainerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(UserActiveRequestFilter.class);
     @Inject
-    private HTTPTokenConverter tokenConverter;
+    private HTTPVarWatchInputConverter tokenConverter;
 
     @Override
     public void filter(ContainerRequestContext ctx) throws IOException {

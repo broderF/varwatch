@@ -23,7 +23,7 @@ import com.ikmb.rest.HTTPVarWatchResponse;
 import com.ikmb.rest.util.HTTPTokenValidator;
 import com.ikmb.rest.util.OAuthRequestWrapper;
 import com.ikmb.rest.util.ResponseBuilder;
-import com.ikmb.rest.util.VarWatchInputConverter;
+import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import java.io.IOException;
 import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +66,7 @@ public class VarWatchRegistrationImpl {
 //    @Context
 //    ServletContext context;
     @Inject
-    private VarWatchInputConverter inputConverter;
+    private HTTPVarWatchInputConverter inputConverter;
     @Inject
     private RegistrationManager registrationManager;
     @Inject

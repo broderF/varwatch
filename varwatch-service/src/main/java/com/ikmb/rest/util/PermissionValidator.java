@@ -24,7 +24,7 @@ import com.ikmb.core.data.variant.VariantStatusManager;
 public class PermissionValidator {
 
     @Inject
-    private HTTPTokenConverter tokenConverter;
+    private HTTPVarWatchInputConverter tokenConverter;
     @Inject
     private TokenManager tokenManager;
     @Inject

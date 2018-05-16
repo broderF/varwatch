@@ -32,7 +32,7 @@ import com.ikmb.core.data.workflow.analysis.AnalysisDao;
 import com.ikmb.core.data.workflow.job.JobDao;
 import com.ikmb.core.data.workflow.worker.WorkerDao;
 import com.ikmb.rest.util.HTTPTokenValidator;
-import com.ikmb.rest.util.VarWatchInputConverter;
+import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import com.ikmb.rest.registration.ClientChecker;
 import com.ikmb.rest.registration.RegistrationManager;
 import com.ikmb.rest.registration.TokenCreator;
@@ -94,7 +94,7 @@ public class ServletConfig extends JerseyGuiceServletContextListener {
                 bind(VarWatchPersist.class).asEagerSingleton();
 
                 bind(PasswordValidator.class);
-                bind(VarWatchInputConverter.class);
+                bind(HTTPVarWatchInputConverter.class);
                 bind(RegistrationManager.class);
                 bind(HTTPTokenValidator.class);
 
