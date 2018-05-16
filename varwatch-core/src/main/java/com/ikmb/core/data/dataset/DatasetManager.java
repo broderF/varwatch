@@ -48,9 +48,6 @@ public class DatasetManager {
     private ClientDao clientDao;
 
     @Inject
-    private HPOTermBuilder hpoBuilder;
-
-    @Inject
     private DatasetBuilder datasetBuilder;
 
     @Inject
