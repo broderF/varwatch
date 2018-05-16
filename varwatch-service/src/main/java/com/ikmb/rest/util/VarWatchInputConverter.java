@@ -15,9 +15,12 @@ import com.ikmb.core.varwatchcommons.entities.VWMatchRequest;
 import com.ikmb.core.varwatchcommons.entities.Dataset;
 import com.ikmb.core.varwatchcommons.entities.Password;
 import com.ikmb.core.varwatchcommons.entities.PasswordReset;
+import com.ikmb.core.varwatchcommons.utils.VarWatchException;
+import com.ikmb.rest.HTTPVarWatchResponse;
 import com.ikmb.rest.registration.VarWatchRegistrationImpl;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -36,72 +39,71 @@ public class VarWatchInputConverter {
     @Inject
     private ObjectMapper mapper = new ObjectMapper();
 
-    public void setHTTPRequest(HttpServletRequest request, Class inputClass) throws IOException {
-        InputStream input = null;
-        input = request.getInputStream();
-        this.inputString = IOUtils.toString(input, "UTF-8");
-        this.inputClass = inputClass;
-        logger.info("inputstring is: " + inputString);
+    public void setHTTPRequest(HttpServletRequest request, Class inputClass) throws VarWatchException {
+        try {
+            InputStream input = null;
+            input = request.getInputStream();
+            this.inputString = IOUtils.toString(input, "UTF-8");
+            this.inputClass = inputClass;
+            logger.info("inputstring is: " + inputString);
+        } catch (IOException ex) {
+            throw new VarWatchException(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
+        }
     }
 
-    public Client getVWClient() throws IOException {
-        Client client = null;
-        if (inputClass.equals(Client.class)) {
-            client = mapper.reader().forType(Client.class).readValue(inputString);
+    private <T extends Object> T getObject(String inputString, Class<T> type) throws VarWatchException {
+        try {
+            T object = mapper.reader().forType(type).readValue(inputString);
+            return object;
+        } catch (IOException ex) {
+            throw new VarWatchException(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
         }
-        return client;
     }
 
-    public Password getPassword() throws IOException {
-        Password pw = null;
-        if (inputClass.equals(Password.class)) {
-            pw = mapper.reader().forType(Password.class).readValue(inputString);
-        }
-        return pw;
-    }
-    
-      public PasswordReset getPasswordReset() throws IOException {
-        PasswordReset pw = null;
-        if (inputClass.equals(PasswordReset.class)) {
-            pw = mapper.reader().forType(PasswordReset.class).readValue(inputString);
-        }
-        return pw;
+    public Client getVWClient() throws VarWatchException {
+//        Client client = null;
+//        if (inputClass.equals(Client.class)) {
+//            client = mapper.reader().forType(Client.class).readValue(inputString);
+//        }
+//        return client;
+        return getObject(inputString, Client.class);
     }
 
-    public Contact getVWContact() throws IOException {
-        Contact contact = null;
+    public Password getPassword() throws VarWatchException {
+        return getObject(inputString, Password.class);
+    }
+
+    public PasswordReset getPasswordReset() throws VarWatchException {
+        return getObject(inputString, PasswordReset.class);
+    }
+
+    public Contact getVWContact() throws VarWatchException {
         if (inputClass.equals(Contact.class)) {
-            contact = mapper.reader().forType(Contact.class).readValue(inputString);
-        } else if (inputClass.equals(VWMatchRequest.class)) {
-            VWMatchRequest request = mapper.reader().forType(VWMatchRequest.class).readValue(inputString);
-            contact = request.getPatient().getContact();
+            return getObject(inputString, Contact.class);
+        } else {
+            return getObject(inputString, VWMatchRequest.class).getPatient().getContact();
         }
-        return contact;
     }
 
-    public RegistrationUser getRegistrationUser() throws IOException {
-        RegistrationUser contact = null;
-        if (inputClass.equals(RegistrationUser.class)) {
-            contact = mapper.reader().forType(RegistrationUser.class).readValue(inputString);
-        }
-        return contact;
+    public RegistrationUser getRegistrationUser() throws VarWatchException {
+        return getObject(inputString, RegistrationUser.class);
     }
 
-    public DefaultUser getDefaultUser() throws IOException {
-        DefaultUser contact = null;
-        if (inputClass.equals(DefaultUser.class)) {
-            contact = mapper.reader().forType(DefaultUser.class).readValue(inputString);
-        }
-        return contact;
+    public DefaultUser getDefaultUser() throws VarWatchException {
+        return getObject(inputString, DefaultUser.class);
     }
 
     public String getRequestString() {
         return inputString;
     }
 
-    public VWMatchRequest getVWMatchRequest() throws IOException {
-        VWMatchRequest request = mapper.reader().forType(VWMatchRequest.class).readValue(inputString);
-        return request;
+    public VWMatchRequest getVWMatchRequest() throws VarWatchException {
+        try {
+            VWMatchRequest request = mapper.reader().forType(VWMatchRequest.class).readValue(inputString);
+            return request;
+        } catch (IOException ex) {
+            throw new VarWatchException(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
+        }
     }
 
     public Dataset getDataset() throws IOException {
@@ -118,37 +120,9 @@ public class VarWatchInputConverter {
         return contact;
     }
 
-    public VWMatchRequest getVWMatchRequest(HttpServletRequest request, Class inputClass) throws IOException {
+    public VWMatchRequest getVWMatchRequest(HttpServletRequest request, Class inputClass) throws VarWatchException {
         setHTTPRequest(request, inputClass);
         return getVWMatchRequest();
     }
 
-    public enum HTTPParsingResponse {
-
-        //http requests
-        HTTP_REQUEST_NOT_PARSABLE(0, "http request not parsable"),
-        HTTP_CONTACT_NOT_PARSABLE(1, "http contact not parsable for string"),
-        HTTP_CLIENT_NOT_PARSABLE(2, "http client not parsable for string");
-
-        private final int code;
-        private final String description;
-
-        private HTTPParsingResponse(int code, String description) {
-            this.code = code;
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        @Override
-        public String toString() {
-            return code + ": " + description;
-        }
-    }
 }

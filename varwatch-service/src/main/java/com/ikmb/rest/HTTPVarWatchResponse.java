@@ -3,20 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.rest.submit;
+package com.ikmb.rest;
 
 /**
  *
  * @author broder
  */
-public enum SubmitResponse {
+public enum HTTPVarWatchResponse {
 
-    SUBMIT_SUCCESFULL(0, "Dataset successfully saved");
+    SUBMIT_SUCCESFULL(0, "Dataset successfully saved"),
+    //http requests
+    HTTP_REQUEST_NOT_PARSABLE(1, "http request not parsable"),
+    HTTP_CONTACT_NOT_PARSABLE(2, "http contact not parsable for string"),
+    HTTP_CLIENT_NOT_PARSABLE(3, "http client not parsable for string");
 
     private final int code;
     private final String description;
 
-    private SubmitResponse(int code, String description) {
+    private HTTPVarWatchResponse(int code, String description) {
         this.code = code;
         this.description = description;
     }

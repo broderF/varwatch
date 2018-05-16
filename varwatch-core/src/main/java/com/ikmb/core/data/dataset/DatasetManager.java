@@ -21,6 +21,7 @@ import com.ikmb.core.data.hpo.PhenotypeDao;
 import com.ikmb.core.data.matching.Match;
 import com.ikmb.core.data.matching.MatchVariantDataManager;
 import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.varwatchcommons.utils.VarWatchException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,58 +59,39 @@ public class DatasetManager {
     private String errorMessage;
 
     @Transactional
-    public Long persistRawData(VWMatchRequest submitrequest, User user, AuthClient client, DatasetBuilder.RawDataType rawDataType) {
+    public Long persistRawData(VWMatchRequest submitrequest, User user, AuthClient client, DatasetBuilder.RawDataType rawDataType) throws VarWatchException {
         AuthClient clientSql = clientDao.getClientByID(client.getId());
-
         User userSQL = userDao.getUserByID(user.getId());
 
-        String assembly = submitrequest.getPatient().getAssembly();
-        if (assembly == null || (!(assembly.equals("GRCh38") || assembly.equals("GRCh37")))) {
-            logger.error("invalid assembly: {}", assembly);
-            errorMessage = "Invalid assembly: " + assembly;
-            return null;
-        }
+        validateAssembly(submitrequest.getPatient().getAssembly());
 
-        Set<Phenotype> phenotypes = new HashSet<>();
-        Set<String> incorrectPhenotypes = new HashSet<>();
-        for (Feature vwFeature : submitrequest.getPatient().getFeatures()) {
-            String ageOfOnset = vwFeature.getAgeOfOnset();
-            HPOTerm ageOfOnsetSql = hpoDao.getHPOTermByName(ageOfOnset, "C");
-            Boolean observed = false;
-            if (vwFeature.getObserved() != null && vwFeature.getObserved().equalsIgnoreCase("true")) {
-                observed = true;
-            }
-            HPOTerm phenotypeSql = hpoDao.getHPOTermByName(vwFeature.getId(), "O");
-            logger.info("current hpo term {}", vwFeature.getId());
-            if (phenotypeSql == null) {
-                logger.error("invalid hpo term {}", vwFeature.getId());
-                incorrectPhenotypes.add(vwFeature.getId());
-                continue;
-            }
-            Phenotype phenotype = new Phenotype();
-            phenotype.setAgeOfOnset(ageOfOnsetSql);
-            phenotype.setObserved(observed);
-            phenotype.setPhenotype(phenotypeSql);
-            phenotypes.add(phenotype);
-        }
-        if (!incorrectPhenotypes.isEmpty()) {
-            errorMessage = "Invalid hpo term(";
-            for (String s : incorrectPhenotypes) {
-                errorMessage += s;
-            }
-            errorMessage += ")";
-            return null;
-        } else if (phenotypes.isEmpty()) {
-            errorMessage = "No valid HPO term";
-            return null;
-        }
+        validateHpoTerms(submitrequest.getPatient().getFeatures());
 
+        Set<Phenotype> phenotypes = getPhenotypesFromFeatures(submitrequest.getPatient().getFeatures());
         HPOTerm inheritanceMode = hpoDao.getHPOTermByName(submitrequest.getPatient().getInheritanceMode(), "I");
         HPOTerm ageOfOnset = hpoDao.getHPOTermByName(submitrequest.getPatient().getAgeOfOnset(), "C");
 
         DatasetVW datasetSQL = datasetBuilder.withVWMatchRequest(submitrequest, rawDataType).withClient(clientSql).withUser(userSQL).withPhenotypes(phenotypes).withAgeOfOnset(ageOfOnset).withModeOfInheritance(inheritanceMode).buildRawVWSql();
-        datasetDao.save(datasetSQL);
+        persistDataset(datasetSQL);
         return datasetSQL.getId();
+    }
+
+    private void validateAssembly(String assembly) throws VarWatchException {
+        if (assembly == null || (!(assembly.equals("GRCh38") || assembly.equals("GRCh37")))) {
+            logger.error("invalid assembly: {}", assembly);
+            throw new VarWatchException("Invalid assembly: " + assembly);
+        }
+    }
+
+    private void validateHpoTerms(List<Feature> features) throws VarWatchException {
+        for (Feature vwFeature : features) {
+            HPOTerm phenotypeSql = hpoDao.getHPOTermByName(vwFeature.getId(), "O");
+            logger.info("current hpo term {}", vwFeature.getId());
+            if (phenotypeSql == null) {
+                logger.error("invalid hpo term {}", vwFeature.getId());
+                throw new VarWatchException("invalid hpo term " + vwFeature.getId());
+            }
+        }
     }
 
     @Transactional
@@ -139,7 +121,7 @@ public class DatasetManager {
     public List<Dataset> getSimpleDatasetByUserId(Integer userId) {
         User user = userDao.getUserByID(userId);
         List<DatasetVW> datasetsSql = datasetDao.getDatasetsByUser(user);
-        logger.info("nr of sql datasets {}",datasetsSql.size());
+        logger.info("nr of sql datasets {}", datasetsSql.size());
         List<Dataset> datasets = datasetBuilder.withDatasetsSQL(datasetsSql).buildSimpleVW();
         return datasets;
     }
@@ -200,6 +182,34 @@ public class DatasetManager {
 
     public void setDatasetDao(DatasetDao datasetDao) {
         this.datasetDao = datasetDao;
+    }
+
+    private Set<Phenotype> getPhenotypesFromFeatures(List<Feature> features) {
+        Set<Phenotype> phenotypes = new HashSet<>();
+        for (Feature vwFeature : features) {
+            String ageOfOnset = vwFeature.getAgeOfOnset();
+            HPOTerm ageOfOnsetSql = hpoDao.getHPOTermByName(ageOfOnset, "C");
+            Boolean observed = false;
+            if (vwFeature.getObserved() != null && vwFeature.getObserved().equalsIgnoreCase("true")) {
+                observed = true;
+            }
+            HPOTerm phenotypeSql = hpoDao.getHPOTermByName(vwFeature.getId(), "O");
+            logger.info("current hpo term {}", vwFeature.getId());
+            if (phenotypeSql == null) {
+                continue;
+            }
+            Phenotype phenotype = new Phenotype();
+            phenotype.setAgeOfOnset(ageOfOnsetSql);
+            phenotype.setObserved(observed);
+            phenotype.setPhenotype(phenotypeSql);
+            phenotypes.add(phenotype);
+        }
+        return phenotypes;
+    }
+
+    @Transactional
+    public void persistDataset(DatasetVW datasetSQL) {
+        datasetDao.save(datasetSQL);
     }
 
 }

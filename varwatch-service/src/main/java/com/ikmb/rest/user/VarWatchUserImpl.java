@@ -10,12 +10,13 @@ import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.VWResponse;
+import com.ikmb.core.varwatchcommons.utils.VarWatchException;
+import com.ikmb.rest.HTTPVarWatchResponse;
 import com.ikmb.rest.util.ResponseBuilder;
 import com.ikmb.rest.util.VarWatchInputConverter;
 import com.ikmb.rest.registration.RegistrationManager;
 import com.ikmb.rest.util.HTTPTokenConverter;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
-import com.ikmb.rest.util.UserActiveRequestFilter.UserActiveFilter;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -99,10 +100,10 @@ public class VarWatchUserImpl {
         try {
             inputConverter.setHTTPRequest(request, DefaultUser.class);
             contact = inputConverter.getDefaultUser();
-        } catch (IOException ex) {
+        } catch (VarWatchException ex) {
             VWResponse response = new VWResponse();
             response.setMessage("Error");
-            response.setMessage(VarWatchInputConverter.HTTPParsingResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
+            response.setMessage(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
         }
 

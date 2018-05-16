@@ -34,8 +34,6 @@ public class AnnotationService {
     @Inject
     private DatasetManager datasetManager;
     @Inject
-    private FamilyDataManager familyManager;
-    @Inject
     private VariantDataManager variantManager;
 
     @GET

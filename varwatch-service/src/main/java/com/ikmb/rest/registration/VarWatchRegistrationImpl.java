@@ -11,7 +11,6 @@ import com.ikmb.core.data.auth.RegistrationResponse;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserBuilder;
 import com.ikmb.core.data.auth.user.UserManager;
-import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.varwatchcommons.entities.VWResponse;
 import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
@@ -19,13 +18,14 @@ import com.ikmb.core.varwatchcommons.entities.Client;
 import com.ikmb.core.varwatchcommons.entities.PasswordReset;
 import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
 import com.ikmb.core.varwatchcommons.utils.PdfCreator;
-import com.ikmb.rest.util.DataPermissionRequestFilter.DataPermissionFilter;
+import com.ikmb.core.varwatchcommons.utils.VarWatchException;
+import com.ikmb.rest.HTTPVarWatchResponse;
 import com.ikmb.rest.util.HTTPTokenValidator;
 import com.ikmb.rest.util.OAuthRequestWrapper;
 import com.ikmb.rest.util.ResponseBuilder;
 import com.ikmb.rest.util.VarWatchInputConverter;
-import com.ikmb.rest.util.VarWatchInputConverter.HTTPParsingResponse;
 import java.io.IOException;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -88,15 +88,15 @@ public class VarWatchRegistrationImpl {
     public Response registerClient(@Context HttpServletRequest request) {
         try {
             inputConverter.setHTTPRequest(request, Client.class);
-        } catch (IOException ex) {
-            return Response.status(Response.Status.OK).entity(HTTPParsingResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription()).build();
+        } catch (VarWatchException ex) {
+            return Response.status(Response.Status.OK).entity(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription()).build();
         }
 
         Client client;
         try {
             client = inputConverter.getVWClient();
-        } catch (IOException ex) {
-            return Response.status(Response.Status.OK).entity(HTTPParsingResponse.HTTP_CLIENT_NOT_PARSABLE.getDescription()).build();
+        } catch (VarWatchException ex) {
+            return Response.status(Response.Status.OK).entity(HTTPVarWatchResponse.HTTP_CLIENT_NOT_PARSABLE.getDescription()).build();
         }
         String response = registrationManager.saveClient(client);
         return Response.status(Response.Status.OK).entity(response).build();
@@ -113,7 +113,7 @@ public class VarWatchRegistrationImpl {
         } catch (IOException ex) {
             VWResponse response = new VWResponse();
             response.setMessage("Error");
-            response.setMessage(HTTPParsingResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
+            response.setMessage(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
         }
 
@@ -143,7 +143,7 @@ public class VarWatchRegistrationImpl {
         return response;
     }
 
-     @GET
+    @GET
     @Path("test")
     public Response test(@Context HttpServletRequest request) {
         return Response.status(Response.Status.OK).entity("hallo varwatch registration test22").build();
@@ -265,13 +265,12 @@ public class VarWatchRegistrationImpl {
             PasswordReset resetPW = inputConverter.getPasswordReset();
             newPw = resetPW.getPassword();
             oldPw = resetPW.getOldPassword();
-        } catch (IOException ex) {
+        } catch (VarWatchException ex) {
             VWResponse response = new VWResponse();
             response.setMessage("Error");
-            response.setDescription(HTTPParsingResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
+            response.setDescription(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
         }
-
         if (!userChecker.isUserValid(user.getMail(), oldPw)) {
             return new ResponseBuilder().withVwError().withVwMessage(userChecker.getResponse()).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
@@ -292,10 +291,10 @@ public class VarWatchRegistrationImpl {
         try {
             inputConverter.setHTTPRequest(request, DefaultUser.class);
             contact = inputConverter.getDefaultUser().getMail();
-        } catch (IOException ex) {
+        } catch (VarWatchException ex) {
             VWResponse response = new VWResponse();
             response.setMessage("Error");
-            response.setDescription(HTTPParsingResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
+            response.setDescription(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
         }
 
