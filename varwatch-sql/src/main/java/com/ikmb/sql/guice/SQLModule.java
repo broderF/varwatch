@@ -9,6 +9,7 @@ import com.google.inject.AbstractModule;
 import com.ikmb.core.data.auth.client.ClientDao;
 import com.ikmb.core.data.auth.token.TokenDao;
 import com.ikmb.core.data.auth.user.UserDao;
+import com.ikmb.core.data.config.ConfigurationDao;
 import com.ikmb.core.data.dataset.DatasetDao;
 import com.ikmb.core.data.dataset.DatasetStatusDao;
 import com.ikmb.core.data.ensembl.EnsemblDao;
@@ -25,6 +26,7 @@ import com.ikmb.core.data.workflow.analysis.AnalysisDao;
 import com.ikmb.core.data.workflow.job.JobDao;
 import com.ikmb.core.data.workflow.worker.WorkerDao;
 import com.ikmb.sql.data.client.ClientDaoSQL;
+import com.ikmb.sql.data.config.ConfigurationDaoSQL;
 import com.ikmb.sql.data.dataset.DatasetDaoSQL;
 import com.ikmb.sql.data.dataset.DatasetStatusDaoSQL;
 import com.ikmb.sql.data.ensembl.EnsemblDaoSQL;
@@ -71,6 +73,8 @@ public class SQLModule extends AbstractModule {
         bind(TokenDao.class).to(TokenDaoSQL.class);
         bind(UserDao.class).to(UserDaoSQL.class);
         bind(MatchVariantDao.class).to(MatchVariantDaoSQL.class);
+
+        bind(ConfigurationDao.class).to(ConfigurationDaoSQL.class);
     }
 
 }

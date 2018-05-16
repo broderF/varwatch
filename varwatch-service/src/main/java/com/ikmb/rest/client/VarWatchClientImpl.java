@@ -40,14 +40,13 @@ public class VarWatchClientImpl {
         clientChecker.isClientValid(clientId);
         if (!clientChecker.isClientValid(clientId)) {
             String errorMessage = clientChecker.getResponse();
-            return new ResponseBuilder().withVwError().withVwMessage(errorMessage).withStatusType(Response.Status.NOT_FOUND).build();
+            return new ResponseBuilder().withVwError().withVwMessage(errorMessage).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
         AuthClient client = clientManager.getClient(clientId);
 
         if (!client.getRedirect().equals(redirectUri)) {
             return new ResponseBuilder().withVwError().withVwMessage("Redirect Uri is invalid").withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
-
         return new ResponseBuilder().withVwSuccessful().withVwMessage("Redirect Uri is valid").withStatusType(Response.Status.OK).build();
     }
 
@@ -59,7 +58,7 @@ public class VarWatchClientImpl {
         clientChecker.isClientValid(clientId);
         if (!clientChecker.isClientValid(clientId)) {
             String errorMessage = clientChecker.getResponse();
-            return new ResponseBuilder().withVwError().withVwMessage(errorMessage).withStatusType(Response.Status.NOT_FOUND).build();
+            return new ResponseBuilder().withVwError().withVwMessage(errorMessage).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
         AuthClient client = clientManager.getClient(clientId);
 

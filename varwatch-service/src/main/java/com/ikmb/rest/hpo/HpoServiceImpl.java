@@ -22,7 +22,7 @@ public class HpoServiceImpl {
     @Inject
     private HPOUpdateManager hpoManager;
 
-      @GET
+    @GET
     @Path("data")
     @Produces(MediaType.TEXT_PLAIN)
     public String getHpoDataList() {

@@ -8,7 +8,6 @@ package com.ikmb.rest.annotation;
 import com.google.inject.Inject;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetVW;
-import com.ikmb.core.data.family.FamilyDataManager;
 import com.ikmb.core.data.family.GeneFamily;
 import com.ikmb.core.data.gene.Gene;
 import com.ikmb.core.data.hpo.HPOTerm;

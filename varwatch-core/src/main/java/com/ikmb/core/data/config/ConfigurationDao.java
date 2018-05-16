@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.rest.util;
+package com.ikmb.core.data.config;
 
-import org.junit.Before;
+import java.util.List;
 
 /**
  *
  * @author broder
  */
-public class PermissionValidatorTest {
+public interface ConfigurationDao {
 
-    @Before
-    public void setUp() {
-    }
+    public List<VarWatchConfig> getAllConfigurations();
+
+    public void save(VarWatchConfig config);
 
 }

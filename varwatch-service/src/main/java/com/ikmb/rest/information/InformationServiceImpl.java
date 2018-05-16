@@ -6,14 +6,10 @@
 package com.ikmb.rest.information;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
-import com.ikmb.core.data.auth.RegistrationResponse;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.varwatchcommons.entities.Dataset;
 import com.ikmb.core.varwatchcommons.entities.RejectedVariant;
-import com.ikmb.rest.util.HTTPTokenValidator;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.variant.Variant;
