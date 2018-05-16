@@ -28,4 +28,9 @@ public class ConfigurationManager {
         VarWatchConfig config = new VarWatchConfig(key, value);
         configDao.save(config);
     }
+
+    @Transactional
+    public String getConfigurations(String key) {
+        return configDao.getConfiguration(key);
+    }
 }

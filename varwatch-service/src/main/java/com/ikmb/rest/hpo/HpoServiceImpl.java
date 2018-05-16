@@ -8,6 +8,7 @@ package com.ikmb.rest.hpo;
 import com.google.inject.Inject;
 import com.ikmb.core.data.hpo.HPOUpdateManager;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -27,6 +28,12 @@ public class HpoServiceImpl {
     @Produces(MediaType.TEXT_PLAIN)
     public String getHpoDataList() {
         return hpoManager.getHpoList();
+    }
+
+    @POST
+    @Path("new")
+    public void parseNewHpo() {
+        hpoManager.updateHpoFile();
     }
 
 }

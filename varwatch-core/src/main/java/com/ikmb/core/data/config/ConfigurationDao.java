@@ -17,4 +17,6 @@ public interface ConfigurationDao {
 
     public void save(VarWatchConfig config);
 
+    public String getConfiguration(String key);
+
 }
