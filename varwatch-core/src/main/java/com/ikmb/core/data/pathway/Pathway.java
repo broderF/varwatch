@@ -5,6 +5,7 @@
  */
 package com.ikmb.core.data.pathway;
 
+import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +25,8 @@ public class Pathway implements Serializable {
     @GeneratedValue
     private Integer id;
     @Column(name = "name")
-    private String name;
+    @Expose
+    private String identifier;
     @Column(name = "description")
     private String description;
 
@@ -37,11 +39,11 @@ public class Pathway implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return identifier;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.identifier = name;
     }
 
     public String getDescription() {

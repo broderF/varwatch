@@ -11,11 +11,10 @@ import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.family.FamilyDataManager;
 import com.ikmb.core.data.family.GeneFamily;
 import com.ikmb.core.data.gene.Gene;
-import com.ikmb.core.data.gene.GeneDataManager;
 import com.ikmb.core.data.hpo.HPOTerm;
 import com.ikmb.core.data.pathway.Pathway;
-import com.ikmb.core.data.pathway.PathwayDataManager;
 import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantDataManager;
 import com.ikmb.rest.util.DataPermissionRequestFilter.DataPermissionFilter;
 import com.ikmb.rest.util.ResponseBuilder;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
@@ -30,16 +29,14 @@ import javax.ws.rs.core.Response;
 
 @Path("annotation")
 @TokenFilter
-public class AnnotationServiceImpl {
+public class AnnotationService {
 
     @Inject
     private DatasetManager datasetManager;
     @Inject
-    private PathwayDataManager pathwayManager;
-    @Inject
-    private GeneDataManager geneManager;
-    @Inject
     private FamilyDataManager familyManager;
+    @Inject
+    private VariantDataManager variantManager;
 
     @GET
     @Path("datasets/{dataset_id}")
@@ -55,9 +52,8 @@ public class AnnotationServiceImpl {
     @Produces(MediaType.APPLICATION_JSON)
     @DataPermissionFilter(dataType = Variant.class)
     public Response getVariantPathways(@HeaderParam("Authorization") String header, @PathParam("variant_id") Long variantId) {
-
-        List<Pathway> pathway = pathwayManager.getPathways(variantId);
-        return new ResponseBuilder().buildList(pathway);
+        List<Pathway> pathway = variantManager.getPathwaysFromVariant(variantId);
+        return new ResponseBuilder().buildListWithExpose(pathway);
     }
 
     @GET
@@ -65,8 +61,7 @@ public class AnnotationServiceImpl {
     @Produces(MediaType.APPLICATION_JSON)
     @DataPermissionFilter(dataType = Variant.class)
     public Response getVariantGenes(@HeaderParam("Authorization") String header, @PathParam("variant_id") Long variantId) {
-
-        List<Gene> genes = geneManager.getGenes(variantId);
+        List<Gene> genes = variantManager.getGenesFromVariant(variantId);
         return new ResponseBuilder().buildListWithExpose(genes);
     }
 
@@ -75,11 +70,15 @@ public class AnnotationServiceImpl {
     @Produces(MediaType.APPLICATION_JSON)
     @DataPermissionFilter(dataType = Variant.class)
     public Response getVariantFamilies(@HeaderParam("Authorization") String header, @PathParam("variant_id") Long variantId) {
-        List<GeneFamily> families = familyManager.getFamilies(variantId);
-        return new ResponseBuilder().buildList(families);
+        List<GeneFamily> families = variantManager.getFamiliesFromVariant(variantId);
+        return new ResponseBuilder().buildListWithExpose(families);
     }
 
     public void setDatasetManager(DatasetManager datasetManager) {
         this.datasetManager = datasetManager;
+    }
+
+    public void setVariantManager(VariantDataManager variantManager) {
+        this.variantManager = variantManager;
     }
 }

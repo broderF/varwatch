@@ -39,7 +39,7 @@ public class Gene implements Serializable {
     private Integer id;
     @Column(name = "name")
     @Expose
-    private String name;
+    private String identifier;
     @Column(name = "symbol")
     private String symbol;
     @Column(name = "symbol_source")
@@ -79,11 +79,11 @@ public class Gene implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return identifier;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.identifier = name;
     }
 
     public String getSymbol() {

@@ -9,11 +9,17 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.ikmb.core.data.dataset.DatasetDao;
 import com.ikmb.core.data.dataset.DatasetVW;
+import com.ikmb.core.data.family.GeneFamily;
+import com.ikmb.core.data.gene.Gene;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import com.ikmb.core.varwatchcommons.utils.VariantHash;
 import com.ikmb.core.data.hpo.HPOTermBuilder;
+import com.ikmb.core.data.pathway.Pathway;
+import com.ikmb.core.data.varianteffect.VariantEffect;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -41,7 +47,6 @@ public class VariantDataManager {
 
 //    @Inject
 //    private VariantMetaDataDao variantMetaDao;
-
     @Transactional
     public List<Variant> save(List<VWVariant> variants, DatasetVW dataset) {
         dataset = datasetDao.getDataset(dataset.getId());
@@ -59,7 +64,6 @@ public class VariantDataManager {
 //                varMeta.setVariant(variantSql);
 //                variantMetaDao.persist(varMeta);
 //            }
-
             variantsSQL.add(variantSql);
 //            String variantHash = variantHasher.getVariantHash(variant, hpoTermBuilder.addFeatures(dataset.getPhenotypes()).buildStringSet());
 
@@ -103,6 +107,42 @@ public class VariantDataManager {
     public void deleteBeaconVariant(Long variantID) {
         variantDao.removeComplete(variantID);
     }
+
+    @Transactional
+    public List<Gene> getGenesFromVariant(Long variantId) {
+        Variant variant = get(variantId);
+        Set<Gene> genesSql = new HashSet<>();
+        for (VariantEffect variantEffect : variant.getVariantEffects()) {
+            Gene gene = variantEffect.getTranscript().getGene();
+            genesSql.add(gene);
+        }
+        return new ArrayList<>(genesSql);
+    }
+
+    @Transactional
+    public List<Pathway> getPathwaysFromVariant(Long variantId) {
+        Variant variant = get(variantId);
+        Set<Pathway> pathwaysSql = new HashSet<>();
+        for (VariantEffect variantEffect : variant.getVariantEffects()) {
+            Gene gene = variantEffect.getTranscript().getGene();
+            Set<Pathway> currentPathways = gene.getPathways();
+            pathwaysSql.addAll(currentPathways);
+        }
+        return new ArrayList<>(pathwaysSql);
+    }
+
+    @Transactional
+    public List<GeneFamily> getFamiliesFromVariant(Long variantId) {
+        Variant variant = get(variantId);
+        List<GeneFamily> familiesSql = new ArrayList<>();
+        for (VariantEffect variantEffect : variant.getVariantEffects()) {
+            Gene gene = variantEffect.getTranscript().getGene();
+            Set<GeneFamily> currentFamilies = gene.getFamilies();
+            familiesSql.addAll(currentFamilies);
+        }
+        return familiesSql;
+    }
+
 //
 //    public static void main(String[] args) {
 //        Injector inj = Guice.createInjector(new VarWatchInjector(), new JpaPersistModule("varwatch_dev"));
