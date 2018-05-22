@@ -7,7 +7,7 @@ package com.ikmb.varwatchworker;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
-import com.ikmb.matching.VarWatchScreenerNew.MatchType;
+import com.ikmb.matching.varwatch.VarWatchScreener.MatchType;
 import com.ikmb.utils.WorkerInputHandler;
 import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
 import com.ikmb.core.varwatchcommons.utils.VariantHash;

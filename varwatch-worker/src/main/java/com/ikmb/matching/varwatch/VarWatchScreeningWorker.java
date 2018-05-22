@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.matching;
+package com.ikmb.matching.varwatch;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
@@ -20,6 +20,8 @@ import com.ikmb.core.data.workflow.job.JobManager;
 import com.ikmb.core.data.workflow.worker.AnalysisWorker;
 import com.ikmb.utils.WorkerInputHandler;
 import com.ikmb.core.data.workflow.analysis.AnalysisBuilder;
+//import com.ikmb.matching.ScreeningFactory;
+//import com.ikmb.matching.ScreeningFactory;
 import com.ikmb.varwatchworker.Worker;
 import java.util.List;
 import org.slf4j.LoggerFactory;
@@ -55,6 +57,8 @@ public class VarWatchScreeningWorker implements Worker {
 
     @Inject
     private JobManager jobManager;
+    @Inject
+    private VarWatchScreener screener;
 
 //    @Inject
 //    private DatasetManager dsDataManager;
@@ -97,7 +101,7 @@ public class VarWatchScreeningWorker implements Worker {
         }
 
         logger.info("----- Start Screening Database " + _referenceDB.getName() + "-----");
-        DatabaseScreener screener = ScreeningFactory.getScreeningDatabase(_referenceDB);
+//        DatabaseScreener screener = ScreeningFactory.getScreeningDatabase(_referenceDB);
         screener.initialize(_referenceDB, _dataset);
         RefDatabase varwatchDB = referenceDBDataManager.getVarWatchDatabase();
         screener.setVWDatabase(varwatchDB);

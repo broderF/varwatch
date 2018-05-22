@@ -12,10 +12,11 @@ import com.ikmb.core.data.workflow.analysis.Analysis;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.worker.AnalysisWorker;
 import com.ikmb.extraction.ExtractVariantsWorker;
-import com.ikmb.matching.BeaconCollectorWorker;
-import com.ikmb.matching.HGMDScreeningWorker;
-import com.ikmb.matching.ScreeningWorker;
-import com.ikmb.matching.VarWatchScreeningWorker;
+import com.ikmb.matching.beacon.BeaconScreeningWorker;
+import com.ikmb.matching.beacon.BeaconCollectorWorker;
+import com.ikmb.matching.hgmd.HGMDScreeningWorker;
+//import com.ikmb.matching.ScreeningWorker;
+import com.ikmb.matching.varwatch.VarWatchScreeningWorker;
 import com.ikmb.report.ReportWorker;
 import com.ikmb.sanity.SanityWorker;
 
@@ -66,7 +67,7 @@ public class WorkerFactory {
                 worker = injector.getInstance(CollectScreeningResultWorkerNew.class);
                 break;
             case Analysis.ANALYSIS_SCREENING_BEACON:
-                worker = injector.getInstance(ScreeningWorker.class);
+                worker = injector.getInstance(BeaconScreeningWorker.class);
                 break;
             case Analysis.ANALYSIS_COLLECTING_BEACON:
                 worker = injector.getInstance(BeaconCollectorWorker.class);

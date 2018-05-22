@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 import com.ikmb.core.data.config.ConfigurationManager;
+import com.ikmb.core.data.config.VarWatchConfig.ConfigurationTerms;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -72,7 +73,7 @@ public class HPOUpdateManager {
 //        }
 //        Map<Long, HpoPathTerm> hpoTerms = hpoDao.getHpoTermsFromDb(uri);
 //        return getHpoListFromHpoTerms("MYHPO_06_2017", hpoTerms);
-        String hpoPathString = configManager.getConfigurations("hpo_path");
+        String hpoPathString = configManager.getConfiguration(ConfigurationTerms.HPO_BASIC_FILE.getTerm());
         try {
             Path hpoPath = Paths.get(hpoPathString);
             boolean fileExist = Files.exists(hpoPath);
@@ -113,7 +114,7 @@ public class HPOUpdateManager {
 
     @Transactional
     public void updateHpoBrowserFile() {
-        String url = configManager.getConfigurations("hpo_source");
+        String url = configManager.getConfiguration(ConfigurationTerms.HPO_OBO_SOURCE_URL.getTerm());
         OBOFormatParser parser = new OBOFormatParser();
         try {
             OBODoc parse = parser.parseURL(url);
@@ -124,7 +125,7 @@ public class HPOUpdateManager {
 
             List<String> hpoLines = parseOboHpo(termFrames);
 
-            String hpoPath = configManager.getConfigurations("hpo_path");
+            String hpoPath = configManager.getConfiguration(ConfigurationTerms.HPO_BASIC_FILE.getTerm());
             writeToFile(version, hpoLines, hpoPath);
 
         } catch (IOException ex) {
@@ -135,8 +136,8 @@ public class HPOUpdateManager {
 
     @Transactional
     public void updateHpoDistanceFile() {
-        String oboFilePath = configManager.getConfigurations("hpo_source");
-        String calcFilePath = configManager.getConfigurations("hpo_calc");
+        String oboFilePath = configManager.getConfiguration(ConfigurationTerms.HPO_OBO_SOURCE_URL.getTerm());
+        String calcFilePath = configManager.getConfiguration(ConfigurationTerms.HPO_DIST_FILE.getTerm());
         HpoDistanceFileCalculator hpoDistanceFileCalculator = new HpoDistanceFileCalculator();
         try {
             hpoDistanceFileCalculator.run(oboFilePath, calcFilePath);

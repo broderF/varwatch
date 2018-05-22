@@ -332,7 +332,6 @@ public class MatchVariantDataManager {
 
     @Transactional
     public List<Variant> getSimilarVWByGene(Variant variant) {
-//        return matchVariantDao.getSimilarVWVariantsByGene(variant);
         List<Variant> matchedVariants = matchVariantDao.getSimilarVWVariantsByGene(variant);
         return filterForNonFinishedDatasets(matchedVariants);
     }

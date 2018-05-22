@@ -1,4 +1,4 @@
-package com.ikmb.matching;
+package com.ikmb.matching.beacon;
 
 import com.google.inject.Inject;
 import com.ikmb.core.data.dataset.DatasetVW;
@@ -7,7 +7,7 @@ import com.ikmb.core.data.matching.MatchVariant;
 import com.ikmb.core.data.matching.MatchVariantDataManager;
 import com.ikmb.core.data.reference_db.RefDatabase;
 import com.ikmb.core.data.variant.Variant;
-import com.ikmb.matching.VarWatchScreenerNew.MatchType;
+import com.ikmb.matching.varwatch.VarWatchScreener.MatchType;
 import com.ikmb.core.data.variant.VariantStatusManager;
 import java.net.URI;
 import java.sql.Connection;
@@ -35,7 +35,7 @@ import org.json.JSONObject;
  *
  * @author bfredrich
  */
-class GlobalBeaconScreener implements DatabaseScreener {
+public class GlobalBeaconScreener {
 
     private Connection _conn = null;
     private List<Match> _matches = new ArrayList<>();
@@ -49,28 +49,23 @@ class GlobalBeaconScreener implements DatabaseScreener {
     @Inject
     private VariantStatusManager variantStatusManager;
 
-    @Override
     public void initialize(RefDatabase database, DatasetVW dataset) {
         _database = database;
         _dataset = dataset;
     }
 
-    @Override
     public void setVWDatabase(RefDatabase vwDatabase) {
         this.vwDatabase = vwDatabase;
     }
 
-    @Override
     public DatasetVW getDataset() {
         return _dataset;
     }
 
-    @Override
     public RefDatabase getDatabase() {
         return _database;
     }
 
-    @Override
     public void run() {
 //        List<Variant> variants = ConvertHelper.convertVariantsFromSQL(new ArrayList<Variant>(_dataset.getVariants()));
 //        if (!_database.getAssembly().equals(VWConfiguration.STANDARD_COORDS)) {
@@ -140,7 +135,6 @@ class GlobalBeaconScreener implements DatabaseScreener {
 //        variantStatusManager.addMatches(getMatches(), VariantStatusBuilder.VariantStatusMessage.MATCHED_TO_BEACON);
     }
 
-    @Override
     public List<Match> getMatches() {
         return _matches;
     }

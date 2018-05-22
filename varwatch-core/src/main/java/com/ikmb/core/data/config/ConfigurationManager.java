@@ -30,7 +30,7 @@ public class ConfigurationManager {
     }
 
     @Transactional
-    public String getConfigurations(String key) {
+    public String getConfiguration(String key) {
         return configDao.getConfiguration(key);
     }
 }

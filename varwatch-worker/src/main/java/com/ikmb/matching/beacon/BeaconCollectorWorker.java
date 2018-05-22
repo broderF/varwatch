@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.matching;
+package com.ikmb.matching.beacon;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
@@ -36,9 +36,6 @@ public class BeaconCollectorWorker implements Worker {
 
     private DatasetVW _dataset;
 
-//    private byte[] _rawData;
-//    private String _rawDataType;
-//    private byte[] _vcfFile;
     @Inject
     private WorkerInputHandler workerInputHandler;
 
@@ -48,24 +45,6 @@ public class BeaconCollectorWorker implements Worker {
     @Inject
     private DatasetManager dsDataManager;
 
-    @Inject
-    private MatchVariantDataManager matchVariantDM;
-
-//    @Inject
-//    private VariantStatusBuilder variantStatusBuilder;
-//    @Inject
-//    private VariantBuilder variantBuilder;
-//
-//    @Inject
-//    private VariantStatusManager variantStatusManager;
-//
-//    @Inject
-//    private HPOTermBuilder hpoTermBuilder;
-//
-//    @Inject
-//    private VariantHash variantHasher;
-//    @Inject
-//    private VariantDataManager variantDM;
     @Inject
     private ReferenceDBDataManager refDBDataManager;
 

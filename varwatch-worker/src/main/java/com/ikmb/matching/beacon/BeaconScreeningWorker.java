@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.matching;
+package com.ikmb.matching.beacon;
 
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
@@ -17,6 +17,7 @@ import com.ikmb.core.data.variant.VariantStatusManager;
 import com.ikmb.core.data.workflow.analysis.Analysis;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.worker.AnalysisWorker;
+//import com.ikmb.matching.ScreeningFactory;
 import com.ikmb.utils.WorkerInputHandler;
 import com.ikmb.varwatchworker.Worker;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Broder
  */
-public class ScreeningWorker implements Worker {
+public class BeaconScreeningWorker implements Worker {
 
     protected AnalysisWorker _workerSQL;
     protected Analysis _analysisSQL;
@@ -35,7 +36,7 @@ public class ScreeningWorker implements Worker {
     private DatasetVW _dataset;
     private RefDatabase _referenceDB;
     private WorkFlowManager.JobProcessStatus jobProcessStatus = WorkFlowManager.JobProcessStatus.FAILED;
-    private final org.slf4j.Logger logger = LoggerFactory.getLogger(ScreeningWorker.class);
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(BeaconScreeningWorker.class);
 
     @Inject
     private MatchVariantDataManager matchDataManager;
@@ -51,6 +52,8 @@ public class ScreeningWorker implements Worker {
 
     @Inject
     private ReferenceDBDataManager referenceDBDataManager;
+    @Inject
+    private GlobalBeaconScreener screener;
 
 //    @Inject
 //    private DatasetManager dsDataManager;
@@ -87,7 +90,7 @@ public class ScreeningWorker implements Worker {
         parseInput();
 
         logger.info("----- Start Screening Database " + _referenceDB.getName() + "-----");
-        DatabaseScreener screener = ScreeningFactory.getScreeningDatabase(_referenceDB);
+//        DatabaseScreener screener = ScreeningFactory.getScreeningDatabase(_referenceDB);
         screener.initialize(_referenceDB, _dataset);
         RefDatabase varwatchDB = referenceDBDataManager.getVarWatchDatabase();
         screener.setVWDatabase(varwatchDB);

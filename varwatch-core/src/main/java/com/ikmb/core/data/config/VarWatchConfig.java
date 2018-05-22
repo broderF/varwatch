@@ -50,4 +50,11 @@ public class VarWatchConfig implements Serializable {
         this.value = value;
     }
 
+    public enum ConfigurationTerms {
+        HPO_OBO_SOURCE_URL, HPO_BASIC_FILE, HPO_DIST_FILE;
+
+        public String getTerm() {
+            return this.name().toLowerCase();
+        }
+    }
 }
