@@ -33,7 +33,7 @@ public class HpoServiceImpl {
     @POST
     @Path("new")
     public void parseNewHpo() {
-        hpoManager.updateHpoFile();
+        hpoManager.updateHpoBrowserFile();
     }
 
 }

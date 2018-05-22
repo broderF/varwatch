@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.update.hpo;
+package com.ikmb.core.data.hpo;
 
-import com.ikmb.core.data.hpo.HpoPathTerm;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -18,6 +17,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,28 +30,60 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.obolibrary.oboformat.model.Frame;
+import org.obolibrary.oboformat.model.OBODoc;
+import org.obolibrary.oboformat.parser.OBOFormatParser;
 
 /**
  *
  * @author bfredrich
  */
-public class HpoPathCalculator {
+public class HpoDistanceFileCalculator {
 
-    public static void main(String[] args) throws IOException {
-        HpoPathCalculator calculator = new HpoPathCalculator();
-        calculator.run();
-    }
+//    public static void main(String[] args) throws IOException {
+//        HpoPathCalculator calculator = new HpoPathCalculator();
+//        calculator.run();
+//    }
     long altIds = 1;
 
-    private void run() throws IOException {
-        Map<Long, HpoPathTerm> hpoTerms = getHpoTermsFromDb(null, null, null);
-        printTxt(hpoTerms);
+    public void run(String oboPath, String outputPath) throws IOException {
+        Map<Long, HpoPathTerm> hpoTerms = getHpoTermsFromFile(oboPath);
+//        printTxt(hpoTerms);
         List<String> lines = new ArrayList<>();
         for (Map.Entry<Long, HpoPathTerm> mapEntry : hpoTerms.entrySet()) {
             lines.addAll(calculatePaths(mapEntry, hpoTerms));
         }
-        Path file = Paths.get("/home/bfredrich/ancestors.txt");
+        Path file = Paths.get(outputPath);
         Files.write(file, lines, Charset.forName("UTF-8"));
+    }
+
+    public Map<Long, HpoPathTerm> getHpoTermsFromFile(String filePath) throws IOException {
+        Map<Long, HpoPathTerm> hpoTerms = new TreeMap<>();
+        OBOFormatParser parser = new OBOFormatParser();
+        OBODoc parse = parser.parse(filePath);
+
+        List<Frame> termFrames = new ArrayList<>(parse.getTermFrames());
+        Collections.sort(termFrames, (Frame o1, Frame o2) -> {
+            Integer id1 = Integer.parseInt(o1.getId().split(":")[1]);
+            Integer id2 = Integer.parseInt(o2.getId().split(":")[1]);
+            return id1 - id2;
+        });
+
+        for (Frame curFrame : termFrames) {
+            Long id = Long.parseLong(curFrame.getId().split(":")[1]);
+            String description = curFrame.getTagValue("name", String.class);
+            HpoPathTerm hpoPathTerm = new HpoPathTerm(id, curFrame.getId(), description);
+            Collection<String> altTerms = curFrame.getTagValues("alt_id", String.class);
+            Collection<String> parentTerms = curFrame.getTagValues("is_a", String.class);
+            for (String s : parentTerms) {
+                Long parentId = Long.parseLong(s.split(":")[1]);
+                hpoPathTerm.addParent(parentId);
+            }
+
+            hpoTerms.put(id, hpoPathTerm);
+        }
+
+        return hpoTerms;
     }
 
     public Map<Long, HpoPathTerm> getHpoTermsFromDb(String database, String user, String password) {
@@ -153,7 +186,7 @@ public class HpoPathCalculator {
                 object.put("parents", parentTerms);
                 hposJson.put(object);
             } catch (JSONException ex) {
-                Logger.getLogger(HpoPathCalculator.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(HpoDistanceFileCalculator.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 //        Gson gson = new GsonBuilder().setPrettyPrinting().create();

@@ -77,7 +77,7 @@ public class HPOUpdateManager {
             Path hpoPath = Paths.get(hpoPathString);
             boolean fileExist = Files.exists(hpoPath);
             if (!fileExist) {
-                updateHpoFile();
+                updateHpoBrowserFile();
             }
             return Files.readAllLines(hpoPath).stream().collect(Collectors.joining("\n"));
         } catch (IOException ex) {
@@ -112,8 +112,7 @@ public class HPOUpdateManager {
     }
 
     @Transactional
-    public void updateHpoFile() {
-
+    public void updateHpoBrowserFile() {
         String url = configManager.getConfigurations("hpo_source");
         OBOFormatParser parser = new OBOFormatParser();
         try {
@@ -132,6 +131,18 @@ public class HPOUpdateManager {
             Logger.getLogger(HPOUpdateManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    @Transactional
+    public void updateHpoDistanceFile() {
+        String oboFilePath = configManager.getConfigurations("hpo_source");
+        String calcFilePath = configManager.getConfigurations("hpo_calc");
+        HpoDistanceFileCalculator hpoDistanceFileCalculator = new HpoDistanceFileCalculator();
+        try {
+            hpoDistanceFileCalculator.run(oboFilePath, calcFilePath);
+        } catch (IOException ex) {
+            Logger.getLogger(HPOUpdateManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private String getVersionFromObo(OBODoc parse) {
