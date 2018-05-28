@@ -21,7 +21,7 @@ import com.ikmb.core.data.hpo.PhenotypeDao;
 import com.ikmb.core.data.matching.Match;
 import com.ikmb.core.data.matching.MatchVariantDataManager;
 import com.ikmb.core.data.variant.Variant;
-import com.ikmb.core.varwatchcommons.utils.VarWatchException;
+import com.ikmb.core.utils.VarWatchException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

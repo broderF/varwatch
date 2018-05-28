@@ -8,7 +8,7 @@ package com.ikmb.extraction;
 import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.data.variant.VariantBuilder;
 import com.ikmb.utils.VWConfiguration;
-import com.ikmb.core.varwatchcommons.tools.CrossMap;
+import com.ikmb.core.tools.CrossMap;
 import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import java.util.ArrayList;

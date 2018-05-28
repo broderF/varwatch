@@ -6,7 +6,7 @@
 package com.ikmb.varwatchbarkeeper;
 
 import com.google.inject.Injector;
-import com.ikmb.core.varwatchcommons.VWConfiguration;
+import com.ikmb.core.VWConfiguration;
 import com.ikmb.core.data.workflow.job.JobManager;
 import com.ikmb.core.data.workflow.worker.AnalysisWorker;
 import com.ikmb.core.data.workflow.worker.WorkerManager;

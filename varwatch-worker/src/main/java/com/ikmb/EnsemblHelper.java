@@ -5,7 +5,7 @@
  */
 package com.ikmb;
 
-import com.ikmb.core.varwatchcommons.utils.ParserHelper;
+import com.ikmb.core.utils.VariantParser;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -44,9 +44,9 @@ public class EnsemblHelper {
             InputStream inputSream = helper.runEnsembl(filePathInput, filePathOutput, ensemblName, command);
             vcf = IOUtils.toString(inputSream, StandardCharsets.UTF_8);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ParserHelper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VariantParser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(ParserHelper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VariantParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return vcf;
     }

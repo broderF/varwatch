@@ -16,7 +16,7 @@ import com.ikmb.core.varwatchcommons.entities.VWStatus;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import com.ikmb.core.varwatchcommons.entities.RejectedVariant;
 import com.ikmb.core.varwatchcommons.entities.Status;
-import com.ikmb.core.varwatchcommons.utils.VariantHash;
+import com.ikmb.core.utils.VariantHash;
 import com.ikmb.core.data.hpo.HPOTermBuilder;
 import com.ikmb.core.data.matching.Match;
 import com.ikmb.core.data.matching.MatchVariant;

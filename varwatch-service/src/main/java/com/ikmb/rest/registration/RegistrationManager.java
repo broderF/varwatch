@@ -8,7 +8,6 @@ package com.ikmb.rest.registration;
 import com.google.inject.Inject;
 import com.ikmb.core.varwatchcommons.entities.VWResponse;
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
-import com.ikmb.core.varwatchcommons.entities.Client;
 import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.rest.util.ResponseBuilder;
 import static com.ikmb.rest.registration.RegistrationManager.RegistrationResponse.REGISTRATION_ERROR_DOUBLE_ENTITY;
@@ -19,6 +18,7 @@ import com.ikmb.core.data.auth.client.ClientManager;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserBuilder;
 import com.ikmb.core.data.auth.user.UserManager;
+import com.ikmb.core.varwatchcommons.entities.Client;
 import javax.ws.rs.core.Response;
 
 /**

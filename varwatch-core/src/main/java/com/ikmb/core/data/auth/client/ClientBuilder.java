@@ -7,7 +7,7 @@ package com.ikmb.core.data.auth.client;
 
 import com.google.inject.Inject;
 import com.ikmb.core.varwatchcommons.entities.Client;
-import com.ikmb.core.varwatchcommons.utils.PasswordValidator;
+import com.ikmb.core.utils.PasswordValidator;
 import org.joda.time.DateTime;
 
 /**

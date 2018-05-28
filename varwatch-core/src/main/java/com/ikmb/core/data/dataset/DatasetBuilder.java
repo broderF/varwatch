@@ -15,7 +15,7 @@ import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
 import com.ikmb.core.varwatchcommons.entities.VWMatchRequest;
 import com.ikmb.core.varwatchcommons.entities.Dataset;
 import com.ikmb.core.varwatchcommons.entities.Feature;
-import com.ikmb.core.varwatchcommons.utils.ParserHelper;
+import com.ikmb.core.utils.VariantParser;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -134,7 +134,7 @@ public class DatasetBuilder {
 
             data = out.toByteArray();
         } catch (IOException ex) {
-            Logger.getLogger(ParserHelper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VariantParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return data;
     }
@@ -149,7 +149,7 @@ public class DatasetBuilder {
 
             data = out.toByteArray();
         } catch (IOException ex) {
-            Logger.getLogger(ParserHelper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VariantParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return data;
     }

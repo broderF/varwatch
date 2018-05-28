@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import com.ikmb.core.varwatchcommons.entities.Contact;
 import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
-import com.ikmb.core.varwatchcommons.utils.PasswordValidator;
+import com.ikmb.core.utils.PasswordValidator;
 
 /**
  *

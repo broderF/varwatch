@@ -8,7 +8,7 @@ package com.ikmb.sql.guice;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.jpa.JpaPersistModule;
-import com.ikmb.core.varwatchcommons.VWConfiguration;
+import com.ikmb.core.VWConfiguration;
 
 /**
  *

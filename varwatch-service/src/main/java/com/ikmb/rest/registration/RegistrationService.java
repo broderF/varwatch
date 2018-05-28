@@ -16,16 +16,15 @@ import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
 import com.ikmb.core.varwatchcommons.entities.Client;
 import com.ikmb.core.varwatchcommons.entities.PasswordReset;
-import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
-import com.ikmb.core.varwatchcommons.utils.PdfCreator;
-import com.ikmb.core.varwatchcommons.utils.VarWatchException;
+import com.ikmb.core.notification.NotificationSubmitter;
+import com.ikmb.core.utils.PdfCreator;
+import com.ikmb.core.utils.VarWatchException;
 import com.ikmb.rest.HTTPVarWatchResponse;
 import com.ikmb.rest.util.HTTPTokenValidator;
 import com.ikmb.rest.util.OAuthRequestWrapper;
 import com.ikmb.rest.util.ResponseBuilder;
 import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import java.io.IOException;
-import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -57,11 +56,11 @@ import org.slf4j.LoggerFactory;
  * @author bfredrich
  */
 @Path("registration")
-public class VarWatchRegistrationImpl {
+public class RegistrationService {
 
     private Integer expiresIn = 3600;
 
-    private static final Logger logger = LoggerFactory.getLogger(VarWatchRegistrationImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 
 //    @Context
 //    ServletContext context;
@@ -324,4 +323,13 @@ public class VarWatchRegistrationImpl {
         response.setDescription(RegistrationResponse.PASSWORD_RESETTED.getDescription());
         return Response.status(Response.Status.OK).entity(response).build();
     }
+
+    public void setInputConverter(HTTPVarWatchInputConverter inputConverter) {
+        this.inputConverter = inputConverter;
+    }
+
+    public void setRegistrationManager(RegistrationManager registrationManager) {
+        this.registrationManager = registrationManager;
+    }
+
 }

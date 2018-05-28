@@ -7,7 +7,7 @@ package com.ikmb.varwatchcommons.tools;
 
 import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.data.variant.VariantBuilder;
-import com.ikmb.core.varwatchcommons.tools.CrossMap;
+import com.ikmb.core.tools.CrossMap;
 import junit.framework.Assert;
 import org.junit.Test;
 

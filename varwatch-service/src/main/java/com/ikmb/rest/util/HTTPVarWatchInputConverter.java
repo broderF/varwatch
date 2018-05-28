@@ -18,9 +18,9 @@ import com.ikmb.core.varwatchcommons.entities.VWMatchRequest;
 import com.ikmb.core.varwatchcommons.entities.Dataset;
 import com.ikmb.core.varwatchcommons.entities.Password;
 import com.ikmb.core.varwatchcommons.entities.PasswordReset;
-import com.ikmb.core.varwatchcommons.utils.VarWatchException;
+import com.ikmb.core.utils.VarWatchException;
 import com.ikmb.rest.HTTPVarWatchResponse;
-import com.ikmb.rest.registration.VarWatchRegistrationImpl;
+import com.ikmb.rest.registration.RegistrationService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HTTPVarWatchInputConverter {
 
-    private static final Logger logger = LoggerFactory.getLogger(VarWatchRegistrationImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
     private String inputString = null;
     private Class inputClass = null;
 

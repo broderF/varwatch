@@ -13,7 +13,7 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.ikmb.WorkFlowManager;
 import com.ikmb.WorkFlowManager.JobProcessStatus;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
+import com.ikmb.core.notification.NotificationSubmitter;
 import com.ikmb.core.data.workflow.analysis.Analysis;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;

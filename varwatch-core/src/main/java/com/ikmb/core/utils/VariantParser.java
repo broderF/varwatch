@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.varwatchcommons.utils;
+package com.ikmb.core.utils;
 
 import com.google.gson.Gson;
 import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
@@ -23,7 +23,7 @@ import org.codehaus.jettison.json.JSONException;
  *
  * @author bfredrich
  */
-public class ParserHelper {
+public class VariantParser {
 
 //    public static byte[] getVariantInfoFromObject(List<VWGenomicFeature> genomicFeatures) {
 //        byte[] data = null;
@@ -51,7 +51,7 @@ public class ParserHelper {
                 featuresJson.add(genomicFeature);
             }
         } catch (JSONException | UnsupportedEncodingException ex) {
-            Logger.getLogger(ParserHelper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VariantParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return featuresJson;
     }
@@ -63,7 +63,7 @@ public class ParserHelper {
 
             matchRequest = new Gson().fromJson(base64String, VWMatchRequest.class);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ParserHelper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VariantParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return matchRequest;
     }

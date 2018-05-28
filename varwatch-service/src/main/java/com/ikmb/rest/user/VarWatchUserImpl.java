@@ -10,7 +10,7 @@ import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.VWResponse;
-import com.ikmb.core.varwatchcommons.utils.VarWatchException;
+import com.ikmb.core.utils.VarWatchException;
 import com.ikmb.rest.HTTPVarWatchResponse;
 import com.ikmb.rest.util.ResponseBuilder;
 import com.ikmb.rest.util.HTTPVarWatchInputConverter;

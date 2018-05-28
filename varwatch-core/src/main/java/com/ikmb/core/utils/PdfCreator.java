@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.varwatchcommons.utils;
+package com.ikmb.core.utils;
 
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
 import com.itextpdf.text.Document;

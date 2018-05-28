@@ -16,7 +16,7 @@ import com.ikmb.core.data.wipe.WipeDataManager;
 import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
 import com.ikmb.core.varwatchcommons.entities.VWStatus;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
-import com.ikmb.core.varwatchcommons.utils.ParserHelper;
+import com.ikmb.core.utils.VariantParser;
 import com.ikmb.core.data.workflow.analysis.Analysis;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;
@@ -116,7 +116,7 @@ public class ExtractVariantsWorker implements Worker {
         VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.ASSEMBLY_NOT_MAPABLE.getMessage()).buildVWStatus();
         extractionDataManager.setVariantStatus(_dataset, notMapableVariants, status);
 
-        String vcfString = ParserHelper.json2vcf(mappedVariants);
+        String vcfString = VariantParser.json2vcf(mappedVariants);
         byte[] vcfFile = vcfString.getBytes();
 
         VCFParser vcfParser = new VCFParser();

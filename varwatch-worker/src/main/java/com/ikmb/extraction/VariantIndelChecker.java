@@ -8,7 +8,7 @@ package com.ikmb.extraction;
 import com.google.inject.Inject;
 import com.ikmb.core.varwatchcommons.entities.VWStatus;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
-import com.ikmb.core.varwatchcommons.utils.VariantHash;
+import com.ikmb.core.utils.VariantHash;
 import com.ikmb.core.data.variant.VariantStatusBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;

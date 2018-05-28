@@ -5,7 +5,7 @@
  */
 package com.ikmb.extraction;
 
-import com.ikmb.core.varwatchcommons.utils.VariantHash;
+import com.ikmb.core.utils.VariantHash;
 import com.google.inject.Inject;
 import com.ikmb.core.varwatchcommons.entities.VWStatus;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;

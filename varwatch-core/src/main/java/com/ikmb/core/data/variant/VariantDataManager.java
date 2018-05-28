@@ -12,7 +12,7 @@ import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.family.GeneFamily;
 import com.ikmb.core.data.gene.Gene;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
-import com.ikmb.core.varwatchcommons.utils.VariantHash;
+import com.ikmb.core.utils.VariantHash;
 import com.ikmb.core.data.hpo.HPOTermBuilder;
 import com.ikmb.core.data.pathway.Pathway;
 import com.ikmb.core.data.varianteffect.VariantEffect;

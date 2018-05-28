@@ -47,7 +47,7 @@ public class DatasetDaoSQLTest {
     public void setUp() {
         tdl = new TestDatabaseLoader();
         testUser = tdl.getTestUser();
-        client = tdl.getClient();
+//        client = tdl.getClient();
         datasetDaoSQL = tdl.getInj().getInstance(DatasetManager.class);
         um = tdl.getInj().getInstance(UserManager.class);
         //Todo get db dump from prod server and fill this database

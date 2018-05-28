@@ -5,7 +5,7 @@
  */
 package com.ikmb.rest.registration;
 
-import com.ikmb.core.varwatchcommons.utils.PasswordValidator;
+import com.ikmb.core.utils.PasswordValidator;
 import com.google.inject.Inject;
 import com.ikmb.core.data.auth.RegistrationResponse;
 import com.ikmb.core.data.auth.client.AuthClient;

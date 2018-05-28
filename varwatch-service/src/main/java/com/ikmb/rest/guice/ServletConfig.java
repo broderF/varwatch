@@ -27,7 +27,7 @@ import com.ikmb.core.data.variant.VariantDao;
 import com.ikmb.core.data.variant.VariantStatusDao;
 import com.ikmb.core.data.varianteffect.VariantEffectDao;
 import com.ikmb.core.data.wipe.WipeDataDao;
-import com.ikmb.core.varwatchcommons.utils.PasswordValidator;
+import com.ikmb.core.utils.PasswordValidator;
 import com.ikmb.core.data.workflow.analysis.AnalysisDao;
 import com.ikmb.core.data.workflow.job.JobDao;
 import com.ikmb.core.data.workflow.worker.WorkerDao;

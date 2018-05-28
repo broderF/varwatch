@@ -7,7 +7,7 @@ package com.ikmb.varwatchcommons.tools;
 
 import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.data.varianteffect.VariantEffect;
-import com.ikmb.core.varwatchcommons.tools.VariantEffectPredictor;
+import com.ikmb.core.tools.VariantEffectPredictor;
 import java.util.List;
 import junit.framework.Assert;
 import org.junit.Test;

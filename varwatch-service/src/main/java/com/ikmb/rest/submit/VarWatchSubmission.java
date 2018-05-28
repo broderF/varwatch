@@ -20,7 +20,7 @@ import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import com.ikmb.core.data.dataset.DatasetStatusManager;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;
-import com.ikmb.core.varwatchcommons.utils.VarWatchException;
+import com.ikmb.core.utils.VarWatchException;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
 import com.ikmb.rest.util.UserActiveRequestFilter.UserActiveFilter;
 import javax.servlet.http.HttpServletRequest;

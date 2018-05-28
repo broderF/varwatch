@@ -13,7 +13,7 @@ import com.ikmb.core.data.auth.user.UserBuilder;
 import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.data.wipe.WipeDataManager;
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
-import com.ikmb.core.varwatchcommons.utils.PdfCreator;
+import com.ikmb.core.utils.PdfCreator;
 import com.ikmb.sql.guice.VarWatchMainModule;
 import com.ikmb.sql.guice.VarWatchPersist;
 

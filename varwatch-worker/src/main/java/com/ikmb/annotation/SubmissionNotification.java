@@ -8,7 +8,7 @@ package com.ikmb.annotation;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.variant.Variant;
-import com.ikmb.core.varwatchcommons.notification.NotificationSubmitter;
+import com.ikmb.core.notification.NotificationSubmitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

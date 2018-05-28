@@ -10,7 +10,7 @@ import com.ikmb.EnsemblHelper;
 import com.ikmb.WorkerLauncher;
 import com.ikmb.core.data.varianteffect.VariantEffect;
 import com.ikmb.utils.VWUtils;
-import com.ikmb.core.varwatchcommons.VWConfiguration;
+import com.ikmb.core.VWConfiguration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

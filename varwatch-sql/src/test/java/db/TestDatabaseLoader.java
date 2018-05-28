@@ -13,7 +13,6 @@ import com.ikmb.core.data.auth.client.ClientManager;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.data.dataset.DatasetVW;
-import com.ikmb.core.varwatchcommons.entities.Client;
 import com.ikmb.sql.guice.SQLModule;
 import com.ikmb.sql.guice.VarWatchMainModule;
 import com.ikmb.sql.guice.VarWatchPersist;
@@ -67,13 +66,13 @@ public class TestDatabaseLoader {
         return user;
     }
 
-    public AuthClient getClient() {
-        Client client = new Client();
-        client.setName("testclient");
-        client.setPassword("testpw");
-        ClientManager cm = inj.getInstance(ClientManager.class);
-        cm.save(client);
-//        emProvider.get().persist(client);
-        return cm.getClient("testclient");
-    }
+//    public AuthClient getClient() {
+//        Client client = new Client();
+//        client.setName("testclient");
+//        client.setPassword("testpw");
+//        ClientManager cm = inj.getInstance(ClientManager.class);
+//        cm.save(client);
+////        emProvider.get().persist(client);
+//        return cm.getClient("testclient");
+//    }
 }

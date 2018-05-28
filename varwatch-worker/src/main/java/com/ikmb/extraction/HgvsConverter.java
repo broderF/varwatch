@@ -10,7 +10,7 @@ import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import com.ikmb.EnsemblHelper;
 import com.ikmb.WorkerLauncher;
-import com.ikmb.core.varwatchcommons.utils.ParserHelper;
+import com.ikmb.core.utils.VariantParser;
 import com.ikmb.utils.VWConfiguration;
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,7 +54,7 @@ public class HgvsConverter {
     }
 
     private void run() {
-        Map<String, String> hgvsAssemblyMap = ParserHelper.json2hgvsMap(genomicfeatures,assembly);
+        Map<String, String> hgvsAssemblyMap = VariantParser.json2hgvsMap(genomicfeatures,assembly);
         String folder = WorkerLauncher.injector.getConfiguration().getPathToTmp();
         for (String assembly : hgvsAssemblyMap.keySet()) {
             String filePathInput = folder + "input_" + RandomStringUtils.randomAlphanumeric(10) + "_" + new DateTime().toString(DateTimeFormat.forPattern("ddMMyyyyHHmmss")) + ".hgvs";
@@ -95,7 +95,7 @@ public class HgvsConverter {
 //                Files.deleteIfExists(Paths.get(filePathOutput));
 //                Files.deleteIfExists(Paths.get(filePathError));
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(ParserHelper.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VariantParser.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(EnsemblHelper.class.getName()).log(Level.SEVERE, null, ex);
             } finally {

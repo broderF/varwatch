@@ -17,7 +17,7 @@ import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.data.varianteffect.VariantEffect;
 import com.ikmb.core.data.varianteffect.VariantEffectDataManager;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.core.varwatchcommons.tools.VariantEffectPredictor;
+import com.ikmb.core.tools.VariantEffectPredictor;
 import com.ikmb.core.data.workflow.analysis.Analysis;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;

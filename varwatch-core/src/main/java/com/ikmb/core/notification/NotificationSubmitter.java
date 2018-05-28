@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.core.varwatchcommons.notification;
+package com.ikmb.core.notification;
 
 import java.io.FileInputStream;
 import java.io.IOException;

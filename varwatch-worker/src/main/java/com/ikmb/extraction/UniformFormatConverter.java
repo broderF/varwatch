@@ -11,7 +11,7 @@ import com.ikmb.core.data.ensembl.Ensembl;
 import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import com.ikmb.core.varwatchcommons.entities.VWStatus;
-import com.ikmb.core.varwatchcommons.utils.ParserHelper;
+import com.ikmb.core.utils.VariantParser;
 import com.ikmb.core.data.ensembl.EnsemblDataManager;
 import com.ikmb.core.data.variant.VariantStatusBuilder;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class UniformFormatConverter {
         VariantFormat variantFormat = VariantFormat.getVariantFormat(dataset.getRawDataType());
         switch (variantFormat) {
             case NORMAL:
-                genomicFeatures = ParserHelper.getVariantInfoFromByteArray(dataset.getRawData());
+                genomicFeatures = VariantParser.getVariantInfoFromByteArray(dataset.getRawData());
 //                String vcfString = ParserHelper.json2vcf(features);
 //                vcfFile = vcfString.getBytes();
                 break;
@@ -70,7 +70,7 @@ public class UniformFormatConverter {
             case HGVS:
                 //with the hgvs string inside of the object
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Start hgvs");
-                List<GenomicFeature> tmpfeatures = ParserHelper.getVariantInfoFromByteArray(dataset.getRawData());
+                List<GenomicFeature> tmpfeatures = VariantParser.getVariantInfoFromByteArray(dataset.getRawData());
 //                List<String> hgvsErrorVariants = new ArrayList<>();
 //                genomicFeatures = EnsemblHelper.hgvs2vcfWithScript(tmpfeatures, hgvsErrorVariants);
 //                for (String tmpVar : hgvsErrorVariants) {

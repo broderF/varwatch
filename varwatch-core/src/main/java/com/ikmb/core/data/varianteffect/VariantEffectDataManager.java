@@ -11,7 +11,7 @@ import com.ikmb.core.data.dataset.DatasetDao;
 import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.varwatchcommons.entities.VWStatus;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
-import com.ikmb.core.varwatchcommons.utils.VariantHash;
+import com.ikmb.core.utils.VariantHash;
 import com.ikmb.core.data.variant.VariantBuilder;
 import com.ikmb.core.data.variant.VariantDao;
 import com.ikmb.core.data.hpo.HPOTermBuilder;
