@@ -23,6 +23,8 @@ import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;
 import com.ikmb.core.data.workflow.worker.AnalysisWorker;
 import com.ikmb.core.data.workflow.analysis.AnalysisBuilder;
+import com.ikmb.core.filter.VariantEffectFilterManager;
+import com.ikmb.core.filter.VariantFilterManager;
 import com.ikmb.varwatchworker.Worker;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,6 +77,9 @@ public class AnnotationWorker implements Worker {
     @Inject
     private SubmissionNotification submissionNoti;
 
+    @Inject
+    private VariantFilterManager variantFilterManager;
+
     private WorkFlowManager.JobProcessStatus jobProcessStatus = WorkFlowManager.JobProcessStatus.FAILED;
 
     @Override
@@ -89,16 +94,15 @@ public class AnnotationWorker implements Worker {
         Set<Variant> variants = _dataset.getVariants();
 //        List<GenomicFeature> variantInfoFromByteArray = ParserHelper.getVariantInfoFromByteArray(vcfFile);
         for (Variant variant : variants) {
-            List<VariantEffect> filteredvariantEffects = new ArrayList<>();
             List<VariantEffect> variantEffects = vep.run(variant);
-            for (VariantEffect curEffect : variantEffects) {
-                if (curEffect.getTranscriptName().startsWith("ENST") && isImpactfull(curEffect.getConsequence())) {
-                    filteredvariantEffects.add(curEffect);
-                    variant.setUploadedVariantion(curEffect.getUploaded_variation());
-                }
+//            variantFilterManager.isValid(variant, variantEffects);
+            if (variantFilterManager.isValid(variant, variantEffects)) {
+                logger.info("persist variant effects for variant id:{} ,  location:{}", variant.getId(), variant.toString());
+                variantEffDataManager.persistSQLVariantEffectTmp(variant, variantFilterManager.getValidVariantEffects());
+            } else {
+                logger.info("variant invalid, removing variant id:{} ,  location:{}", variant.getId(), variant.toString());
+                variantEffDataManager.removeVariant(variant);
             }
-            logger.info("{} canonical variants with high or moderate impact factor", filteredvariantEffects.size());
-            variantEffDataManager.persistSQLVariantEffect(variant, filteredvariantEffects);
         }
 //        variantEffDataManager.persistSQLVariantEffects(filteredvariantEffects, _dataset);
 //        variantEffects = filteredvariantEffects;

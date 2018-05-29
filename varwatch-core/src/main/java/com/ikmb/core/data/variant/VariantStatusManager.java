@@ -119,7 +119,12 @@ public class VariantStatusManager {
                 lastStatus = currentStatus;
             }
         }
-        return variantStatusBuilder.withStatusSQL(lastStatus).build();
+        if (lastStatus != null) {
+
+            return variantStatusBuilder.withStatusSQL(lastStatus).build();
+        } else {
+            return null;
+        }
     }
 
     @Transactional
@@ -280,7 +285,6 @@ public class VariantStatusManager {
 //        List<Status> variants = vdm.getTmpAllStatus(1136l);
 //        System.out.println("finish");
 //    }
-
     private List<Status> getAllNonMatchingStatus(Long id) {
         List<Status> allVariantStatus = new ArrayList<>();
         List<VariantStatus> statusVariantsSql = variantStatusDao.getNonMatchedStatus(id);

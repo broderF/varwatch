@@ -33,4 +33,9 @@ public class ConfigurationManager {
     public String getConfiguration(String key) {
         return configDao.getConfiguration(key);
     }
+
+    @Transactional
+    public List<FilterConfig> getFilterOptions() {
+        return configDao.getFilterConfigurations();
+    }
 }

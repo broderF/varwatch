@@ -14,6 +14,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -46,6 +48,12 @@ public class EnsemblHttpRequestHandler {
             int responseCode = httpConnection.getResponseCode();
 
             if (responseCode != 200) {
+                if (responseCode == 429 && httpConnection.getHeaderField("Retry-After") != null) {
+                    double sleepFloatingPoint = Double.valueOf(httpConnection.getHeaderField("Retry-After"));
+                    double sleepMillis = 1000 * sleepFloatingPoint;
+                    Thread.sleep((long) sleepMillis);
+                    return sendHttpRequest(parameter);
+                }
                 throw new RuntimeException("Response code was not 200. Detected response was " + responseCode);
             }
 
@@ -73,6 +81,8 @@ public class EnsemblHttpRequestHandler {
             logger.error("Error while connecting to ensembl endpoint", ex);
         } catch (IOException ex) {
             logger.error("Error while connecting to ensembl endpoint", ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(EnsemblHttpRequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return output;
     }

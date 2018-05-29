@@ -6,6 +6,7 @@
 package com.ikmb.core.data.hpo;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -47,7 +48,7 @@ public class HpoDistanceFileCalculator {
     long altIds = 1;
 
     public void run(String oboPath, String outputPath) throws IOException {
-        Map<Long, HpoPathTerm> hpoTerms = getHpoTermsFromFile(oboPath);
+        Map<Long, HpoPathTerm> hpoTerms = getHpoTermsFromFile(new URL(oboPath));
 //        printTxt(hpoTerms);
         List<String> lines = new ArrayList<>();
         for (Map.Entry<Long, HpoPathTerm> mapEntry : hpoTerms.entrySet()) {
@@ -57,10 +58,10 @@ public class HpoDistanceFileCalculator {
         Files.write(file, lines, Charset.forName("UTF-8"));
     }
 
-    public Map<Long, HpoPathTerm> getHpoTermsFromFile(String filePath) throws IOException {
+    public Map<Long, HpoPathTerm> getHpoTermsFromFile(URL oboUrl) throws IOException {
         Map<Long, HpoPathTerm> hpoTerms = new TreeMap<>();
         OBOFormatParser parser = new OBOFormatParser();
-        OBODoc parse = parser.parse(filePath);
+        OBODoc parse = parser.parse(oboUrl);
 
         List<Frame> termFrames = new ArrayList<>(parse.getTermFrames());
         Collections.sort(termFrames, (Frame o1, Frame o2) -> {

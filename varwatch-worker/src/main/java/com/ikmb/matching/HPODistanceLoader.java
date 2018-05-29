@@ -8,10 +8,15 @@ package com.ikmb.matching;
 import com.google.inject.Inject;
 import com.ikmb.core.data.config.ConfigurationManager;
 import com.ikmb.core.data.config.VarWatchConfig.ConfigurationTerms;
+import com.ikmb.core.data.hpo.HPOUpdateManager;
+import com.ikmb.core.data.hpo.HpoDistanceFileCalculator;
 import com.ikmb.matching.varwatch.VarWatchScreener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,6 +37,19 @@ public class HPODistanceLoader {
     public Map<String, HPOPath> loadHPODistances() {
         String hpoFile = configManager.getConfiguration(ConfigurationTerms.HPO_DIST_FILE.getTerm());
         pathList = new HashMap<>();
+
+        Path hpoFilePath = Paths.get(hpoFile);
+        boolean fileExist = Files.exists(hpoFilePath);
+        if (!fileExist) {
+            String oboUrlPath = configManager.getConfiguration(ConfigurationTerms.HPO_OBO_SOURCE_URL.getTerm());
+            String calcFilePath = configManager.getConfiguration(ConfigurationTerms.HPO_DIST_FILE.getTerm());
+            HpoDistanceFileCalculator hpoDistanceFileCalculator = new HpoDistanceFileCalculator();
+            try {
+                hpoDistanceFileCalculator.run(oboUrlPath, calcFilePath);
+            } catch (IOException ex) {
+                Logger.getLogger(HPOUpdateManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         try (BufferedReader br = new BufferedReader(new FileReader(hpoFile))) {
             String line = br.readLine();
 

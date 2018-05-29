@@ -30,9 +30,9 @@ import javax.ws.rs.core.Response;
 @TokenFilter
 public class AnnotationService {
 
-    @Inject
+//    @Inject
     private DatasetManager datasetManager;
-    @Inject
+//    @Inject
     private VariantDataManager variantManager;
 
     @GET
@@ -71,10 +71,12 @@ public class AnnotationService {
         return new ResponseBuilder().buildListWithExpose(families);
     }
 
+    @Inject
     public void setDatasetManager(DatasetManager datasetManager) {
         this.datasetManager = datasetManager;
     }
 
+    @Inject
     public void setVariantManager(VariantDataManager variantManager) {
         this.variantManager = variantManager;
     }

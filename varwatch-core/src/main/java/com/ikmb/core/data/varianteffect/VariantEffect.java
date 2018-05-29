@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  *
@@ -61,6 +62,8 @@ public class VariantEffect implements Serializable {
     private String loftee;
     @Column(name = "impact")
     private String impactFactor;
+    @Transient
+    private JSONObject vepConsequence;
 
     public Long getId() {
         return id;
@@ -77,7 +80,7 @@ public class VariantEffect implements Serializable {
     public void setLoftee(String loftee) {
         this.loftee = loftee;
     }
-    
+
     public Integer getCds_start() {
         return cds_start;
     }
@@ -188,6 +191,14 @@ public class VariantEffect implements Serializable {
 
     public void setImpactFactor(String impactFactor) {
         this.impactFactor = impactFactor;
+    }
+
+    public void setVepConsequence(JSONObject currentConseq) {
+        this.vepConsequence = currentConseq;
+    }
+
+    public JSONObject getVepConsequence() {
+        return vepConsequence;
     }
 
 }

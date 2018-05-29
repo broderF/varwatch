@@ -28,7 +28,7 @@ public class VariantEffectPredictorTest {
         variant.setAlternateBase("T");
         variant.setChromosomeName("1");
         List<VariantEffect> variantEffects = vep.run(variant);
-        Assert.assertEquals("get most impactfull variant effects", 1, variantEffects.size());
+        Assert.assertEquals("get all variant effects", 3, variantEffects.size());
         
         VariantEffect variantEffect = variantEffects.get(0);
         Assert.assertEquals("MODIFIER",variantEffect.getImpactFactor());

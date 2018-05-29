@@ -131,16 +131,16 @@ public class HPOUpdateManager {
         } catch (IOException ex) {
             Logger.getLogger(HPOUpdateManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        updateHpoDistanceFile();
     }
 
     @Transactional
     public void updateHpoDistanceFile() {
-        String oboFilePath = configManager.getConfiguration(ConfigurationTerms.HPO_OBO_SOURCE_URL.getTerm());
+        String oboUrlPath = configManager.getConfiguration(ConfigurationTerms.HPO_OBO_SOURCE_URL.getTerm());
         String calcFilePath = configManager.getConfiguration(ConfigurationTerms.HPO_DIST_FILE.getTerm());
         HpoDistanceFileCalculator hpoDistanceFileCalculator = new HpoDistanceFileCalculator();
         try {
-            hpoDistanceFileCalculator.run(oboFilePath, calcFilePath);
+            hpoDistanceFileCalculator.run(oboUrlPath, calcFilePath);
         } catch (IOException ex) {
             Logger.getLogger(HPOUpdateManager.class.getName()).log(Level.SEVERE, null, ex);
         }

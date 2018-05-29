@@ -17,10 +17,9 @@ import java.util.Set;
 public class HPODistanceCalculator {
 
     private final Map<String, HPOPath> pathList;
-    @Inject
-    private HPODistanceLoader hpoDistanceLoader;
 
-    public HPODistanceCalculator() {
+    @Inject
+    public HPODistanceCalculator(HPODistanceLoader hpoDistanceLoader) {
         pathList = hpoDistanceLoader.loadHPODistances();
     }
 

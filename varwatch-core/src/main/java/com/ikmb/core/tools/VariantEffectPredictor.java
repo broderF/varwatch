@@ -31,37 +31,38 @@ public class VariantEffectPredictor {
         parameters.add("canonical=true");
         parameters.add("ccds=true");
         parameters.add("hgvs=true");
-
     }
 
     public List<VariantEffect> run(Variant variant) {
         int refBaseLength = variant.getReferenceBase().isEmpty() ? 0 : variant.getReferenceBase().length() - 1;
-        int endPos = variant.getChromosomePos()+ refBaseLength;
+        int endPos = variant.getChromosomePos() + refBaseLength;
         String restCall = "/vep/human/region/" + variant.getChromosomeName() + ":" + variant.getChromosomePos() + ":" + endPos + "/" + variant.getAlternateBase() + "?";
         StringJoiner stringjoiner = new StringJoiner("&");
         parameters.forEach(element -> stringjoiner.add(element));
         String parameter = stringjoiner.toString();
         System.out.println(restCall + parameter);
         String response = ensemblHttpRequestHandler.sendHttpRequest(restCall + parameter);
-        return getVariantEffectFromResponse(response);
+        return getVariantEffectFromResponse(variant, response);
     }
 
-    public List<VariantEffect> getVariantEffectFromResponse(String response) {
+    public List<VariantEffect> getVariantEffectFromResponse(Variant variant, String response) {
         List<VariantEffect> variantEffects = new ArrayList<>();
         try {
             System.out.println(response);
             JSONObject result = new JSONArray(response).getJSONObject(0);
-            String mostSevereConseq = result.getString("most_severe_consequence");
+            variant.setVepOutput(result);
+            variant.setUploadedVariantion(result.getString("input"));
+//            String mostSevereConseq = result.getString("most_severe_consequence");
             JSONArray consequences = result.getJSONArray("transcript_consequences");
             for (int i = 0; i < consequences.length(); i++) {
                 JSONObject currentConseq = consequences.getJSONObject(i);
                 JSONArray conseqTerms = currentConseq.getJSONArray("consequence_terms");
                 for (int j = 0; j < conseqTerms.length(); j++) {
                     String currentConseqTerm = conseqTerms.getString(j);
-                    if (currentConseqTerm.equals(mostSevereConseq)) {
-                        variantEffects.add(getVariantEffect(result, currentConseq, currentConseqTerm));
-                        break;
-                    }
+//                    if (currentConseqTerm.equals(mostSevereConseq)) {
+                    variantEffects.add(getVariantEffect(result, currentConseq, currentConseqTerm));
+//                        break;
+//                    }
                 }
             }
         } catch (JSONException ex) {
@@ -80,7 +81,9 @@ public class VariantEffectPredictor {
             if (currentConseq.has("canonical")) {
                 variantEffect.setCanonicalTranscript("1".equals(currentConseq.getString("canonical")));
             }
-            variantEffect.setHgvs_c(currentConseq.getString("hgvsc"));
+            if (currentConseq.has("hgvsc")) {
+                variantEffect.setHgvs_c(currentConseq.getString("hgvsc"));
+            }
             variantEffect.setFeatureName(currentConseq.getString("transcript_id"));
 
             if (currentConseq.has("cdna_start")) {
@@ -89,6 +92,7 @@ public class VariantEffectPredictor {
             if (currentConseq.has("cdna_end")) {
                 variantEffect.setCds_end(currentConseq.getInt("cdna_end"));
             }
+            variantEffect.setVepConsequence(currentConseq);
         } catch (JSONException ex) {
             ex.printStackTrace();
             Logger.getLogger(VariantEffectPredictor.class.getName()).log(Level.SEVERE, null, ex);

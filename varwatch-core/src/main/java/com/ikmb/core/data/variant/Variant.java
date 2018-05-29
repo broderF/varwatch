@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  *
@@ -65,6 +66,8 @@ public class Variant implements Serializable {
 //    private Set<VariantMetaData> variantMetaData = new HashSet<VariantMetaData>();
     @Transient
     private String uploaded_variant;
+    @Transient
+    private JSONObject vepOutput;
 
     public Long getId() {
         return id;
@@ -169,7 +172,6 @@ public class Variant implements Serializable {
 //    public void setVariantMetaData(Set<VariantMetaData> variantMetaData) {
 //        this.variantMetaData = variantMetaData;
 //    }
-
     public String toString() {
         return chromosomeName + "," + chromosomePos + "," + referenceBase + "," + alternateBase;
     }
@@ -186,4 +188,13 @@ public class Variant implements Serializable {
     public String getUploadedVariant() {
         return this.uploaded_variant;
     }
+
+    public void setVepOutput(JSONObject result) {
+        this.vepOutput = result;
+    }
+
+    public JSONObject getVepOutput() {
+        return vepOutput;
+    }
+
 }

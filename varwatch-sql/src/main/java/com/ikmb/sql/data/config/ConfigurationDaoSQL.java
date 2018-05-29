@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.ikmb.core.data.auth.client.AuthClient;
 import com.ikmb.core.data.config.ConfigurationDao;
+import com.ikmb.core.data.config.FilterConfig;
 import com.ikmb.core.data.config.VarWatchConfig;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -47,6 +48,13 @@ public class ConfigurationDaoSQL implements ConfigurationDao {
             System.out.println("no client result found");
             return null;
         }
+    }
+
+    @Override
+    public List<FilterConfig> getFilterConfigurations() {
+        TypedQuery<FilterConfig> query = emProvider.get().createQuery("SELECT u FROM FilterConfig u", FilterConfig.class
+        );
+        return query.getResultList();
     }
 
 }

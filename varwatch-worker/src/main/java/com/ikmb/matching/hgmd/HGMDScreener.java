@@ -169,7 +169,7 @@ public class HGMDScreener {
     private boolean isCodonMatch(Variant queryVariant, DatasetHGMD variant) {
         for (VariantEffect varEff1 : queryVariant.getVariantEffects()) {
             if (variant.getProtein_end() == null || variant.getProtein_start() == null || varEff1.getProtein_start() == null || varEff1.getProtein_end() == null) {
-                System.out.println("variant or matching variant effect is null for (hgmd variant: " + queryVariant.getId() + ") and effet(effect:" + varEff1.getId() + ")");
+//                System.out.println("variant or matching variant effect is null for (hgmd variant: " + queryVariant.getId() + ") and effet(effect:" + varEff1.getId() + ")");
                 continue;
             }
             if (varEff1.getProtein_start() <= variant.getProtein_end() && varEff1.getProtein_end() >= variant.getProtein_start()) {
