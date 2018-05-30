@@ -357,7 +357,6 @@ public class MatchVariantDataManager {
 //        System.out.println(bup);
 //        System.out.println("finish");
 //    }
-
     private List<Variant> filterForNonFinishedDatasets(List<Variant> matchedVariants) {
         List<Variant> filteredVariants = new ArrayList<>();
         int notCompletedMatches = 0;
@@ -472,36 +471,35 @@ public class MatchVariantDataManager {
         return matchInformations;
     }
 
-    private List<MatchVariant> filterMatchedVariants(List<MatchVariant> vwmatchedVariantsSql, Variant queryVariant) {
-        List<MatchVariant> vwStatuses = getVWStatusEntries(vwmatchedVariantsSql);
-        List<MatchVariant> hgmdStatuses = getHgmdStatusEntries(vwmatchedVariantsSql);
-
-        List<MatchVariant> filteredStatusEntries = new ArrayList<>();
-        filteredStatusEntries.addAll(getFilteredList(vwStatuses, queryVariant));
-        filteredStatusEntries.addAll(getFilteredList(hgmdStatuses, queryVariant));
-        return filteredStatusEntries;
-    }
-
-    private List<MatchVariant> getVWStatusEntries(List<MatchVariant> vwmatchedVariantsSql) {
-        List<MatchVariant> vwVariantStatusEntries = new ArrayList<>();
-        for (MatchVariant curStatus : vwmatchedVariantsSql) {
-            if (curStatus.getDatabase().equals("VarWatch")) {
-                vwVariantStatusEntries.add(curStatus);
-            }
-        }
-        return vwVariantStatusEntries;
-    }
-
-    private List<MatchVariant> getHgmdStatusEntries(List<MatchVariant> vwmatchedVariantsSql) {
-        List<MatchVariant> vwVariantStatusEntries = new ArrayList<>();
-        for (MatchVariant curStatus : vwmatchedVariantsSql) {
-            if (curStatus.getDatabase().equals("HGMD")) {
-                vwVariantStatusEntries.add(curStatus);
-            }
-        }
-        return vwVariantStatusEntries;
-    }
-
+//    private List<MatchVariant> filterMatchedVariants(List<MatchVariant> vwmatchedVariantsSql, Variant queryVariant) {
+//        List<MatchVariant> vwStatuses = getVWStatusEntries(vwmatchedVariantsSql);
+//        List<MatchVariant> hgmdStatuses = getHgmdStatusEntries(vwmatchedVariantsSql);
+//
+//        List<MatchVariant> filteredStatusEntries = new ArrayList<>();
+//        filteredStatusEntries.addAll(getFilteredList(vwStatuses, queryVariant));
+//        filteredStatusEntries.addAll(getFilteredList(hgmdStatuses, queryVariant));
+//        return filteredStatusEntries;
+//    }
+//
+//    private List<MatchVariant> getVWStatusEntries(List<MatchVariant> vwmatchedVariantsSql) {
+//        List<MatchVariant> vwVariantStatusEntries = new ArrayList<>();
+//        for (MatchVariant curStatus : vwmatchedVariantsSql) {
+//            if (curStatus.getDatabase().equals("VarWatch")) {
+//                vwVariantStatusEntries.add(curStatus);
+//            }
+//        }
+//        return vwVariantStatusEntries;
+//    }
+//
+//    private List<MatchVariant> getHgmdStatusEntries(List<MatchVariant> vwmatchedVariantsSql) {
+//        List<MatchVariant> vwVariantStatusEntries = new ArrayList<>();
+//        for (MatchVariant curStatus : vwmatchedVariantsSql) {
+//            if (curStatus.getDatabase().equals("HGMD")) {
+//                vwVariantStatusEntries.add(curStatus);
+//            }
+//        }
+//        return vwVariantStatusEntries;
+//    }
     public List<MatchVariant> getFilteredList(List<MatchVariant> vwmatchedVariantsSql, Variant queryVariant) {
         if (vwmatchedVariantsSql.size() <= 5) {
             return vwmatchedVariantsSql;
@@ -594,13 +592,15 @@ public class MatchVariantDataManager {
                 Variant var = variantDao.get(matchVariant.getVariantId());
                 posisiton = var.getChromosomePos();
             }
-            Integer distance = Math.abs(queryVariant.getChromosomePos() - posisiton);
-            if (distance2Variant.containsKey(posisiton)) {
-                distance2Variant.get(posisiton).add(status);
-            } else {
-                List<MatchVariant> variantStatusList = new ArrayList<>();
-                variantStatusList.add(status);
-                distance2Variant.put(distance, variantStatusList);
+            if (posisiton != null) {
+                Integer distance = Math.abs(queryVariant.getChromosomePos() - posisiton);
+                if (distance2Variant.containsKey(posisiton)) {
+                    distance2Variant.get(posisiton).add(status);
+                } else {
+                    List<MatchVariant> variantStatusList = new ArrayList<>();
+                    variantStatusList.add(status);
+                    distance2Variant.put(distance, variantStatusList);
+                }
             }
         }
 

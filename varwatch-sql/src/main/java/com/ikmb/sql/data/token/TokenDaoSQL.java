@@ -55,10 +55,10 @@ public class TokenDaoSQL implements TokenDao {
     }
 
     public void update(AuthToken tokenSQL) {
-        AuthToken currentToken = emProvider.get().find(AuthToken.class, tokenSQL.getId());
-        currentToken.setExpiresIn(tokenSQL.getExpiresIn());
-        emProvider.get().merge(currentToken);
-        emProvider.get().refresh(currentToken);
+//        AuthToken currentToken = emProvider.get().find(AuthToken.class, tokenSQL.getId());
+//        currentToken.setExpiresIn(tokenSQL.getExpiresIn());
+        emProvider.get().merge(tokenSQL);
+//        emProvider.get().refresh(currentToken);
     }
 
     public void save(AuthToken tokensql) {

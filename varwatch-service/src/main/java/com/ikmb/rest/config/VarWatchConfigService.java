@@ -9,6 +9,8 @@ import com.google.inject.Inject;
 import com.ikmb.core.data.config.ConfigurationManager;
 import com.ikmb.core.data.config.FilterConfig;
 import com.ikmb.core.data.config.VarWatchConfig;
+import com.ikmb.core.data.reference_db.RefDatabase;
+import com.ikmb.core.data.reference_db.ReferenceDBDataManager;
 import com.ikmb.rest.util.ResponseBuilder;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -28,6 +30,8 @@ public class VarWatchConfigService {
 
     @Inject
     private ConfigurationManager configManager;
+    @Inject
+    private ReferenceDBDataManager databaseManager;
 
     @GET
     @Path("show")
@@ -56,6 +60,14 @@ public class VarWatchConfigService {
     @Path("filter/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public void addFilterConfiguration(@QueryParam("key") String key, @QueryParam("value") String value, @QueryParam("type") String type, @QueryParam("enabled") boolean enabled) {
-        configManager.addFilterConfiguration(key, value,type,enabled);
+        configManager.addFilterConfiguration(key, value, type, enabled);
+    }
+
+    @GET
+    @Path("beacon/show")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBeaconConfiguration() {
+        List<RefDatabase> activeBeacons = databaseManager.getActiveBeacons();
+        return new ResponseBuilder().buildList(activeBeacons);
     }
 }

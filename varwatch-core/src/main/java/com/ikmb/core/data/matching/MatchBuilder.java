@@ -131,7 +131,7 @@ public class MatchBuilder {
     }
 
     public MatchBuilder withGenes(List<Gene> genes) {
-        genes = new ArrayList<>();
+//        genes = new ArrayList<>();
         this.genes = genes;
         return this;
     }

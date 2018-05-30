@@ -52,7 +52,7 @@ public class AnalysisWorker implements Serializable {
         return id;
     }
 
-    public void Long(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

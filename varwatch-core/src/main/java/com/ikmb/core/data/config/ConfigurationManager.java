@@ -7,6 +7,7 @@ package com.ikmb.core.data.config;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.ikmb.core.data.reference_db.RefDatabase;
 import java.util.List;
 
 /**
@@ -43,5 +44,9 @@ public class ConfigurationManager {
     public void addFilterConfiguration(String key, String value, String type, boolean enabled) {
         FilterConfig filterConfig = new FilterConfig(key, value, type, enabled);
         configDao.updateFilterConfig(filterConfig);
+    }
+
+    public List<RefDatabase> getActiveBeacons() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

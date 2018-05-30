@@ -87,56 +87,58 @@ public class HpoDistanceFileCalculator {
         return hpoTerms;
     }
 
-    public Map<Long, HpoPathTerm> getHpoTermsFromDb(String database, String user, String password) {
-        Connection _conn = null;
-        Map<Long, HpoPathTerm> hpoTerms = new TreeMap<Long, HpoPathTerm>();
-        int nr = 0;
-        try {
-            _conn = DriverManager.getConnection("jdbc:mysql://localhost/MYHPO_06_2017?user=root&password=yuBr3Pef");
-
-            Statement stmt = _conn.createStatement();
-            //am besten mit join und dann die HPOTerm Map füllen
-            String select = "SELECT * FROM term t left join term2term t2t on t.id=t2t.term2_id";
-//            String select = "SELECT term.id FROM term where subontology=\"O\"";
-            System.out.println(select);
-            ResultSet rs = stmt.executeQuery(select);
-//| id | name                                     | is_obsolete | is_root | subontology | comment | acc        |
-
-            while (rs.next()) {
-                Long id = Long.parseLong(rs.getString("t.id"));
-                nr++;
-//                ids.add(id);
-
-                if (hpoTerms.containsKey(id)) {
-                    HpoPathTerm pathTerm = hpoTerms.get(id);
-                    String parent = rs.getString("t2t.term1_id");
-                    if (parent != null) {
-                        Long parentId = Long.parseLong(parent);
-                        pathTerm.addParent(parentId);
-                    }
-                } else {
-                    String accesionNumber = rs.getString("t.acc");
-                    String name = rs.getString("t.name");
-                    HpoPathTerm pathTerm = new HpoPathTerm(id, accesionNumber, name);
-                    String parent = rs.getString("t2t.term1_id");
-                    if (parent != null) {
-                        Long parentId = Long.parseLong(parent);
-                        pathTerm.addParent(parentId);
-                    }
-                    hpoTerms.put(id, pathTerm);
-                }
-
-            }
-
-        } catch (SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
-        System.out.println(nr);
-        return hpoTerms;
-    }
+//    public Map<Long, HpoPathTerm> getHpoTermsFromDb(String database, String user, String password) {
+//        Connection _conn = null;
+//        Map<Long, HpoPathTerm> hpoTerms = new TreeMap<Long, HpoPathTerm>();
+//        int nr = 0;
+//        try {
+//            _conn = DriverManager.getConnection("jdbc:mysql://localhost/MYHPO_06_2017?user=root&password=yuBr3Pef");
+//
+//            Statement stmt = _conn.createStatement();
+//            //am besten mit join und dann die HPOTerm Map füllen
+//            String select = "SELECT * FROM term t left join term2term t2t on t.id=t2t.term2_id";
+////            String select = "SELECT term.id FROM term where subontology=\"O\"";
+//            System.out.println(select);
+//            ResultSet rs = stmt.executeQuery(select);
+////| id | name                                     | is_obsolete | is_root | subontology | comment | acc        |
+//
+//            while (rs.next()) {
+//                Long id = Long.parseLong(rs.getString("t.id"));
+//                nr++;
+////                ids.add(id);
+//
+//                if (hpoTerms.containsKey(id)) {
+//                    HpoPathTerm pathTerm = hpoTerms.get(id);
+//                    String parent = rs.getString("t2t.term1_id");
+//                    if (parent != null) {
+//                        Long parentId = Long.parseLong(parent);
+//                        pathTerm.addParent(parentId);
+//                    }
+//                } else {
+//                    String accesionNumber = rs.getString("t.acc");
+//                    String name = rs.getString("t.name");
+//                    HpoPathTerm pathTerm = new HpoPathTerm(id, accesionNumber, name);
+//                    String parent = rs.getString("t2t.term1_id");
+//                    if (parent != null) {
+//                        Long parentId = Long.parseLong(parent);
+//                        pathTerm.addParent(parentId);
+//                    }
+//                    hpoTerms.put(id, pathTerm);
+//                }
+//
+//            }
+//
+//        } catch (SQLException ex) {
+//            // handle any errors
+//            System.out.println("SQLException: " + ex.getMessage());
+//            System.out.println("SQLState: " + ex.getSQLState());
+//            System.out.println("VendorError: " + ex.getErrorCode());
+//        } finally {
+//            _conn.close();
+//        }
+//        System.out.println(nr);
+//        return hpoTerms;
+//    }
 
     private List<String> calculatePaths(Map.Entry<Long, HpoPathTerm> mapEntry, Map<Long, HpoPathTerm> hpoTerms) {
         List<String> lines = new ArrayList<>();

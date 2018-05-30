@@ -61,7 +61,7 @@ public class TokenManager {
 
     @Transactional
     public void createNewToken(String token, String userName,
-             String clientName, Integer expiresIn
+            String clientName, Integer expiresIn
     ) {
         AuthToken tokensql = new AuthToken();
         System.out.println(clientName);
@@ -105,6 +105,8 @@ public class TokenManager {
         DateTime newDate = expiresInDate.plusSeconds(expiresIn);
 
         if (token != null && token.getExpiresIn().isAfter(new DateTime())) {
+            logger.error("current datetime {} and in millis {}", new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")), new DateTime().getMillis());
+            logger.error("new expires in  datetime {} and in millis {}", newDate.toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")), newDate.getMillis());
 
             token.setExpiresIn(newDate);
             tokenDao.update(token);
@@ -117,7 +119,6 @@ public class TokenManager {
             }
             logger.error("current datetime {} and in millis {}", new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")), new DateTime().getMillis());
             logger.error("new expires in  datetime {} and in millis {}", newDate.toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")), newDate.getMillis());
-
             return false;
         }
     }
