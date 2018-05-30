@@ -53,14 +53,16 @@ public class TokenManager {
     @Transactional
     public void refreshToken(String currentToken, String userMail, String clientName, Integer expiresIn) {
         AuthToken tokenSQL = tokenDao.getToken(currentToken);
-        DateTime expiresInDate = tokenSQL.getExpiresIn();
+        DateTime expiresInDate = new DateTime();
         DateTime newDate = expiresInDate.plusSeconds(expiresIn);
         tokenSQL.setExpiresIn(newDate);
         tokenDao.update(tokenSQL);
     }
 
     @Transactional
-    public void createNewToken(String token, String userName, String clientName, Integer expiresIn) {
+    public void createNewToken(String token, String userName,
+             String clientName, Integer expiresIn
+    ) {
         AuthToken tokensql = new AuthToken();
         System.out.println(clientName);
         AuthClient clientByName = clientDao.getClientByName(clientName);
@@ -92,7 +94,8 @@ public class TokenManager {
 //        }
 //    }
     @Transactional
-    public boolean isTokenValid(String accessToken) {
+    public boolean isTokenValid(String accessToken
+    ) {
         if (accessToken == null || accessToken.isEmpty()) {
             return false;
         }
@@ -109,7 +112,7 @@ public class TokenManager {
         } else {
             if (token != null) {
                 logger.error("current expiresIn {} and in millis {}", token.getExpiresIn().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")), token.getExpiresIn().getMillis());
-            }else{
+            } else {
                 logger.error("Token is null!");
             }
             logger.error("current datetime {} and in millis {}", new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")), new DateTime().getMillis());
@@ -120,20 +123,23 @@ public class TokenManager {
     }
 
     @Transactional
-    public User getUserByToken(String accessToken) {
+    public User getUserByToken(String accessToken
+    ) {
         AuthToken token = tokenDao.getToken(accessToken);
         User user = token.getUser();
         return userDao.getUserByID(user.getId());
     }
 
     @Transactional
-    public AuthClient getClientByToken(String accessToken) {
+    public AuthClient getClientByToken(String accessToken
+    ) {
         AuthToken token = tokenDao.getToken(accessToken);
         return token.getClient();
     }
 
     @Transactional
-    public boolean deleteToken(String accessToken) {
+    public boolean deleteToken(String accessToken
+    ) {
         return tokenDao.remove(accessToken);
     }
 

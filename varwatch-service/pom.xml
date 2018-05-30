@@ -165,7 +165,8 @@
                         </goals>
                         <configuration>
                             <outputDirectory>../docker/data/</outputDirectory>
-                           <!-- <outputDirectory>${endorsed.dir}</outputDirectory>-->
+                            <!-- <outputDirectory>${endorsed.dir}</outputDirectory>-->
+                            <!--<filtering>true</filtering>-->
                             <silent>true</silent>
                             <artifactItems>
                                 <artifactItem>

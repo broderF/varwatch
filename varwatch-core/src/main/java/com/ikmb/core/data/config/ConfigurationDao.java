@@ -15,10 +15,12 @@ public interface ConfigurationDao {
 
     public List<VarWatchConfig> getAllConfigurations();
 
-    public void save(VarWatchConfig config);
-
     public String getConfiguration(String key);
-    
+
     public List<FilterConfig> getFilterConfigurations();
+
+    public void update(VarWatchConfig config);
+
+    public void updateFilterConfig(FilterConfig filterConfig);
 
 }

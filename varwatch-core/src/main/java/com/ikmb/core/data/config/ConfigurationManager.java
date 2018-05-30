@@ -26,7 +26,7 @@ public class ConfigurationManager {
     @Transactional
     public void addConfiguration(String key, String value) {
         VarWatchConfig config = new VarWatchConfig(key, value);
-        configDao.save(config);
+        configDao.update(config);
     }
 
     @Transactional
@@ -37,5 +37,11 @@ public class ConfigurationManager {
     @Transactional
     public List<FilterConfig> getFilterOptions() {
         return configDao.getFilterConfigurations();
+    }
+
+    @Transactional
+    public void addFilterConfiguration(String key, String value, String type, boolean enabled) {
+        FilterConfig filterConfig = new FilterConfig(key, value, type, enabled);
+        configDao.updateFilterConfig(filterConfig);
     }
 }

@@ -7,7 +7,6 @@ package com.ikmb.sql.data.config;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.ikmb.core.data.auth.client.AuthClient;
 import com.ikmb.core.data.config.ConfigurationDao;
 import com.ikmb.core.data.config.FilterConfig;
 import com.ikmb.core.data.config.VarWatchConfig;
@@ -33,8 +32,8 @@ public class ConfigurationDaoSQL implements ConfigurationDao {
     }
 
     @Override
-    public void save(VarWatchConfig config) {
-        emProvider.get().persist(config);
+    public void update(VarWatchConfig config) {
+        emProvider.get().merge(config);
     }
 
     @Override
@@ -55,6 +54,11 @@ public class ConfigurationDaoSQL implements ConfigurationDao {
         TypedQuery<FilterConfig> query = emProvider.get().createQuery("SELECT u FROM FilterConfig u", FilterConfig.class
         );
         return query.getResultList();
+    }
+
+    @Override
+    public void updateFilterConfig(FilterConfig filterConfig) {
+        emProvider.get().merge(filterConfig);
     }
 
 }

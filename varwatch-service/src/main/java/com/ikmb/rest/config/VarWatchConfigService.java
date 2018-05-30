@@ -7,6 +7,7 @@ package com.ikmb.rest.config;
 
 import com.google.inject.Inject;
 import com.ikmb.core.data.config.ConfigurationManager;
+import com.ikmb.core.data.config.FilterConfig;
 import com.ikmb.core.data.config.VarWatchConfig;
 import com.ikmb.rest.util.ResponseBuilder;
 import java.util.List;
@@ -40,6 +41,21 @@ public class VarWatchConfigService {
     @Path("add")
     @Consumes(MediaType.APPLICATION_JSON)
     public void addConfiguration(@QueryParam("key") String key, @QueryParam("value") String value) {
-        configManager.addConfiguration(key,value);
+        configManager.addConfiguration(key, value);
+    }
+
+    @GET
+    @Path("filter/show")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFilterConfiguration() {
+        List<FilterConfig> filterOptions = configManager.getFilterOptions();
+        return new ResponseBuilder().buildList(filterOptions);
+    }
+
+    @GET
+    @Path("filter/add")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void addFilterConfiguration(@QueryParam("key") String key, @QueryParam("value") String value, @QueryParam("type") String type, @QueryParam("enabled") boolean enabled) {
+        configManager.addFilterConfiguration(key, value,type,enabled);
     }
 }

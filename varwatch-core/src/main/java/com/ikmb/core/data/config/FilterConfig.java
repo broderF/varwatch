@@ -20,31 +20,31 @@ import javax.persistence.Table;
 public class FilterConfig implements Serializable {
 
     @Id
-    private Long id;
-
     @Column(name = "filter_name")
-    private String name;
+    private String key;
     @Column(name = "filter_value")
     private String value;
-    @Column(name = "filter_type")
-    private String filterType;//variant of variant_effect
+    @Column(name = "filter_type", nullable = true)
+    private String type;//variant of variant_effect
     @Column(name = "enabled")
     private boolean enabled;
 
-    public Long getId() {
-        return id;
+    FilterConfig(String key, String value, String type, boolean enabled) {
+        this.enabled = enabled;
+        this.key = key;
+        this.value = value;
+        this.type = type;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public FilterConfig() {
     }
 
     public String getName() {
-        return name;
+        return key;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.key = name;
     }
 
     public String getValue() {
@@ -56,11 +56,11 @@ public class FilterConfig implements Serializable {
     }
 
     public String getFilterType() {
-        return filterType;
+        return type;
     }
 
     public void setFilterType(String filterType) {
-        this.filterType = filterType;
+        this.type = filterType;
     }
 
     public boolean isEnabled() {
@@ -71,5 +71,4 @@ public class FilterConfig implements Serializable {
         this.enabled = enabled;
     }
 
-    
 }
