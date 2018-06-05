@@ -5,11 +5,13 @@
  */
 package com.ikmb.core.data.reference_db;
 
+import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -26,13 +28,17 @@ public class RefDatabase implements Serializable {
     @GeneratedValue
     private Long id;
     @Column(name = "name")
+    @Expose
     private String name;
     @Column(name = "version")
     private String version;
     @Column(name = "path")
+    @Expose
     private String path;
+    @Expose
     @Column(name = "assembly")
     private String assembly;
+    @Expose
     @Column(name = "implementation")
     private String implementation;
     @Column(name = "is_active")
@@ -42,6 +48,18 @@ public class RefDatabase implements Serializable {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "timestamp")
     private DateTime lastUpdate;
+    @Expose
+    @Lob
+    @Column(name = "image", nullable = true, columnDefinition = "blob")
+    private byte[] image;
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
     public Long getId() {
         return id;
@@ -119,5 +137,4 @@ public class RefDatabase implements Serializable {
 //        RefDatabase refDatabase = new RefDatabaseImpl();
 //        ref
 //    }
-
 }

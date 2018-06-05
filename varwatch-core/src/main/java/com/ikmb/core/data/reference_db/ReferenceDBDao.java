@@ -20,4 +20,9 @@ public interface ReferenceDBDao {
     public RefDatabase getVarWatchDatabase();
 
     public void save(RefDatabase refDbSql);
+
+    public RefDatabase getRefDatabaseByName(String name);
+
+    public void update(RefDatabase refDatabase);
+
 }

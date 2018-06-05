@@ -13,6 +13,7 @@ import java.util.ArrayList;
 //import com.ikmb.varwatchsql.PersistenceManager;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 /**
@@ -26,7 +27,7 @@ public class ReferenceDBDaoSQL implements ReferenceDBDao {
     private Provider<EntityManager> emProvider;
 
     public RefDatabase get(Long id) {
-            RefDatabase find = emProvider.get().find(RefDatabase.class, id);
+        RefDatabase find = emProvider.get().find(RefDatabase.class, id);
         return find;
     }
 
@@ -44,5 +45,22 @@ public class ReferenceDBDaoSQL implements ReferenceDBDao {
 
     public void save(RefDatabase refDbSql) {
         emProvider.get().persist(refDbSql);
+    }
+
+    @Override
+    public RefDatabase getRefDatabaseByName(String name) {
+        TypedQuery<RefDatabase> query = emProvider.get().createQuery("SELECT s FROM RefDatabase s WHERE s.name = :name", RefDatabase.class);
+        RefDatabase refDb = null;
+        try {
+            refDb = query.setParameter("name", name).getSingleResult();
+        } catch (NoResultException ex) {
+
+        }
+        return refDb;
+    }
+
+    @Override
+    public void update(RefDatabase refDatabase) {
+        emProvider.get().merge(refDatabase);
     }
 }

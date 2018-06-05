@@ -9,36 +9,38 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import org.joda.time.DateTime;
 
 /**
  *
  * @author broder
  */
 public class ReferenceDBDataManager {
-
+    
     @Inject
     private ReferenceDBDao refDBDao;
-
+    
     @Transactional
     public RefDatabase getReferenceDBById(Long id) {
         return refDBDao.get(id);
     }
-
+    
     @Transactional
     public List<RefDatabase> getActiveDatabases() {
         return refDBDao.getActiveDatabases();
     }
-
+    
     @Transactional
     public RefDatabase getVarWatchDatabase() {
         return refDBDao.getVarWatchDatabase();
     }
-
+    
     @Transactional
     public void saveReferenceDatabase(RefDatabase refDbSql) {
         refDBDao.save(refDbSql);
     }
-
+    
+    @Transactional
     public List<RefDatabase> getActiveBeacons() {
         List<RefDatabase> activeDatabases = refDBDao.getActiveDatabases();
         List<RefDatabase> activeBeacons = new ArrayList<>();
@@ -48,5 +50,41 @@ public class ReferenceDBDataManager {
             }
         }
         return activeBeacons;
+    }
+    
+    @Transactional
+    public RefDatabase saveBeacon(String name, String path, String assembly, byte[] image, Boolean enabled) {
+        RefDatabase refDatabase = refDBDao.getRefDatabaseByName(name);
+        if (refDatabase == null) {
+            RefDatabase newRefDatabase = new RefDatabase();
+            newRefDatabase.setAssembly(assembly);
+            newRefDatabase.setImage(image);
+            newRefDatabase.setImplementation("global_beacon");
+            newRefDatabase.setIsActive(enabled);
+            newRefDatabase.setName(name);
+            newRefDatabase.setPath(path);
+            newRefDatabase.setUpdated(Boolean.FALSE);
+            newRefDatabase.setLastUpdate(new DateTime());
+            refDBDao.save(newRefDatabase);
+            return newRefDatabase;
+        } else {
+            if (assembly != null && !assembly.isEmpty()) {
+                refDatabase.setAssembly(assembly);
+            }
+            if (image != null && image.length > 0) {
+                refDatabase.setImage(image);
+            }
+            if (enabled != null) {
+                refDatabase.setIsActive(enabled);
+            }
+            if (name != null && !name.isEmpty()) {
+                refDatabase.setName(name);
+            }
+            if (path != null && !path.isEmpty()) {
+                refDatabase.setPath(path);
+            }
+            refDBDao.update(refDatabase);
+            return refDatabase;
+        }
     }
 }
