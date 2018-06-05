@@ -5,9 +5,11 @@ package com.ikmb.rest.user;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserManager;
+import com.ikmb.core.data.wipe.WipeDataManager;
 import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.VWResponse;
 import com.ikmb.core.utils.VarWatchException;
@@ -19,6 +21,7 @@ import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -52,12 +55,13 @@ public class VarWatchUserImpl {
 //    private HTTPTokenConverter tokenConverter;
     @Inject
     private UserManager userManager;
+    @Inject
+    private WipeDataManager wipeDb;
 
     @POST
     @Path("report")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setUserReportSchedule(@HeaderParam("Authorization") String header, @QueryParam("schedule") String reportSchedule) {
-
 
         User user = inputConverter.getUserFromHeader(header);
         try {
@@ -108,6 +112,16 @@ public class VarWatchUserImpl {
 
         Response response = registrationManager.updateUser(contact, user);
         return response;
+    }
+
+    @POST
+    @Path("delete")
+    public Response deleteUser(@HeaderParam("Authorization") String header) {
+
+        User user = inputConverter.getUserFromHeader(header);
+        String response = wipeDb.wipeDataByUser(user.getMail());
+        userManager.delete(user);
+        return Response.status(Response.Status.OK).entity(new Gson().toJson(response)).build();
     }
 
     public enum ReportSchedule {

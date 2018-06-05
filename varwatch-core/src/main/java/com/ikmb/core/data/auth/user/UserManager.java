@@ -67,4 +67,9 @@ public class UserManager {
     public User getUserById(Integer userId) {
         return userDao.getUserByID(userId);
     }
+
+    @Transactional
+    public void delete(User user) {
+        userDao.deleteUser(user);
+    }
 }

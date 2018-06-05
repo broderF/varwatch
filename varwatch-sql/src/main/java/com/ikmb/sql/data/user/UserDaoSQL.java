@@ -87,4 +87,9 @@ public class UserDaoSQL implements UserDao{
         return tmp;
     }
 
+    @Override
+    public void deleteUser(User user) {
+        emProvider.get().remove(user);
+    }
+
 }
