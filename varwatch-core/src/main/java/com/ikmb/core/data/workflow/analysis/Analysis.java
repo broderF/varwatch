@@ -43,6 +43,8 @@ public class Analysis implements Serializable {
     public final static String ANALYSIS_REPORT = "report";
     @Transient
     public final static String ANALYSIS_SANITY_CHECK = "sanity_check";
+    @Transient
+    public final static String ANALYSIS_HPO_UPDATE = "hpo_update";
 
     @Id
     @GeneratedValue

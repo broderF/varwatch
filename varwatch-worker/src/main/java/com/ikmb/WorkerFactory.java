@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.varwatchworker;
+package com.ikmb;
 
 import com.google.inject.Injector;
 import com.ikmb.WorkerLauncher;
@@ -19,6 +19,9 @@ import com.ikmb.matching.hgmd.HGMDScreeningWorker;
 import com.ikmb.matching.varwatch.VarWatchScreeningWorker;
 import com.ikmb.report.ReportWorker;
 import com.ikmb.sanity.SanityWorker;
+import com.ikmb.update.HPOUpdateWorker;
+import com.ikmb.varwatchworker.CollectScreeningResultWorkerNew;
+import com.ikmb.varwatchworker.Worker;
 
 /**
  *
@@ -78,11 +81,17 @@ public class WorkerFactory {
             case Analysis.ANALYSIS_SANITY_CHECK:
                 worker = injector.getInstance(SanityWorker.class);
                 break;
+            case Analysis.ANALYSIS_HPO_UPDATE:
+                worker = injector.getInstance(HPOUpdateWorker.class);
+                break;
         }
 
-        worker.setAnalysisJob(jobSQL);
-        worker.setAnalysis(analysis);
-        worker.setWorker(workerSQL);
+        if (worker != null) {
+            worker.setAnalysisJob(jobSQL);
+            worker.setAnalysis(analysis);
+            worker.setWorker(workerSQL);
+        }
+
         return worker;
     }
 }

@@ -6,7 +6,6 @@
 package com.ikmb.core.data.hpo;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 import com.ikmb.core.data.config.ConfigurationManager;
 import com.ikmb.core.data.config.VarWatchConfig.ConfigurationTerms;
@@ -16,18 +15,14 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
 import org.apache.commons.lang.StringUtils;
 import org.obolibrary.oboformat.model.Frame;
 import org.obolibrary.oboformat.model.OBODoc;
@@ -45,7 +40,7 @@ public class HPOUpdateManager {
     @Inject
     HPOTermDao hpoDao;
     @Inject
-    private Provider<EntityManager> emProvider;
+    private HPOOboFileParser oboFileParser;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HPOUpdateManager.class);
 
     public void update() {
@@ -119,14 +114,14 @@ public class HPOUpdateManager {
         try {
             OBODoc parse = parser.parseURL(url);
 
-            String version = getVersionFromObo(parse);
+            String version = oboFileParser.getVersionFromObo(parse);
 
-            List<Frame> termFrames = getAllFramesSorted(parse);
+            List<Frame> termFrames = oboFileParser.getAllFramesSorted(parse);
 
-            List<String> hpoLines = parseOboHpo(termFrames);
+            List<String> hpoLines = oboFileParser.parseOboHpo(termFrames);
 
             String hpoPath = configManager.getConfiguration(ConfigurationTerms.HPO_BASIC_FILE.getTerm());
-            writeToFile(version, hpoLines, hpoPath);
+            oboFileParser.writeToFile(version, hpoLines, hpoPath);
 
         } catch (IOException ex) {
             Logger.getLogger(HPOUpdateManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -146,57 +141,14 @@ public class HPOUpdateManager {
         }
     }
 
-    private String getVersionFromObo(OBODoc parse) {
-        Frame headerFrame = parse.getHeaderFrame();
-        String version = headerFrame.getTagValue("data-version", String.class);
-        return version;
+    @Transactional
+    public HPOTerm getHpoTermOrUpdate(String primaryId) {
+        HPOTerm hpoTerm = hpoDao.saveOrUpdate(primaryId);
+        return hpoTerm;
     }
 
-    private List<Frame> getAllFramesSorted(OBODoc parse) {
-        List<Frame> termFrames = new ArrayList<>(parse.getTermFrames());
-        Collections.sort(termFrames, (Frame o1, Frame o2) -> {
-            Integer id1 = Integer.parseInt(o1.getId().split(":")[1]);
-            Integer id2 = Integer.parseInt(o2.getId().split(":")[1]);
-            return id1 - id2;
-        });
-        return termFrames;
-    }
-
-    private List<String> parseOboHpo(List<Frame> termFrames) {
-        //id,alternativeid | description | parents
-        List<String> hpoLines = new ArrayList<>();
-        for (Frame curFrame : termFrames) {
-            String id = curFrame.getId();
-            String name = curFrame.getTagValue("name", String.class);
-            Collection<String> altTerms = curFrame.getTagValues("alt_id", String.class);
-            Collection<String> parentTerms = curFrame.getTagValues("is_a", String.class);
-            StringJoiner idsJoiner = new StringJoiner(",");
-            idsJoiner.add(id);
-            for (String curAlt : altTerms) {
-                idsJoiner.add(curAlt);
-            }
-            String ids = idsJoiner.toString();
-
-            idsJoiner = new StringJoiner(",");
-            for (String curParent : parentTerms) {
-                idsJoiner.add(curParent);
-            }
-            String parents = idsJoiner.toString();
-            hpoLines.add(ids + "|" + name + "|" + parents);
-        }
-        return hpoLines;
-    }
-
-    private void writeToFile(String version, List<String> hpoLines, String hpoPath) {
-        Path path = Paths.get(hpoPath);
-
-        try {
-            Files.write(path, version.getBytes());
-            Files.write(path, "\n".getBytes(), StandardOpenOption.APPEND);
-            Files.write(path, hpoLines, StandardOpenOption.APPEND);
-        } catch (IOException ex) {
-            Logger.getLogger(HPOUpdateManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    @Transactional
+    public void updatePhenotype(Phenotype curPheno) {
+        hpoDao.updatePhenotype(curPheno);
     }
 }

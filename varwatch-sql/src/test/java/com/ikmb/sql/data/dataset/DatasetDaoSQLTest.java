@@ -33,11 +33,11 @@ public class DatasetDaoSQLTest {
         savedDataset.setUser(testUser);
         savedDataset.setClient(client);
         savedDataset.setDescription("Testdataset");
-        List<User> allUser = um.getAllUser();
-        System.out.println(allUser.size());
+//        List<User> allUser = um.getAllUser();
+//        System.out.println(allUser.size());
 //        datasetDaoSQL.persistRawData(savedDataset);
-        List<Long> allDatasetIds = datasetDaoSQL.getAllDatasetIds();
-        System.out.println(allDatasetIds.size());
+//        List<Long> allDatasetIds = datasetDaoSQL.getAllDatasetIds();
+//        System.out.println(allDatasetIds.size());
 //        DatasetVW loadedDataset = datasetDaoSQL.getDataset(1l);
 //        Assert.assertEquals(savedDataset.getId(), loadedDataset.getId());
 //        Assert.assertEquals(savedDataset.getDescription(), loadedDataset.getDescription());
@@ -46,10 +46,10 @@ public class DatasetDaoSQLTest {
     @Before
     public void setUp() {
         tdl = new TestDatabaseLoader();
-        testUser = tdl.getTestUser();
+//        testUser = tdl.getTestUser();
 //        client = tdl.getClient();
-        datasetDaoSQL = tdl.getInj().getInstance(DatasetManager.class);
-        um = tdl.getInj().getInstance(UserManager.class);
+//        datasetDaoSQL = tdl.getInj().getInstance(DatasetManager.class);
+//        um = tdl.getInj().getInstance(UserManager.class);
         //Todo get db dump from prod server and fill this database
     }
 

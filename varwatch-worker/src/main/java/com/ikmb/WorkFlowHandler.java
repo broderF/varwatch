@@ -12,7 +12,6 @@ import com.ikmb.core.data.workflow.worker.AnalysisWorker;
 import com.ikmb.utils.WorkerTimer;
 import com.ikmb.core.data.workflow.worker.WorkerManager;
 import com.ikmb.varwatchworker.Worker;
-import com.ikmb.varwatchworker.WorkerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

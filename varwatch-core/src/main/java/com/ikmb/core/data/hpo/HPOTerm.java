@@ -31,14 +31,14 @@ public class HPOTerm implements Serializable {
     @Column(name = "identifier")
     @Expose
     private String identifier;
-    @Column(name = "description")
+    @Column(name = "description", nullable = true)
     private String description;
-    @Column(name = "subontology")
+    @Column(name = "subontology", nullable = true)
     private String subontology;
-    @Column(name = "is_root")
-    private boolean is_root;
-    @Column(name = "is_obsolete")
-    private boolean is_obsolete;
+    @Column(name = "is_root", nullable = true)
+    private Boolean is_root;
+    @Column(name = "is_obsolete", nullable = true)
+    private Boolean is_obsolete;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "hpo")
     private Set<HPOAlternativeTerm> alternativeHpos = new HashSet<>();
 
@@ -74,19 +74,19 @@ public class HPOTerm implements Serializable {
         this.subontology = subontology;
     }
 
-    public boolean isRoot() {
+    public Boolean isRoot() {
         return is_root;
     }
 
-    public void setIsRoot(boolean is_root) {
+    public void setIsRoot(Boolean is_root) {
         this.is_root = is_root;
     }
 
-    public boolean isObsolete() {
+    public Boolean isObsolete() {
         return is_obsolete;
     }
 
-    public void setIsObsolete(boolean is_obsolete) {
+    public void setIsObsolete(Boolean is_obsolete) {
         this.is_obsolete = is_obsolete;
     }
 
@@ -97,9 +97,4 @@ public class HPOTerm implements Serializable {
     public void setAlternativeHpos(Set<HPOAlternativeTerm> alternativeHpos) {
         this.alternativeHpos = alternativeHpos;
     }
-
-    HPOTerm toHPO() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

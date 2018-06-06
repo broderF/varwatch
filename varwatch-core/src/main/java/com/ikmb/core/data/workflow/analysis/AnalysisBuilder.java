@@ -22,8 +22,8 @@ public class AnalysisBuilder {
         SCREENING_VARWATCH,
         SCREENING_HGMD,
         REPORT,
-        SANITY_CHECK
-        ;
+        SANITY_CHECK,
+        HPO_UPDATE;
 
         @Override
         public String toString() {

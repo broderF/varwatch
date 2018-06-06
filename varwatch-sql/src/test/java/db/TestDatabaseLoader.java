@@ -5,17 +5,10 @@
  */
 package db;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.persist.jpa.JpaPersistModule;
-import com.ikmb.core.data.auth.client.AuthClient;
-import com.ikmb.core.data.auth.client.ClientManager;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.data.dataset.DatasetVW;
-import com.ikmb.sql.guice.SQLModule;
-import com.ikmb.sql.guice.VarWatchMainModule;
-import com.ikmb.sql.guice.VarWatchPersist;
 import java.util.HashSet;
 import org.joda.time.DateTime;
 
@@ -33,8 +26,8 @@ public class TestDatabaseLoader {
     }
 
     public TestDatabaseLoader() {
-        inj = Guice.createInjector(new VarWatchMainModule(),new SQLModule(), new JpaPersistModule("varwatch_test"));
-        VarWatchPersist init = inj.getInstance(VarWatchPersist.class);
+//        inj = Guice.createInjector(new VarWatchMainModule(),new SQLModule(), new JpaPersistModule("varwatch_test"));
+//        VarWatchPersist init = inj.getInstance(VarWatchPersist.class);
         
 //        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("varwatch_test");
 //        EntityManager em = emFactory.createEntityManager();

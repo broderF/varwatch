@@ -5,8 +5,12 @@
  */
 package com.ikmb.sql.data.hpo;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.ikmb.core.data.hpo.HPOTerm;
 import com.ikmb.core.data.hpo.HPOTermDao;
 import com.ikmb.core.data.hpo.HpoPathTerm;
+import com.ikmb.core.data.hpo.Phenotype;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -18,13 +22,19 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 /**
  *
  * @author bfredrich
  */
 public class HPOTermDaoSQL implements HPOTermDao {
-    
+
+    @Inject
+    private Provider<EntityManager> emProvider;
+
     public Map<Long, HpoPathTerm> getHpoTermsFromDb(String connectionPath) {
         Connection _conn = null;
         Map<Long, HpoPathTerm> hpoTerms = new TreeMap<Long, HpoPathTerm>();
@@ -97,5 +107,25 @@ public class HPOTermDaoSQL implements HPOTermDao {
             Logger.getLogger(HPOTermDaoSQL.class.getName()).log(Level.SEVERE, null, ex);
         }
         return alternativeHpos;
+    }
+
+    @Override
+    public HPOTerm saveOrUpdate(String primaryId) {
+        EntityManager em = emProvider.get();
+        TypedQuery<HPOTerm> query = em.createQuery("SELECT s FROM HPOTerm s WHERE s.identifier = :identifier", HPOTerm.class);
+        try {
+            HPOTerm singleResult = query.setParameter("identifier", primaryId).getSingleResult();
+            return singleResult;
+        } catch (NoResultException nre) {
+        }
+        HPOTerm hpoTerm = new HPOTerm();
+        hpoTerm.setIdentifier(primaryId);
+        hpoTerm.setAlternativeHpos(new HashSet<>());
+        return em.merge(hpoTerm);
+    }
+
+    @Override
+    public void updatePhenotype(Phenotype curPheno) {
+        emProvider.get().merge(curPheno);
     }
 }

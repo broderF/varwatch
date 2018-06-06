@@ -15,4 +15,8 @@ public interface HPOTermDao {
 
     public Map<Long, HpoPathTerm> getHpoTermsFromDb(String connectionPath);
 
+    public HPOTerm saveOrUpdate(String primaryId);
+
+    public void updatePhenotype(Phenotype curPheno);
+
 }
