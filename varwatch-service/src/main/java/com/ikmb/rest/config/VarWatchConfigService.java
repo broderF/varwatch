@@ -15,9 +15,9 @@ import com.ikmb.core.data.reference_db.ReferenceDBDataManager;
 import com.ikmb.core.data.workflow.analysis.AnalysisBuilder;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;
+import com.ikmb.rest.util.AdminRequestFilter.AdminFilter;
 import com.ikmb.rest.util.ResponseBuilder;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -45,6 +44,7 @@ import javax.ws.rs.core.Response;
  *
  * @author broder
  */
+@AdminFilter
 @Path("config")
 public class VarWatchConfigService {
 
