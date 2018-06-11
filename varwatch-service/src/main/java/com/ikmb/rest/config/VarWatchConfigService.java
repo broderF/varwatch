@@ -17,13 +17,21 @@ import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;
 import com.ikmb.rest.util.ResponseBuilder;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -94,10 +102,14 @@ public class VarWatchConfigService {
     @POST
     @Path("beacon/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addBeaconConfiguration(@QueryParam("name") String name, @QueryParam("path") String path, @QueryParam("assembly") String assembly, @QueryParam("image_url") String imageUrl, @QueryParam("enabled") boolean enabled) {
-        byte[] image = recoverImageFromUrl(imageUrl);
-        RefDatabase referenceDB = databaseManager.saveBeacon(name, path, assembly, image, enabled);
-
+    public Response addBeaconConfiguration(@QueryParam("name") String name, @QueryParam("path") String path, @QueryParam("assembly") String assembly, @QueryParam("image_url") String imageUrl, @QueryParam("enabled") Boolean enabled) {
+        String imagePath = "images/clinvar_logo.png";
+        try {
+            saveImage(imageUrl, imagePath);
+        } catch (IOException ex) {
+            Logger.getLogger(VarWatchConfigService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        RefDatabase referenceDB = databaseManager.saveBeacon(name, path, assembly, imagePath, enabled);
         for (Long id : dsManager.getAllDatasetIds()) {
             jobManager.createJob(id, AnalysisBuilder.ModuleName.SCREENING_BEACON, referenceDB.getId().toString(), AnalysisJob.JobAction.UPDATE.toString());
             jobManager.createJob(id, AnalysisBuilder.ModuleName.SCREEN_BEACON_RESULT_COLLECT, null, AnalysisJob.JobAction.UPDATE.toString());
@@ -106,7 +118,7 @@ public class VarWatchConfigService {
         return new ResponseBuilder().buildListWithExpose(activeBeacons);
     }
 
-    private byte[] recoverImageFromUrl(String urlText) {
+    public static byte[] recoverImageFromUrl(String urlText) {
         URL url;
         try {
             url = new URL(urlText);
@@ -129,4 +141,58 @@ public class VarWatchConfigService {
 
         return output.toByteArray();
     }
+
+    TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                //No need to implement.
+            }
+
+            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                //No need to implement.
+            }
+        }
+    };
+
+    public static void main(String[] args) throws Exception {
+        VarWatchConfigService cur = new VarWatchConfigService();
+        cur.run();
+    }
+
+    public void run() throws IOException {
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        String imageUrl = "https://varwatch.de/assets/images/logo-877471f9f124d5f5d79a250ef2650efa.png";
+        String destinationFile = "image.jpg";
+
+        saveImage(imageUrl, destinationFile);
+    }
+
+    public void saveImage(String imageUrl, String destinationFile) throws IOException {
+
+        URL url = new URL(imageUrl);
+        InputStream is = url.openStream();
+        OutputStream os = new FileOutputStream(destinationFile);
+
+        byte[] b = new byte[2048];
+        int length;
+
+        while ((length = is.read(b)) != -1) {
+            os.write(b, 0, length);
+        }
+
+        is.close();
+        os.close();
+    }
+
 }

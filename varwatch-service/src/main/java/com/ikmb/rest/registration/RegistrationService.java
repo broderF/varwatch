@@ -82,6 +82,8 @@ public class RegistrationService {
     private UserBuilder userBuilder;
     @Inject
     private EmailNotifier emailNotifier;
+    @Inject
+    private PdfCreator pdfCreator;
 
     @POST
     @Path("client")
@@ -122,7 +124,7 @@ public class RegistrationService {
         VWResponse readEntity = (VWResponse) response.getEntity();
 //        if (readEntity.getMessage().equals(REGISTRATION_SUCCESFULL.getMessage()) && ServletConfig.database != null && ServletConfig.database.equals("varwatch")) {
         logger.info("Send mail");
-        String filePath = PdfCreator.createPdfFromContact(contact);
+        String filePath = pdfCreator.createPdfFromContact(contact);
         logger.info("filepath: " + filePath);
         String firstName = contact.getFirstName();
         String lastName = contact.getLastName();

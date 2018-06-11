@@ -11,8 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
@@ -48,10 +48,19 @@ public class RefDatabase implements Serializable {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "timestamp")
     private DateTime lastUpdate;
+    @Column(name = "image_path", nullable = true)
+    private String imagePath;
     @Expose
-    @Lob
-    @Column(name = "image", nullable = true, columnDefinition = "blob")
+    @Transient
     private byte[] image;
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     public byte[] getImage() {
         return image;

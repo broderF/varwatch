@@ -31,8 +31,8 @@ public class RegistrationFileCreator {
         for (User user : udm.getAllUser()) {
             UserBuilder ub = new UserBuilder();
             RegistrationUser contact = ub.withUser(user).buildRegistrationUser();
-            String filePath = PdfCreator.createPdfFromContact(contact);
-            System.out.println(filePath);
+//            String filePath = PdfCreator.createPdfFromContact(contact);
+//            System.out.println(filePath);
         }
     }
 }
