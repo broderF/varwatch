@@ -13,7 +13,7 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.ikmb.WorkFlowManager;
 import com.ikmb.WorkFlowManager.JobProcessStatus;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.core.notification.NotificationSubmitter;
+import com.ikmb.core.notification.EmailNotifier;
 import com.ikmb.core.data.workflow.analysis.Analysis;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;
@@ -51,6 +51,8 @@ public class SanityWorker implements Worker {
     private WorkerManager workerManager;
     @Inject
     private JobManager jobManager;
+    @Inject
+    private EmailNotifier emailNotifier;
 
     public static void main(String[] args) {
         Injector inj = Guice.createInjector(new VarWatchMainModule(), new JpaPersistModule("varwatch_dev"));
@@ -141,7 +143,7 @@ public class SanityWorker implements Worker {
 
     private void sendMail(String content) {
         String puName = emProvider.get().getEntityManagerFactory().getProperties().get("hibernate.ejb.persistenceUnitName").toString();
-        NotificationSubmitter.sendMail("broderfredrich@gmail.com", content, "varwatch error: " + puName.toString());
+        emailNotifier.sendMail("broderfredrich@gmail.com", content, "varwatch error: " + puName.toString());
     }
 
     private boolean checkForFailedChecks(List<SanityResponse> sanityCheckResponses) {

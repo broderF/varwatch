@@ -32,6 +32,7 @@ public class UserBuilder {
     private String city;
     private String country;
     private String postalCode;
+    private Boolean isAdmin;
 
     public UserBuilder withContact(Contact contact) {
         preName = contact.getPreName();
@@ -89,6 +90,7 @@ public class UserBuilder {
         user.setPostalCode(postalCode);
         user.setReportSchedule(reportSchedule);
         user.setActive(active);
+        user.setAdmin(isAdmin);
         return user;
     }
 
@@ -174,6 +176,7 @@ public class UserBuilder {
         city = contact.getCity();
         country = contact.getCountry();
         postalCode = contact.getPostalCode();
+        isAdmin = contact.getIsAdmin();
         return this;
     }
 }

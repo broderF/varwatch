@@ -5,6 +5,7 @@
  */
 package com.ikmb.annotation;
 
+import com.ikmb.core.notification.SubmissionNotification;
 import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
 import com.ikmb.core.data.dataset.DatasetManager;

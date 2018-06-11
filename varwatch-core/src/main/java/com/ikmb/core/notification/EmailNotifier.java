@@ -5,14 +5,14 @@
  */
 package com.ikmb.core.notification;
 
+import com.google.inject.Inject;
+import com.ikmb.core.data.config.ConfigurationManager;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -32,9 +32,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author bfredrich
  */
-public class NotificationSubmitter {
+public class EmailNotifier {
 
-    private static final Logger logger = LoggerFactory.getLogger(NotificationSubmitter.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmailNotifier.class);
 
     public static String host = "smtp.udag.de";
     public static String port = "587";
@@ -42,10 +42,18 @@ public class NotificationSubmitter {
     public static String pw = "VarWatchInf0";
 
     public static void main(String[] args) {
-        sendMail("broderfredrich@gmail.com", "testmail", "testsubject");
+//        sendMail("broderfredrich@gmail.com", "testmail", "testsubject");
     }
 
-    public static void sendMail(String email, String mailtext, String subject) {
+    @Inject
+    public EmailNotifier(ConfigurationManager configManager) {
+        host = configManager.getConfiguration("email_host");
+        port = configManager.getConfiguration("email_port");
+        user = configManager.getConfiguration("email_user");
+        pw = configManager.getConfiguration("email_pw");
+    }
+
+    public void sendMail(String email, String mailtext, String subject) {
 //        String host = "smtp.gmail.com";
 //        Integer port = 587;
 //        final String user = "varwatch.notifier@gmail.com";
@@ -75,10 +83,10 @@ public class NotificationSubmitter {
 
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(user, pw);
-                    }
-                });
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(user, pw);
+            }
+        });
 
         try {
 
@@ -99,7 +107,7 @@ public class NotificationSubmitter {
         }
     }
 
-    public static void sendMail(String email, String mailtext, String subject, String filePath) {
+    public void sendMail(String email, String mailtext, String subject, String filePath) {
 //        String host = "smtp.gmail.com";
 //        Integer port = 587;
 //        final String user = "varwatch.notifier@gmail.com";
@@ -115,10 +123,10 @@ public class NotificationSubmitter {
 
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(user, pw);
-                    }
-                });
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(user, pw);
+            }
+        });
 
         try {
 
@@ -132,7 +140,7 @@ public class NotificationSubmitter {
             MimeBodyPart textPart = new MimeBodyPart();
             textPart.setText(mailtext);
 
-            ByteArrayDataSource source = new ByteArrayDataSource(new FileInputStream(filePath), "application/pdf"); 
+            ByteArrayDataSource source = new ByteArrayDataSource(new FileInputStream(filePath), "application/pdf");
 //            DataSource source = new FileDataSource(filePath);
             MimeBodyPart messageBodyPart = new MimeBodyPart();
 //            messageBodyPart = new MimeBodyPart();
@@ -150,11 +158,11 @@ public class NotificationSubmitter {
         } catch (MessagingException e) {
             System.out.println(e);
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(NotificationSubmitter.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmailNotifier.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void sendMail(Set<String> emails, String mailtext, String subject) {
+    public void sendMail(Set<String> emails, String mailtext, String subject) {
         sendMail(StringUtils.join(emails.toArray(), ","), mailtext, subject);
 //        String host = "smtp.gmail.com";
 //        Integer port = 587;

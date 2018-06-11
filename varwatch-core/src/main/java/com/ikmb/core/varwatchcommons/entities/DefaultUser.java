@@ -24,6 +24,7 @@ public class DefaultUser implements User {
     private String city;
     private String country;
     private Boolean active;
+    private Boolean isAdmin;
 
     public void setAddress(String address) {
         this.address = address;
@@ -124,7 +125,6 @@ public class DefaultUser implements User {
 //    public Address getAddress() {
 //        return address;
 //    }
-
     public Boolean getActive() {
         return active;
     }
@@ -133,4 +133,11 @@ public class DefaultUser implements User {
         this.active = active;
     }
 
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
 }

@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.annotation;
+package com.ikmb.core.notification;
 
+import com.google.inject.Inject;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.variant.Variant;
-import com.ikmb.core.notification.NotificationSubmitter;
+import com.ikmb.core.notification.EmailNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,8 @@ import org.slf4j.LoggerFactory;
 public class SubmissionNotification {
 
     private final Logger logger = LoggerFactory.getLogger(SubmissionNotification.class);
+    @Inject
+    private EmailNotifier emailNotifier;
 
     public void notifySubmission(DatasetVW dataset) {
         User user = dataset.getUser();
@@ -43,7 +46,7 @@ public class SubmissionNotification {
                 + "Your VarWatch Team";
         String mailText = title + varheader + variants + vwTeam;
 
-        NotificationSubmitter.sendMail(mail, mailText, "VarWatch Submission Report");
+        emailNotifier.sendMail(mail, mailText, "VarWatch Submission Report");
     }
 
 }

@@ -14,7 +14,7 @@ import com.ikmb.utils.WorkerInputHandler;
 import com.ikmb.core.varwatchcommons.entities.ExternalMatchInformation;
 import com.ikmb.core.varwatchcommons.entities.InternalMatchInformation;
 import com.ikmb.core.varwatchcommons.entities.MatchInformation;
-import com.ikmb.core.notification.NotificationSubmitter;
+import com.ikmb.core.notification.EmailNotifier;
 import com.ikmb.core.utils.VariantHash;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetVW;
@@ -60,6 +60,8 @@ public class ReportWorker implements Worker {
     private VariantDataManager variantDm;
     @Inject
     private DatasetManager dsDm;
+    @Inject
+    private EmailNotifier emailNotifier;
 
     @Override
     public void setWorker(AnalysisWorker workerSQL) {
@@ -129,7 +131,7 @@ public class ReportWorker implements Worker {
         String lastName = user.getLastName();
         String title = "Dear " + firstName + " " + lastName + ",";
         String header = title + "\n\nVarWatch has found some matches in the last report period.\n\n";
-        NotificationSubmitter.sendMail(user.getMail(), header + mailText, "VarWatch: Periodical Report");
+        emailNotifier.sendMail(user.getMail(), header + mailText, "VarWatch: Periodical Report");
 
         jobProcessStatus = JobProcessStatus.SUCCESSFUL;
     }

@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import com.ikmb.WorkFlowManager;
 import com.ikmb.matching.varwatch.VarWatchScreener.MatchType;
 import com.ikmb.utils.WorkerInputHandler;
-import com.ikmb.core.notification.NotificationSubmitter;
+import com.ikmb.core.notification.EmailNotifier;
 import com.ikmb.core.utils.VariantHash;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetStatusBuilder;
@@ -45,6 +45,9 @@ public class CollectScreeningResultWorkerNew implements Worker {
     protected AnalysisWorker _workerSQL;
     protected Analysis _analysisSQL;
     protected AnalysisJob _analysisJobSQL;
+
+    @Inject
+    private EmailNotifier emailNotifier;
 
     private DatasetVW _dataset;
 
@@ -119,7 +122,7 @@ public class CollectScreeningResultWorkerNew implements Worker {
                     }
                     //bingo match
                     String mailText = getMailTextFromVariant(variant);
-                    NotificationSubmitter.sendMail(emails, mailText, "VarWatch: Identical variant found");
+                    emailNotifier.sendMail(emails, mailText, "VarWatch: Identical variant found");
                 }
             }
         }

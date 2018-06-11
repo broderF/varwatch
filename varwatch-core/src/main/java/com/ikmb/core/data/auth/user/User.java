@@ -93,6 +93,8 @@ public class User implements Serializable {
     private DateTime lastReport;
     @Column(name = "active")
     private Boolean active;
+    @Column(name = "is_admin")
+    private Boolean isAdmin;
     @Column(name = "variant_cont")
     private Integer variantCont;
     @Column(name = "registration_form")
@@ -180,6 +182,14 @@ public class User implements Serializable {
 
     public void setDatasets(Set<DatasetVW> datasets) {
         this.datasets = datasets;
+    }
+
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public String getInstitution() {

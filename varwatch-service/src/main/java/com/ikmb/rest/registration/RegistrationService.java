@@ -16,7 +16,7 @@ import com.ikmb.core.varwatchcommons.entities.DefaultUser;
 import com.ikmb.core.varwatchcommons.entities.RegistrationUser;
 import com.ikmb.core.varwatchcommons.entities.Client;
 import com.ikmb.core.varwatchcommons.entities.PasswordReset;
-import com.ikmb.core.notification.NotificationSubmitter;
+import com.ikmb.core.notification.EmailNotifier;
 import com.ikmb.core.utils.PdfCreator;
 import com.ikmb.core.utils.VarWatchException;
 import com.ikmb.rest.HTTPVarWatchResponse;
@@ -80,6 +80,8 @@ public class RegistrationService {
     private UserManager userManager;
     @Inject
     private UserBuilder userBuilder;
+    @Inject
+    private EmailNotifier emailNotifier;
 
     @POST
     @Path("client")
@@ -133,7 +135,7 @@ public class RegistrationService {
                 + "\n"
                 + "With kind regards,\n"
                 + "Your VarWatch Team";
-        NotificationSubmitter.sendMail(contact.getMail(), text, "VarWatch Registration", filePath);
+        emailNotifier.sendMail(contact.getMail(), text, "VarWatch Registration", filePath);
 //        }else{
 //            logger.info("no registration mail sent");
 //            logger.info("Message:"+readEntity.getMessage());
@@ -316,7 +318,7 @@ public class RegistrationService {
 
         String mailtext = title + mail + vwTeam;
 
-        NotificationSubmitter.sendMail(contact, mailtext, subject);
+        emailNotifier.sendMail(contact, mailtext, subject);
 
         VWResponse response = new VWResponse();
         response.setMessage("Successful");
