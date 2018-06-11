@@ -61,3 +61,5 @@ drop table transcript
 drop table variant
 drop table variant_effect
 drop table variant_status
+drop table varwatch_config
+drop table varwatch_config_filter

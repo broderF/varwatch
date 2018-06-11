@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Mon May 14 21:23:33 CEST 2018:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0163-601b-9e48-0000059ce9e8 
+Wed Jun 06 11:01:15 CEST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0163-d454-26e0-0000054e9480 
 on database directory memory:/Users/broder/NetBeansProjects/varwatch/varwatch-sql/sampleDB with class loader sun.misc.Launcher$AppClassLoader@7ea987ac 
 Loaded from file:/Users/broder/.m2/repository/org/apache/derby/derby/10.12.1.1/derby-10.12.1.1.jar
 java.vendor=Oracle Corporation
