@@ -94,7 +94,7 @@ public class User implements Serializable {
     @Column(name = "active")
     private Boolean active;
     @Column(name = "is_admin")
-    private Boolean isAdmin;
+    private Boolean isAdmin = Boolean.FALSE;
     @Column(name = "variant_cont")
     private Integer variantCont;
     @Column(name = "registration_form")

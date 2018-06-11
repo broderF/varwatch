@@ -19,7 +19,10 @@ import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserBuilder;
 import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.varwatchcommons.entities.Client;
+import java.util.List;
 import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reponsible for the user registration/authentification. Abstract Layer above
@@ -35,6 +38,8 @@ public class RegistrationManager {
     private UserManager userManager;
     @Inject
     private UserBuilder userBuilder;
+
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationManager.class);
 
     /**
      * Saves a client in the database
@@ -61,6 +66,13 @@ public class RegistrationManager {
             Response httpResponse = Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
             return httpResponse;
         }
+
+        List<User> allUser = userManager.getAllUser();
+
+        if (allUser.isEmpty()) {
+            userSQL.setIsAdmin(Boolean.TRUE);
+        }
+
         boolean isSuccesFull = userManager.save(userSQL);
         if (isSuccesFull) {
             response.setMessage(REGISTRATION_SUCCESFULL.message);
