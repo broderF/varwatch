@@ -1,8 +1,20 @@
+![](docker/images/varwatch_logo.png?raw=true)
+
+# What VarWatch is
+
+VarWatch is a tool for professional human geneticists, genetic counselors and researchers working with genetic data from patients. High-throughput sequencing is uncovering an increasing number of genomic variants with a suspected link to an observed clinical phenotype. However, substantiating the clinical relevance of these variants-of-unknown-significance (VUS) typically requires one or more independent observations. VarWatch offers a non-commercial platform where such VUS can be registered to be continuously monitored for similar findings in external databases or the VarWatch register itself. Potential matches to other case descriptions will be forwarded to the variant owners to aid in the finding of a diagnosis for the affected patient(s).
+
+![](https://github.com/broderF/varwatch/blob/master/varwatch_gui_variant.png?raw=true)
+
 # Install VarWatch
+
+VarWatch is built and deployed by Docker, which is based on the idea of that you can package your code with dependencies into a deployable unit called a container.
 
 ## Prerequisites
 
-- install docker,docker-compose, maven and java8
+- install docker and docker-compose: https://docs.docker.com/compose/install/
+- install java8: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+- install maven: https://maven.apache.org/install.html
 
 ## Download project
 
@@ -37,3 +49,5 @@ Backup the database:
 Restore the database: 
 
 Inspect a docker container: 
+
+## Configuration
