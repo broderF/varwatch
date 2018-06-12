@@ -17,11 +17,10 @@ import com.ikmb.rest.HTTPVarWatchResponse;
 import com.ikmb.rest.util.ResponseBuilder;
 import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import com.ikmb.rest.registration.RegistrationManager;
+import com.ikmb.rest.util.AdminRequestFilter.AdminFilter;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -122,6 +121,21 @@ public class VarWatchUserImpl {
         String response = wipeDb.wipeDataByUser(user.getMail());
         userManager.delete(user);
         return Response.status(Response.Status.OK).entity(new Gson().toJson(response)).build();
+    }
+
+    @POST
+    @AdminFilter
+    @Path("activate")
+    public Response activateUser(@HeaderParam("Authorization") String header, @QueryParam("mail") String userMail) {
+
+        User user = userManager.getUser(userMail);
+        if (user != null) {
+            user.setActive(Boolean.TRUE);
+            userManager.update(user);
+            return Response.status(Response.Status.OK).entity("User acticated").build();
+        } else {
+            return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Cant find user with the given email").build();
+        }
     }
 
     public enum ReportSchedule {
