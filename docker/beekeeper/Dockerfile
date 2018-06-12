@@ -19,9 +19,9 @@ RUN mkdir log
 COPY ./slurm_service.sh slurm_service.sh
 
 #------- build maven
-RUN git clone https://github.com/broderF/varwatch
-WORKDIR varwatch
-RUN mvn -Dmaven.test.skip=true clean install
+#RUN git clone https://github.com/broderF/varwatch
+#WORKDIR varwatch
+#RUN mvn -Dmaven.test.skip=true clean install
 
 COPY ./varwatch-beekeeper-1.0-SNAPSHOT-jar-with-dependencies.jar varwatch-beekeeper-1.0-SNAPSHOT-jar-with-dependencies.jar
 COPY ./ancestors_path_newHpo.txt ancestors_path_newHpo.txt
