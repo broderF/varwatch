@@ -127,8 +127,12 @@ public class TokenManager {
     public User getUserByToken(String accessToken
     ) {
         AuthToken token = tokenDao.getToken(accessToken);
-        User user = token.getUser();
-        return userDao.getUserByID(user.getId());
+        if (token != null) {
+            User user = token.getUser();
+            return userDao.getUserByID(user.getId());
+        } else {
+            return null;
+        }
     }
 
     @Transactional

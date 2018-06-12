@@ -19,6 +19,7 @@ import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserBuilder;
 import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.varwatchcommons.entities.Client;
+import com.ikmb.rest.HTTPVarWatchResponse;
 import java.util.List;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
@@ -61,29 +62,21 @@ public class RegistrationManager {
         VWResponse response = new VWResponse();
         User userSQL = userBuilder.withRegistrationUser(user).secretPass().build();
         if (!validateRegistrationUser(user)) {
-            response.setMessage(REGISTRATION_ERROR_INFORMATIONS_MISSING.message);
-            response.setDescription(REGISTRATION_ERROR_INFORMATIONS_MISSING.description);
-            Response httpResponse = Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
-            return httpResponse;
+            return new ResponseBuilder().withVwError().withVwMessage(REGISTRATION_ERROR_INFORMATIONS_MISSING.description).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
 
         List<User> allUser = userManager.getAllUser();
 
         if (allUser.isEmpty()) {
             userSQL.setIsAdmin(Boolean.TRUE);
+            userSQL.setActive(Boolean.TRUE);
         }
 
         boolean isSuccesFull = userManager.save(userSQL);
         if (isSuccesFull) {
-            response.setMessage(REGISTRATION_SUCCESFULL.message);
-            response.setDescription(REGISTRATION_SUCCESFULL.description);
-            Response httpResponse = Response.status(Response.Status.OK).entity(response).build();
-            return httpResponse;
+            return new ResponseBuilder().withVwError().withVwMessage(REGISTRATION_SUCCESFULL.description).withStatusType(Response.Status.OK).build();
         } else {
-            response.setMessage(REGISTRATION_ERROR_DOUBLE_ENTITY.message);
-            response.setDescription(REGISTRATION_ERROR_DOUBLE_ENTITY.description);
-            Response httpResponse = Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
-            return httpResponse;
+            return new ResponseBuilder().withVwError().withVwMessage(REGISTRATION_ERROR_DOUBLE_ENTITY.description).withStatusType(Response.Status.OK).build();
         }
 
     }

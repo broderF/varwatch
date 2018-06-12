@@ -28,7 +28,8 @@ public enum RegistrationResponse {
     PASSWORD_CHANGED(9, "Password changed"),
     PASSWORD_RESETTED(10, "Password recovery and email sent"),
     USER_NOT_ACTIVE(11, "User account activation pending"),
-    USER_NO_PERMISSION(12, "User has no permission for that action");
+    USER_NO_PERMISSION(12, "User has no permission for that action"), 
+    USER_NOT_ADMIN(13, "User is not an admin");
 
     private final int code;
     private final String description;

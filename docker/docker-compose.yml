@@ -28,6 +28,7 @@ services:
     networks:
       - overlay
     volumes:
+      - ./images:/images
       - ../varwatch-service/target/varwatch-service-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/varwatch.war
     depends_on:
       - varwatchdb

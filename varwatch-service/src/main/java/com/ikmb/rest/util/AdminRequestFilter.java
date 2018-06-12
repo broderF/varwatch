@@ -15,7 +15,6 @@ import java.lang.annotation.RetentionPolicy;
 import javax.ws.rs.NameBinding;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import org.slf4j.Logger;
@@ -29,7 +28,6 @@ import org.slf4j.LoggerFactory;
 @AdminFilter
 public class AdminRequestFilter implements ContainerRequestFilter {
 
-    @Context
     private static final Logger logger = LoggerFactory.getLogger(AdminRequestFilter.class);
     @Inject
     private HTTPVarWatchInputConverter tokenConverter;
@@ -40,7 +38,7 @@ public class AdminRequestFilter implements ContainerRequestFilter {
         User user = tokenConverter.getUserFromHeader(header);
 
         if (!user.getIsAdmin()) {
-            ctx.abortWith(Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.USER_NOT_ACTIVE.getDescription()).build());
+            ctx.abortWith(Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.USER_NOT_ADMIN.getDescription()).build());
         }
     }
 

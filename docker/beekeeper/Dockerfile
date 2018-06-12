@@ -17,7 +17,6 @@ COPY ./slurm.conf /etc/slurm-llnl/slurm.conf
 #RUN chown root /var/lib/slurm-llnl/slurmctld
 #RUN chown root /var/run/slurm-llnl
 RUN mkdir log
-COPY images images 
 COPY ./slurm_service.sh slurm_service.sh
 COPY ./varwatch-beekeeper-1.0-SNAPSHOT-jar-with-dependencies.jar varwatch-beekeeper-1.0-SNAPSHOT-jar-with-dependencies.jar
 COPY ./ancestors_path_newHpo.txt ancestors_path_newHpo.txt

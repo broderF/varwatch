@@ -114,14 +114,11 @@ public class RegistrationService {
         try {
             contact = inputConverter.getRegistrationUser(request);
         } catch (IOException ex) {
-            VWResponse response = new VWResponse();
-            response.setMessage("Error");
-            response.setMessage(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription());
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(response).build();
+            return new ResponseBuilder().withVwError().withVwMessage(HTTPVarWatchResponse.HTTP_REQUEST_NOT_PARSABLE.getDescription()).withStatusType(Response.Status.NOT_ACCEPTABLE).build();
         }
 
         Response response = registrationManager.saveUser(contact);
-        VWResponse readEntity = (VWResponse) response.getEntity();
+//        VWResponse readEntity = (VWResponse) response.getEntity();
 //        if (readEntity.getMessage().equals(REGISTRATION_SUCCESFULL.getMessage()) && ServletConfig.database != null && ServletConfig.database.equals("varwatch")) {
         logger.info("Send mail");
         String filePath = pdfCreator.createPdfFromContact(contact);
