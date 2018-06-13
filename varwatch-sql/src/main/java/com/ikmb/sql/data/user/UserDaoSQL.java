@@ -8,7 +8,6 @@ package com.ikmb.sql.data.user;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.persist.Transactional;
 import com.ikmb.core.data.auth.user.User;
 import com.ikmb.core.data.auth.user.UserDao;
 import java.util.ArrayList;

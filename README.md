@@ -23,7 +23,8 @@ VarWatch is built and deployed by Docker, which is based on the idea of that you
 ## Build Project
 
 - jump into the varwatch folder: ```cd varwatch```
-- build the varwatch modules and execute the tests: ```sudo mvn install clean```
+- build the varwatch modules and execute the tests: ```mvn install clean```
+- build the varwatch service: ```mvn --also-make --projects varwatch-service install```
 
 ## Start VarWatch
 

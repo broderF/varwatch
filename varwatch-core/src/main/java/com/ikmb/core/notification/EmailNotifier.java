@@ -36,14 +36,10 @@ public class EmailNotifier {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailNotifier.class);
 
-    public static String host = "smtp.udag.de";
-    public static String port = "587";
-    public static String user = "info@varwatch.de";
-    public static String pw = "VarWatchInf0";
-
-    public static void main(String[] args) {
-//        sendMail("broderfredrich@gmail.com", "testmail", "testsubject");
-    }
+    public static String host;
+    public static String port;
+    public static String user;
+    public static String pw;
 
     @Inject
     public EmailNotifier(ConfigurationManager configManager) {
@@ -54,32 +50,14 @@ public class EmailNotifier {
     }
 
     public void sendMail(String email, String mailtext, String subject) {
-//        String host = "smtp.gmail.com";
-//        Integer port = 587;
-//        final String user = "varwatch.notifier@gmail.com";
-//        final String pw = "varwatchreport";
-
-//        String mailtext = parseMailText(submitSQLVariant, similarVariants);
-//        String email = submitSQLVariant.getDataset().getUser().getEmail();
+        if (host == null || port == null || user == null || pw == null) {
+            return;
+        }
         Properties props = new Properties();
-//        props.put("mail.smtp.host", "smtp.gmail.com");
-//        props.put("mail.smtp.socketFactory.port", "587");
-//        props.put("mail.smtp.socketFactory.class",
-//                "javax.net.ssl.SSLSocketFactory");
-//        props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.port", "587");
-//        props.put("mail.smtp.starttls.enable", "true");
-//        props.put("mail.smtp.debug", "true");
-//        props.put("mail.smtp.socketFactory.fallback", "false");
-
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", port);
         props.put("mail.transport.protocol", "smtp");
-//        props.put("mail.smtps.starttls.enable", "true");
-//       props.put("mail.smtp.socketFactory.port", "587");
-//       props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
-//       props.put("mail.smtp.socketFactory.fallback", "false"); 
 
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
@@ -108,13 +86,9 @@ public class EmailNotifier {
     }
 
     public void sendMail(String email, String mailtext, String subject, String filePath) {
-//        String host = "smtp.gmail.com";
-//        Integer port = 587;
-//        final String user = "varwatch.notifier@gmail.com";
-//        final String pw = "varwatchreport";
-
-//        String mailtext = parseMailText(submitSQLVariant, similarVariants);
-//        String email = submitSQLVariant.getDataset().getUser().getEmail();
+        if (host == null || port == null || user == null || pw == null) {
+            return;
+        }
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.host", host);

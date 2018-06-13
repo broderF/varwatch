@@ -118,28 +118,24 @@ public class RegistrationService {
         }
 
         Response response = registrationManager.saveUser(contact);
-//        VWResponse readEntity = (VWResponse) response.getEntity();
-//        if (readEntity.getMessage().equals(REGISTRATION_SUCCESFULL.getMessage()) && ServletConfig.database != null && ServletConfig.database.equals("varwatch")) {
-        logger.info("Send mail");
-        String filePath = pdfCreator.createPdfFromContact(contact);
-        logger.info("filepath: " + filePath);
-        String firstName = contact.getFirstName();
-        String lastName = contact.getLastName();
-        String title = "Dear " + firstName + " " + lastName + ",";
-        String text = title + "\n"
-                + "\n"
-                + "Thank you for registering with VarWatch!\n"
-                + "\n"
-                + "Your account will be activated once you have authenticated yourself. To this end, please sign the attached form and return to the address given.\n"
-                + "\n"
-                + "With kind regards,\n"
-                + "Your VarWatch Team";
-        emailNotifier.sendMail(contact.getMail(), text, "VarWatch Registration", filePath);
-//        }else{
-//            logger.info("no registration mail sent");
-//            logger.info("Message:"+readEntity.getMessage());
-//            logger.info("db:"+ServletConfig.database);
-//        }
+        User user = userManager.getUser(contact.getMail());
+        if (!user.getActive() && !user.getIsAdmin()) {
+            logger.info("Send mail");
+            String filePath = pdfCreator.createPdfFromContact(contact);
+            logger.info("filepath: " + filePath);
+            String firstName = contact.getFirstName();
+            String lastName = contact.getLastName();
+            String title = "Dear " + firstName + " " + lastName + ",";
+            String text = title + "\n"
+                    + "\n"
+                    + "Thank you for registering with VarWatch!\n"
+                    + "\n"
+                    + "Your account will be activated once you have authenticated yourself. To this end, please sign the attached form and return to the address given.\n"
+                    + "\n"
+                    + "With kind regards,\n"
+                    + "Your VarWatch Team";
+            emailNotifier.sendMail(contact.getMail(), text, "VarWatch Registration", filePath);
+        }
         return response;
     }
 

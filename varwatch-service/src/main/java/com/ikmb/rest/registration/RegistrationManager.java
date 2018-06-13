@@ -74,7 +74,7 @@ public class RegistrationManager {
 
         boolean isSuccesFull = userManager.save(userSQL);
         if (isSuccesFull) {
-            return new ResponseBuilder().withVwError().withVwMessage(REGISTRATION_SUCCESFULL.description).withStatusType(Response.Status.OK).build();
+            return new ResponseBuilder().withVwSuccessful().withVwMessage(REGISTRATION_SUCCESFULL.description).withStatusType(Response.Status.OK).build();
         } else {
             return new ResponseBuilder().withVwError().withVwMessage(REGISTRATION_ERROR_DOUBLE_ENTITY.description).withStatusType(Response.Status.OK).build();
         }
