@@ -5,7 +5,7 @@
  */
 package com.ikmb.core.data.auth.user;
 
-import com.ikmb.core.data.auth.user.User;
+import com.google.gson.annotations.Expose;
 import com.ikmb.core.data.dataset.DatasetVW;
 import java.io.Serializable;
 import java.sql.Blob;
@@ -58,12 +58,15 @@ public class User implements Serializable {
     @GeneratedValue
     private Integer id;
     @Column(name = "last_name")
+    @Expose
     private String last_name;
     @Column(name = "first_name")
+    @Expose
     private String first_name;
     @Column(name = "institution")
     private String institution;
     @Column(name = "email")
+    @Expose
     private String email;
     @Column(name = "password")
     private String password;

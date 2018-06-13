@@ -6,6 +6,7 @@
 package com.ikmb.extraction;
 
 import com.google.inject.Inject;
+import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
 import static com.ikmb.core.utils.VariantHash.MAX_BASE_LENGTH;
 import java.io.BufferedReader;
@@ -32,6 +33,7 @@ public class VCFParser {
 
     private List<String> _header = new ArrayList<String>();
     private List<VWVariant> _variants = new ArrayList<VWVariant>();
+    private List<Variant> variants = new ArrayList<>();
     @Inject
     private VariantIndelChecker variantIndelChecker;
     private List<VWVariant> _variantsWithMaxIndelExeeded = new ArrayList<VWVariant>();
@@ -132,6 +134,70 @@ public class VCFParser {
 //                parsedHeader = true;
 //            }
         }
+    }
+
+    private List<Variant> parseVariants(InputStream vcfInput) {
+        BufferedReader in = new BufferedReader(new InputStreamReader(vcfInput));
+        String line = null;
+        List<Variant> variants = new ArrayList<>();
+
+        try {
+            while ((line = in.readLine()) != null) {
+                if (!line.startsWith("#")) {
+                    Map<String, String> variantInformation = new HashMap<>();
+                    StringTokenizer tokenizer = new StringTokenizer(line);
+                    variantInformation.put("CHROM", tokenizer.nextToken());
+                    variantInformation.put("POS", tokenizer.nextToken());
+                    variantInformation.put("ID", tokenizer.nextToken());
+                    variantInformation.put("REF", tokenizer.nextToken());
+                    variantInformation.put("ALT", tokenizer.nextToken());
+                    
+                    Variant variant = new Variant();
+                    variant.setChromosomeName(getChromosomeName(variantInformation));
+                    variant.setChromosomePos(getChromosomePos(variantInformation));
+                    String referenceBase = getReferenceBase(variantInformation).substring(0, Math.min(MAX_BASE_LENGTH, getReferenceBase(variantInformation).length()));
+                    variant.setReferenceBase(referenceBase);
+                    String alternateBase = getAlternateBase(variantInformation).substring(0, Math.min(MAX_BASE_LENGTH, getAlternateBase(variantInformation).length()));
+                    variant.setAlternateBase(alternateBase);
+                    String identifier = getIdentifier(variantInformation);
+                    if (identifier.equals(".")) {
+                        identifier = variant.getChromosomeName() + "_" + variant.getChromosomePos() + "_" + variant.getReferenceBase() + "/" + variant.getAlternateBase();
+                    }
+                    variant.setVEPIdentifier(identifier);
+                    if (line.length() > 10000) {
+                        variant.setFilter("too long");
+                    } else {
+                        variant.setFilter("pass");
+                    }
+                    variants.add(variant);
+//                variant.s(getFilter(variantInformation));
+//                variant.setQuality(getQuality(variantInformation));
+                }
+                //verschiedene Info Parser, Format Parser usw??
+//            if (line.startsWith("#CHROM")) {
+//                StringTokenizer tokenizer = new StringTokenizer(line);
+//                while (tokenizer.hasMoreTokens()) {
+//                    _header.add(tokenizer.nextToken());
+//                }
+//                parsedHeader = true;
+//            }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(VCFParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return variants;
+    }
+
+    public List<Variant> getVariants(byte[] vcfFile) {
+        _header = new ArrayList<>();
+        variants = new ArrayList<>();
+        InputStream vcfInput = new ByteArrayInputStream(vcfFile);
+        try {
+            parse(vcfInput);
+        } catch (IOException ex) {
+            Logger.getLogger(VCFParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return parseVariants(vcfInput);
     }
 
     public String getVCFString(List<VWVariant> variants) {

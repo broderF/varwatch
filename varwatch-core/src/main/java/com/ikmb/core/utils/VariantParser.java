@@ -6,6 +6,7 @@
 package com.ikmb.core.utils;
 
 import com.google.gson.Gson;
+import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
 import com.ikmb.core.varwatchcommons.entities.VWMatchRequest;
 import com.ikmb.core.varwatchcommons.entities.VWVariant;
@@ -110,7 +111,7 @@ public class VariantParser {
     public static String json2vcf(Map<String, List<GenomicFeature>> genomicMap) {
         StringBuilder vcfString = new StringBuilder();
         vcfString.append("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n");
-        for (String hgmdId: genomicMap.keySet()) {
+        for (String hgmdId : genomicMap.keySet()) {
             for (GenomicFeature genomicFeature : genomicMap.get(hgmdId)) {
                 VWVariant variant = genomicFeature.getVariant();
                 vcfString.append(variant.getReferenceName()).append("\t").append(variant.getStart()).append("\t").append(hgmdId).append("\t").append(variant.getReferenceBases()).append("\t").append(variant.getAlternateBases()).append("\t.\t.\t.\n");

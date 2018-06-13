@@ -37,7 +37,7 @@ public class AdminRequestFilter implements ContainerRequestFilter {
         String header = ctx.getHeaderString("authorization");
         User user = tokenConverter.getUserFromHeader(header);
 
-        if (!user.getIsAdmin()) {
+        if (user!= null && !user.getIsAdmin()) {
             ctx.abortWith(Response.status(Response.Status.NOT_ACCEPTABLE).entity(RegistrationResponse.USER_NOT_ADMIN.getDescription()).build());
         }
     }

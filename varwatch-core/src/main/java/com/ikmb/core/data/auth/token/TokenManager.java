@@ -124,8 +124,7 @@ public class TokenManager {
     }
 
     @Transactional
-    public User getUserByToken(String accessToken
-    ) {
+    public User getUserByToken(String accessToken) {
         AuthToken token = tokenDao.getToken(accessToken);
         if (token != null) {
             User user = token.getUser();

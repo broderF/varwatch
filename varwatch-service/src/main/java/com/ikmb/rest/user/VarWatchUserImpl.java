@@ -19,8 +19,12 @@ import com.ikmb.rest.util.HTTPVarWatchInputConverter;
 import com.ikmb.rest.registration.RegistrationManager;
 import com.ikmb.rest.util.AdminRequestFilter.AdminFilter;
 import com.ikmb.rest.util.TokenRequestFilter.TokenFilter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -98,6 +102,7 @@ public class VarWatchUserImpl {
     public Response updateUser(@HeaderParam("Authorization") String header, @Context HttpServletRequest request) {
 
         User user = inputConverter.getUserFromHeader(header);
+        System.out.println(user.getIsAdmin());
         DefaultUser contact;
         try {
             inputConverter.setHTTPRequest(request, DefaultUser.class);
@@ -136,6 +141,16 @@ public class VarWatchUserImpl {
         } else {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Cant find user with the given email").build();
         }
+    }
+
+    @GET
+    @AdminFilter
+    @Path("inactive")
+    public Response getInactiveUsers() {
+
+        List<User> user = userManager.getAllUser();
+        List<User> inactiveUsers = user.stream().filter((u) -> (!u.getActive())).collect(Collectors.toList());
+        return new ResponseBuilder().buildListWithExpose(inactiveUsers);
     }
 
     public enum ReportSchedule {

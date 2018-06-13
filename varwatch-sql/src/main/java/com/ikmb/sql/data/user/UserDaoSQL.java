@@ -22,7 +22,7 @@ import javax.persistence.TypedQuery;
  * @author broder
  */
 @Singleton
-public class UserDaoSQL implements UserDao{
+public class UserDaoSQL implements UserDao {
 
     @Inject
 //    private EntityManager em;
@@ -33,10 +33,10 @@ public class UserDaoSQL implements UserDao{
             return false;
         }
         String persistenceUnitName = emProvider.get().getEntityManagerFactory().getProperties().get("hibernate.ejb.persistenceUnitName").toString();
-        if (persistenceUnitName.equals("varwatch_dev")) {
-            user.setActive(Boolean.TRUE);
-        } else {
+        if (persistenceUnitName.equals("varwatch")) {
             user.setActive(Boolean.FALSE);
+        } else {
+            user.setActive(Boolean.TRUE);
         }
         emProvider.get().persist(user);
         return true;
@@ -52,7 +52,6 @@ public class UserDaoSQL implements UserDao{
         }
     }
 
-    @Transactional
     public User getUserByName(String userMail) {
         TypedQuery<User> query = emProvider.get().createQuery("SELECT u FROM User u WHERE u.email = :mail", User.class
         );
@@ -73,7 +72,7 @@ public class UserDaoSQL implements UserDao{
     }
 
     public void update(User user) {
-        emProvider.get().merge(User.fromUser(user));
+        emProvider.get().merge(user);
     }
 
     public List<User> getAllUser() {
@@ -81,7 +80,7 @@ public class UserDaoSQL implements UserDao{
         );
         List<User> resultList = query.getResultList();
         List<User> tmp = new ArrayList<>();
-        for(User user: resultList){
+        for (User user : resultList) {
             tmp.add(user);
         }
         return tmp;
