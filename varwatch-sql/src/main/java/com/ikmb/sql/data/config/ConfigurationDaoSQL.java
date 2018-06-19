@@ -58,7 +58,23 @@ public class ConfigurationDaoSQL implements ConfigurationDao {
 
     @Override
     public void updateFilterConfig(FilterConfig filterConfig) {
-        emProvider.get().merge(filterConfig);
+        EntityManager get = emProvider.get();
+        TypedQuery<FilterConfig> query = get.createQuery("SELECT s FROM FilterConfig s WHERE s.key = :key", FilterConfig.class);
+        try {
+            FilterConfig dbConfig = query.setParameter("key", filterConfig.getName()).getSingleResult();
+            if (filterConfig.isEnabled() != null) {
+                dbConfig.setEnabled(filterConfig.isEnabled());
+            }
+            if (filterConfig.getFilterType() != null) {
+                dbConfig.setFilterType(filterConfig.getFilterType());
+            }
+            if (filterConfig.getValue() != null) {
+                dbConfig.setValue(filterConfig.getValue());
+            }
+            get.merge(dbConfig);
+        } catch (NoResultException nre) {
+            System.out.println("no filter config found, insert new filter config");
+            get.persist(filterConfig);
+        }
     }
-
 }

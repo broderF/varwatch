@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ikmb.varwatchcommons.tools;
+package com.ikmb.core.tools;
 
 import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.data.varianteffect.VariantEffect;

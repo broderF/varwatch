@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class EnsemblHttpRequestHandler {
 
-    private final String server = "http://rest.ensembl.org";
+    private String server = "http://rest.ensembl.org"; //default GrCh38 server
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(EnsemblHttpRequestHandler.class);
 
     public String sendHttpRequest(String parameter) {
@@ -85,5 +85,11 @@ public class EnsemblHttpRequestHandler {
             Logger.getLogger(EnsemblHttpRequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return output;
+    }
+
+    public void setServerByAssembly(String assembly) {
+        if (assembly != null && assembly.equalsIgnoreCase("GRCh37")) {
+            this.server = "http://grch37.rest.ensembl.org";
+        }
     }
 }

@@ -27,7 +27,7 @@ public class FilterConfig implements Serializable {
     @Column(name = "filter_type", nullable = true)
     private String type;//variant of variant_effect
     @Column(name = "enabled")
-    private boolean enabled;
+    private Boolean enabled;
 
     FilterConfig(String key, String value, String type, boolean enabled) {
         this.enabled = enabled;
@@ -63,11 +63,11 @@ public class FilterConfig implements Serializable {
         this.type = filterType;
     }
 
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
