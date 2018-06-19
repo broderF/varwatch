@@ -62,12 +62,12 @@ public class VarWatchConfigService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConfiguration() {
         List<VarWatchConfig> configurations = configManager.getConfigurations();
-        return new ResponseBuilder().buildList(configurations);
+        return new ResponseBuilder().buildListWithNulls(configurations);
     }
 
     @POST
     @Path("add")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response addConfiguration(@QueryParam("key") String key, @QueryParam("value") String value) {
         configManager.addConfiguration(key, value);
         List<VarWatchConfig> configurations = configManager.getConfigurations();
@@ -84,7 +84,7 @@ public class VarWatchConfigService {
 
     @POST
     @Path("filter/add")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response addFilterConfiguration(@QueryParam("key") String key, @QueryParam("value") String value, @QueryParam("type") String type, @QueryParam("enabled") boolean enabled) {
         configManager.addFilterConfiguration(key, value, type, enabled);
         List<FilterConfig> filterOptions = configManager.getFilterOptions();
@@ -101,7 +101,7 @@ public class VarWatchConfigService {
 
     @POST
     @Path("beacon/add")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response addBeaconConfiguration(@QueryParam("name") String name, @QueryParam("path") String path, @QueryParam("assembly") String assembly, @QueryParam("image_url") String imageUrl, @QueryParam("enabled") Boolean enabled) {
         String imagePath = "images/clinvar_logo.png";
         try {
