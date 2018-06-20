@@ -119,7 +119,7 @@ public class RegistrationService {
 
         Response response = registrationManager.saveUser(contact);
         User user = userManager.getUser(contact.getMail());
-        if (!user.getActive() && !user.getIsAdmin()) {
+        if (!user.getActive() && !user.getIsAdmin() && false) { //Todo remove false with the first official commit
             logger.info("Send mail");
             String filePath = pdfCreator.createPdfFromContact(contact);
             logger.info("filepath: " + filePath);

@@ -5,15 +5,7 @@
  */
 package com.ikmb.core.tools.variant_parser;
 
-import com.ikmb.core.data.dataset.DatasetVW;
-import com.ikmb.core.data.variant.Variant;
-import com.ikmb.core.tools.EnsemblHttpRequestHandler;
-import java.util.List;
-import junit.framework.Assert;
 import org.junit.Test;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import util.JsonFileLoader;
 
 /**
  *

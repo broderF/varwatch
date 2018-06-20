@@ -32,7 +32,6 @@ services:
       - ../varwatch-service/target/varwatch-service-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/varwatch.war
     depends_on:
       - varwatchdb
-      - hpodb
 
   beekeeper:
     build: ./beekeeper
@@ -41,7 +40,6 @@ services:
       - overlay
     depends_on:
       - varwatchdb
-      - hpodb
     volumes:
       - /tmp/worker_data:/log/
 
@@ -52,7 +50,7 @@ services:
       placement:
         constraints: [node.role == manager]
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: test123
       MYSQL_DATABASE: varwatch
@@ -64,23 +62,6 @@ services:
     networks:
       - overlay
 
-  hpodb:
-    image: mysql:5.7.21
-    #restart: always
-    deploy:
-      placement:
-        constraints: [node.role == manager]   
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: test123
-      MYSQL_DATABASE: MYHPO_06_2017
-      MYSQL_USER: demo
-      MYSQL_PASSWORD: omed
-    volumes:
-      - ./data/sql/MYHPO_06_2017.sql:/docker-entrypoint-initdb.d/MYHPO_06_2017.sql
-    networks:
-      - overlay
 networks:
   overlay:
 
