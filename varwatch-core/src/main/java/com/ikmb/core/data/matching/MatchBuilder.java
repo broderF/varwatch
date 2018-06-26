@@ -35,7 +35,6 @@ public class MatchBuilder {
 
 //    @Inject
 //    private GeneBuilder geneBuilder;
-
     @Inject
     private UserBuilder userBuilder;
 
@@ -89,8 +88,9 @@ public class MatchBuilder {
         matchInfo.setContact(contact);
         matchInfo.setHpoTerms(hpoTerms);
 //        matchInfo.setIdenticalMatch(identicalMatch);
-        matchInfo.setMatchedVariant(matchedVariant);
-        matchInfo.setGenes(genes);
+        com.ikmb.core.varwatchcommons.entities.Variant variant = new VariantBuilder().withVariant(matchedVariant).build();
+        matchInfo.setMatchedVariant(variant);
+//        matchInfo.setGenes(genes);
         matchInfo.setQueryVariantId(queryVariantId);
         matchInfo.setHpoDist(hpoDist);
         matchInfo.setId(id);

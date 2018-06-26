@@ -227,7 +227,7 @@ public class VariantStatusManager {
         List<VariantStatus> hgmdMatchedVariantsSql = variantStatusDao.getHgmdMatchedStatus(id);
         List<VariantStatus> beaconMatchedVariantsSql = variantStatusDao.getBeaconMatchedStatus(id);
 
-        if (vwmatchedVariantsSql.isEmpty() && hgmdMatchedVariantsSql.isEmpty()) {
+        if (vwmatchedVariantsSql.isEmpty() && hgmdMatchedVariantsSql.isEmpty() && beaconMatchedVariantsSql.isEmpty()) {
             return getAllNonMatchingStatus(id);
         }
 

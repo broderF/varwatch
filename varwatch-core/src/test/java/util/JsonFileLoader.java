@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public class JsonFileLoader {
 
-    public static String getStringFromFile(String filePath) {
+    public static String getTrimmedStringFromFile(String filePath) {
         List<String> readAllLines = new ArrayList<>();
         try {
             readAllLines = Files.readAllLines(Paths.get(filePath));
@@ -28,6 +28,17 @@ public class JsonFileLoader {
             Logger.getLogger(JsonFileLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
         String collectJoin = readAllLines.stream().map(String::trim).collect(Collectors.joining()).replaceAll("\\s", "");
+        return collectJoin;
+    }
+
+    public static String getStringFromFile(String filePath) {
+        List<String> readAllLines = new ArrayList<>();
+        try {
+            readAllLines = Files.readAllLines(Paths.get(filePath));
+        } catch (IOException ex) {
+            Logger.getLogger(JsonFileLoader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String collectJoin = readAllLines.stream().collect(Collectors.joining("\n"));
         return collectJoin;
     }
 }

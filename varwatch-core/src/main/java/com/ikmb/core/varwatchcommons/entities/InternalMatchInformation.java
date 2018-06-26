@@ -5,9 +5,7 @@
  */
 package com.ikmb.core.varwatchcommons.entities;
 
-import com.ikmb.core.data.gene.Gene;
 import com.ikmb.core.data.hpo.HPOTerm;
-import com.ikmb.core.data.variant.Variant;
 import java.util.List;
 
 /**
@@ -22,9 +20,9 @@ public class InternalMatchInformation extends MatchInformation {
     private Variant matchedVariant;
     private List<HPOTerm> hpoTerms;
     private Double hpoDist;
-    private List<Gene> genes;
+//    private List<Gene> genes;
     private Contact contact;
-    private Gene gene;
+//    private Gene gene;
 
     public Long getQueryVariantId() {
         return queryVariantId;
@@ -34,13 +32,13 @@ public class InternalMatchInformation extends MatchInformation {
         this.queryVariantId = queryVariantId;
     }
 
-    public Gene getGene() {
-        return gene;
-    }
-
-    public void setGene(Gene gene) {
-        this.gene = gene;
-    }
+//    public Gene getGene() {
+//        return gene;
+//    }
+//
+//    public void setGene(Gene gene) {
+//        this.gene = gene;
+//    }
 
     public boolean isIdenticalMatch() {
         return identicalMatch;
@@ -66,13 +64,13 @@ public class InternalMatchInformation extends MatchInformation {
         this.hpoTerms = hpoTerms;
     }
 
-    public List<Gene> getGenes() {
-        return genes;
-    }
-
-    public void setGenes(List<Gene> genes) {
-        this.genes = genes;
-    }
+//    public List<Gene> getGenes() {
+//        return genes;
+//    }
+//
+//    public void setGenes(List<Gene> genes) {
+//        this.genes = genes;
+//    }
 
     public Contact getContact() {
         return contact;

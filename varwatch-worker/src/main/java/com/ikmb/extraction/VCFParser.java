@@ -85,7 +85,7 @@ public class VCFParser {
             //ALt could be more cases, save them in seperate vpis?
             //get the genotype, phenotype
             if (!line.startsWith("#")) {
-                Map<String, String> variantInformation = new HashMap<String, String>();
+                Map<String, String> variantInformation = new HashMap<>();
                 StringTokenizer tokenizer = new StringTokenizer(line);
                 variantInformation.put("CHROM", tokenizer.nextToken());
                 variantInformation.put("POS", tokenizer.nextToken());

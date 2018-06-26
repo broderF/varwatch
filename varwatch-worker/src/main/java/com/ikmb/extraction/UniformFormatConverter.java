@@ -15,7 +15,7 @@ import com.ikmb.core.utils.VariantParser;
 import com.ikmb.core.data.ensembl.EnsemblDataManager;
 import com.ikmb.core.data.variant.Variant;
 import com.ikmb.core.data.variant.VariantStatusBuilder;
-import com.ikmb.core.tools.variant_parser.VariantFactory;
+import com.ikmb.core.tools.variant_parser.VariantParserFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,32 +81,8 @@ public class UniformFormatConverter {
     }
 
     public List<Variant> getVariants(DatasetVW dataset) {
-        com.ikmb.core.tools.variant_parser.VariantParser variantParser = VariantFactory.getVariantParser(dataset.getRawDataType());
+        com.ikmb.core.tools.variant_parser.VariantParser variantParser = VariantParserFactory.getVariantParser(dataset.getRawDataType());
         List<Variant> variants = variantParser.getVariants(dataset);
-//        List<Variant> variants = new ArrayList<>();
-//        VariantFormat variantFormat = VariantFormat.getVariantFormat(dataset.getRawDataType());
-//        switch (variantFormat) {
-//            case NORMAL:
-//                genomicFeatures = VariantParser.getVariantInfoFromByteArray(dataset.getRawData());
-//                break;
-//            case VCF:
-//                VCFParser parser = new VCFParser();
-//                variants = parser.getVariants(dataset.getRawData());
-//                break;
-//            case HGVS:
-//                //with the hgvs string inside of the object
-//                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Start hgvs");
-//                List<GenomicFeature> tmpfeatures = VariantParser.getVariantInfoFromByteArray(dataset.getRawData());
-//
-//                Ensembl _predictorSQL = ensemblDataManager.getActiveEnsembl(false);
-//                hgvsConverter.setEnsemblVersion(_predictorSQL.getName());
-//                genomicFeatures = hgvsConverter.mapVariants(tmpfeatures, dataset.getRawDataAssembly());
-//                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Nof genomic features:" + genomicFeatures.size());
-//                for (String variant : hgvsConverter.getErrorVariants()) {
-//                    errorVariants.put(variant, variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.HGVS_NOT_CONVERTABLE.getMessage()).buildVWStatus());
-//                }
-//                break;
-//        }
         return variants;
     }
 

@@ -103,4 +103,15 @@ public class MatchingServiceImpl {
 
         return Response.status(Response.Status.OK).entity("matches acknowledged").build();
     }
+
+    public void setVariantmatchingManager(MatchVariantDataManager variantmatchingManager) {
+        this.variantmatchingManager = variantmatchingManager;
+    }
+
+    public void setInputConverter(HTTPVarWatchInputConverter inputConverter) {
+        this.inputConverter = inputConverter;
+    }
+    
+    
+
 }

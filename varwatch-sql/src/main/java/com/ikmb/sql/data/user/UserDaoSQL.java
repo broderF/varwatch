@@ -32,7 +32,7 @@ public class UserDaoSQL implements UserDao {
             return false;
         }
         String persistenceUnitName = emProvider.get().getEntityManagerFactory().getProperties().get("hibernate.ejb.persistenceUnitName").toString();
-        if (persistenceUnitName.equals("varwatch_dev")) {
+        if (persistenceUnitName.equals("varwatch_dev") || user.getIsAdmin()) {
             user.setActive(Boolean.TRUE);
         } else {
             user.setActive(Boolean.FALSE);

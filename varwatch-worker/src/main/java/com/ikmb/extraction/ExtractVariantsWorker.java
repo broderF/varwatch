@@ -24,10 +24,15 @@ import com.ikmb.core.data.workflow.worker.AnalysisWorker;
 import com.ikmb.utils.VWConfiguration;
 import com.ikmb.utils.WorkerInputHandler;
 import com.ikmb.core.data.workflow.analysis.AnalysisBuilder;
+import com.ikmb.core.tools.CrossMap;
+import com.ikmb.core.utils.VarWatchException;
 import com.ikmb.varwatchworker.Worker;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +78,9 @@ public class ExtractVariantsWorker implements Worker {
     private DatasetStatusManager statusManager;
 
     @Inject
+    private CrossMap crossMap;
+
+    @Inject
     private WipeDataManager wipeDataManager;
 
     private WorkFlowManager.JobProcessStatus jobProcessStatus = WorkFlowManager.JobProcessStatus.FAILED;
@@ -86,56 +94,50 @@ public class ExtractVariantsWorker implements Worker {
         statusManager.createNewStatus(_dataset.getId(), DatasetStatusBuilder.DatasetStatusType.PROCESSED);
 
         //extract the variants to an uniform format
-        uniformFormatConverter.setDataset(_dataset);
-        uniformFormatConverter.extractVariants();
-        List<GenomicFeature> genomicFeatures = uniformFormatConverter.getGenomicFeatures();
-        logger.info("{} variants extracted", genomicFeatures.size());
-        if (genomicFeatures.size() > 100) {
-            //delete ds if size > 100
-            logger.info("variant size exceeded, dataset will be rejected");
-            statusManager.createNewStatus(_dataset.getId(), DatasetStatusBuilder.DatasetStatusType.REFECTED_MAX_NUMBER);
-            jobProcessStatus = WorkFlowManager.JobProcessStatus.SUCCESSFUL;
+        List<Variant> extractVariantsNew = new ArrayList<>();
+        try {
+            extractVariantsNew = extractVariantsNew();
+        } catch (VarWatchException ex) {
             return;
         }
 
-        Map<String, VWStatus> preProcessErrorVariants = uniformFormatConverter.getPreProcessErrorVariants();
-        logger.info("{} variants couldnt be extracted", preProcessErrorVariants.size());
-        extractionDataManager.setRawVariantStatus(_dataset, preProcessErrorVariants);
-
         //crossmap the variants based on the given assembly
-        List<GenomicFeature> mappedVariants = genomicFeatures;
-        List<VWVariant> notMapableVariants = new ArrayList<>();
+//        List<GenomicFeature> mappedVariants = uniformFormatConverter.getGenomicFeatures();
+        List<Variant> mappedVariants = new ArrayList<>();
         if (!_dataset.getRawDataAssembly().equals(VWConfiguration.STANDARD_COORDS)) {
-            vwCrossMapper.setGenomicFeatures(genomicFeatures, _dataset.getRawDataAssembly());
-            vwCrossMapper.crossmap();
-            mappedVariants = vwCrossMapper.getMappedFeatures();
-            notMapableVariants = vwCrossMapper.getErrorVariants();
+            for (Variant variant : extractVariantsNew) {
+                Optional<Variant> run = crossMap.run(variant, _dataset.getRawDataAssembly(), VWConfiguration.STANDARD_COORDS);
+                Variant mappedVariant = run.get();
+                if (mappedVariant.getFilter().startsWith("not pass")) {
+                    VWStatus status = new VariantStatusBuilder().withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(variant.getFilter()).buildVWStatus();
+                    extractionDataManager.setVariantStatus(_dataset, mappedVariant, status);
+                    logger.info("variant couldnt be mapped: {}", mappedVariant.getVEPIdentifier());
+                } else {
+                    mappedVariants.add(mappedVariant);
+                }
+            }
         }
         logger.info("{} variants mapped", mappedVariants.size());
-        logger.info("{} variants couldnt be mapped", notMapableVariants.size());
-        VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(VariantStatusBuilder.VariantStatusMessage.ASSEMBLY_NOT_MAPABLE.getMessage()).buildVWStatus();
-        extractionDataManager.setVariantStatus(_dataset, notMapableVariants, status);
 
-        String vcfString = VariantParser.json2vcf(mappedVariants);
-        byte[] vcfFile = vcfString.getBytes();
-
-        VCFParser vcfParser = new VCFParser();
-        vcfParser.run(vcfFile);
-        List<VWVariant> variants = vcfParser.getVariants();
-
-        variantChecker.filterVariants(variants);
-        Map<VWVariant, VWStatus> maxIndelExceededVariants = variantChecker.getErrorVariants();
-        logger.info("{} variants with too large indels", maxIndelExceededVariants.size());
-        List<VWVariant> correctVariants = variantChecker.getCorrectVariants();
-        logger.info("{} correct variants", correctVariants.size());
-        extractionDataManager.setVariantStatus(_dataset, maxIndelExceededVariants);
-        List<Variant> persistVariants = extractionDataManager.persistVariants(correctVariants, _dataset);
+//        String vcfString = VariantParser.json2vcf(mappedVariants);
+//        byte[] vcfFile = vcfString.getBytes();
+//        VCFParser vcfParser = new VCFParser();
+//        vcfParser.run(vcfFile);
+//        List<VWVariant> variants = vcfParser.getVariants();
+//
+//        variantChecker.filterVariants(variants);
+//        Map<VWVariant, VWStatus> maxIndelExceededVariants = variantChecker.getErrorVariants();
+//        logger.info("{} variants with too large indels", maxIndelExceededVariants.size());
+//        List<VWVariant> correctVariants = variantChecker.getCorrectVariants();
+//        logger.info("{} correct variants", correctVariants.size());
+//        extractionDataManager.setVariantStatus(_dataset, maxIndelExceededVariants);
+       extractionDataManager.persistVariantsNew(mappedVariants, _dataset);
 
 //        VariantDatabaseHelper.persistVariants(_variants, _dataset);
 //        DatasetVW dataset = VariantDatabaseHelper.getDatasetByID(_dataset.getId());
 //        Set<Variant> variants = dataset.getVariants();
-        String vcf = json2vcf(persistVariants);
-        extractionDataManager.persistVCFFile(vcf.getBytes(), _dataset);
+//        String vcf = json2vcf(persistVariants);
+//        extractionDataManager.persistVCFFile(vcf.getBytes(), _dataset);
 
         jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.ANNOTATION, null, AnalysisJob.JobAction.NEW.toString());
         jobProcessStatus = WorkFlowManager.JobProcessStatus.SUCCESSFUL;
@@ -191,5 +193,41 @@ public class ExtractVariantsWorker implements Worker {
     @Override
     public WorkFlowManager.JobProcessStatus getJobProcessStatus() {
         return jobProcessStatus;
+    }
+
+    private void extractVariants() {
+        uniformFormatConverter.setDataset(_dataset);
+        uniformFormatConverter.extractVariants();
+        List<GenomicFeature> genomicFeatures = uniformFormatConverter.getGenomicFeatures();
+        logger.info("{} variants extracted", genomicFeatures.size());
+        if (genomicFeatures.size() > 100) {
+            //delete ds if size > 100
+            logger.info("variant size exceeded, dataset will be rejected");
+            statusManager.createNewStatus(_dataset.getId(), DatasetStatusBuilder.DatasetStatusType.REFECTED_MAX_NUMBER);
+            jobProcessStatus = WorkFlowManager.JobProcessStatus.SUCCESSFUL;
+            return;
+        }
+        Map<String, VWStatus> preProcessErrorVariants = uniformFormatConverter.getPreProcessErrorVariants();
+        logger.info("{} variants couldnt be extracted", preProcessErrorVariants.size());
+        extractionDataManager.setRawVariantStatus(_dataset, preProcessErrorVariants);
+    }
+
+    private List<Variant> extractVariantsNew() throws VarWatchException {
+        List<Variant> variants = uniformFormatConverter.getVariants(_dataset);
+        logger.info("{} variants extracted", variants.size());
+        if (variants.size() > 100) {
+            //delete ds if size > 100
+            logger.info("variant size exceeded, dataset will be rejected");
+            statusManager.createNewStatus(_dataset.getId(), DatasetStatusBuilder.DatasetStatusType.REFECTED_MAX_NUMBER);
+            jobProcessStatus = WorkFlowManager.JobProcessStatus.SUCCESSFUL;
+            throw new VarWatchException("variant size exceeded, dataset will be rejected");
+        }
+
+        List<Variant> notPassVariants = variants.stream().filter(variant -> variant.getFilter().startsWith("not pass")).collect(Collectors.toList());
+        List<Variant> passVariants = variants.stream().filter(variant -> variant.getFilter().equals("pass")).collect(Collectors.toList());
+
+        logger.info("{} variants couldnt be extracted", notPassVariants.size());
+        extractionDataManager.setRawVariantStatus(_dataset, notPassVariants);
+        return passVariants;
     }
 }

@@ -93,7 +93,7 @@ public class VariantFilterManagerTest {
     }
 
     private String getVepResponseFromFile() {
-        return JsonFileLoader.getStringFromFile("src/test/resources/vep_response.json");
+        return JsonFileLoader.getTrimmedStringFromFile("src/test/resources/vep_response.json");
     }
 
     private VariantEffectFilter createVariantEffectFilterSetup(String filterType, String filterName, String filterValue, boolean enabled, VariantEffectFilter variantFilter) {

@@ -74,6 +74,16 @@ public class VariantDataManager {
     }
 
     @Transactional
+    public void saveNew(List<Variant> variants, DatasetVW dataset) {
+        dataset = datasetDao.getDataset(dataset.getId());
+
+        for (Variant variant : variants) {
+            variant.setDataset(dataset);
+            variantDao.persist(variant);
+        }
+    }
+
+    @Transactional
     public List<com.ikmb.core.varwatchcommons.entities.Variant> getVariantsByDataset(Long datasetId) {
         DatasetVW dataset = datasetDao.getDataset(datasetId);
         List<Variant> variantsSql = variantDao.getVariantsByDataset(dataset);

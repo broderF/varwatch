@@ -1,0 +1,14 @@
+[{
+        "variant": {
+            "hgvs": "AGT:c.803T>C"
+        }
+    }, {
+        "variant": {
+            "hgvs": "9:g.22125504G>C"
+        }
+    }, {
+        "variant": {
+            "hgvs": "ENST00000003084:c.1431_1433delTTC"
+        }
+    }
+]

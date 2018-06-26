@@ -14,6 +14,7 @@ import com.ikmb.core.data.dataset.DatasetVW;
 import com.ikmb.core.data.variant.VariantDataManager;
 import com.ikmb.core.data.hpo.HPOTermBuilder;
 import com.ikmb.core.data.variant.Variant;
+import com.ikmb.core.data.variant.VariantStatusBuilder;
 import com.ikmb.core.data.variant.VariantStatusManager;
 import java.util.List;
 import java.util.Map;
@@ -79,5 +80,21 @@ public class ExtractionDataManager {
     public void persistVCFFile(byte[] bytes, DatasetVW dataset) {
         dataset.setVcfFile(bytes);
         datasetManager.updateDataset(dataset);
+    }
+
+    public void setRawVariantStatus(DatasetVW dataset, List<Variant> notPassVariants) {
+        for (Variant variant : notPassVariants) {
+            VWStatus status = new VariantStatusBuilder().withStatus(VariantStatusBuilder.VariantStatusTerm.REJECTED).withMessage(variant.getFilter()).buildVWStatus();
+            variantStatusManager.save(dataset, variant.getVEPIdentifier(), status);
+        }
+    }
+
+    public void setVariantStatus(DatasetVW dataset, Variant variant, VWStatus status) {
+        String variantHash = VariantHash.getVariantHash(variant);
+        variantStatusManager.save(dataset, variant.getVEPIdentifier(), variantHash, status);
+    }
+
+    public void persistVariantsNew(List<Variant> mappedVariants, DatasetVW dataset) {
+        variantDataManager.saveNew(mappedVariants, dataset);
     }
 }

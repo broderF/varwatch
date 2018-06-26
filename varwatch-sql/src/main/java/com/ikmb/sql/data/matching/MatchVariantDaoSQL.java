@@ -43,9 +43,9 @@ public class MatchVariantDaoSQL implements MatchVariantDao {
 
     @Inject
     private Provider<EntityManager> emProvider;
-
-    @Inject
-    private VariantDataManager variantDm;
+//
+//    @Inject
+//    private VariantDataManager variantDm;
 
     public Match get(Long matchStatusID) {
         return emProvider.get().find(Match.class, matchStatusID);

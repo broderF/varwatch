@@ -113,7 +113,7 @@ public class HPOUpdateManager {
         try {
             OBODoc parse = parser.parseURL(url);
 
-            String version = oboFileParser.getVersionFromObo(parse);
+            String version = "#version:"+oboFileParser.getVersionFromObo(parse);
 
             List<Frame> termFrames = oboFileParser.getAllFramesSorted(parse);
 
