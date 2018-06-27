@@ -8,6 +8,7 @@ package com.ikmb.rest.guice;
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
+import com.ikmb.core.VWConfiguration;
 import com.ikmb.core.data.auth.client.ClientBuilder;
 import com.ikmb.core.data.auth.client.ClientManager;
 import com.ikmb.core.data.auth.token.TokenManager;
@@ -23,11 +24,17 @@ import com.ikmb.rest.registration.UserChecker;
 import com.ikmb.sql.guice.SQLModule;
 import com.ikmb.sql.guice.VarWatchPersist;
 import com.squarespace.jersey2.guice.JerseyGuiceServletContextListener;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -47,9 +54,15 @@ public class ServletConfig extends JerseyGuiceServletContextListener {
         return Arrays.asList(new ServletModule() {
             @Override
             protected void configureServlets() {
-                Properties properties = new Properties();
-                String persistanceModule = "varwatch_docker";
-                database = persistanceModule;
+                String persistanceModule = "varwatch";
+                try {
+                    Properties properties = new Properties();
+                    properties.load(getClass().getClassLoader().getResourceAsStream("server.properties"));
+                    persistanceModule = properties.getProperty("db");
+
+                } catch (IOException ex) {
+                    Logger.getLogger(ServletConfig.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
                 logger.info("----------------------------");
                 logger.info("Module: " + persistanceModule);

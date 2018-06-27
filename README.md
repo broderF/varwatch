@@ -52,3 +52,7 @@ Restore the database:
 Inspect a docker container: 
 
 ## Configuration
+
+### Database configuration
+
+If you want to change the database connection you have to change the parameter for the service and the parameter for the worker and beekeeper. In order to do this change the property db in the file varwatch-service/src/main/webapp/WEB-INF/classes/server.properties and in the file docker/beekeeper/config_worker.txt. Both values should always be the same.

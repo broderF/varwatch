@@ -8,12 +8,16 @@
     <packaging>war</packaging>
 
     <name>varwatch-service</name>
+        <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+    </properties>
 
-    <properties>
+<!--    <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
-    </properties>
+    </properties>-->
 
     <dependencies>
         <!--        <dependency>
@@ -146,9 +150,9 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <compilerArguments>
+<!--                    <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
-                    </compilerArguments>
+                    </compilerArguments>-->
                 </configuration>
             </plugin>
             <plugin>
@@ -157,10 +161,10 @@
                 <version>2.1.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <outputDirectory>../docker/service/</outputDirectory>
+                    <outputDirectory>${project.basedir}/../docker/service/</outputDirectory>
                 </configuration>
             </plugin>
-            <plugin>
+            <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.1</version>
@@ -172,8 +176,8 @@
                         </goals>
                         <configuration>
                             <outputDirectory>../docker/data/</outputDirectory>
-                            <!-- <outputDirectory>${endorsed.dir}</outputDirectory>-->
-                            <!--<filtering>true</filtering>-->
+                             <outputDirectory>${endorsed.dir}</outputDirectory>
+                            <filtering>true</filtering>
                             <silent>true</silent>
                             <artifactItems>
                                 <artifactItem>
@@ -186,7 +190,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
