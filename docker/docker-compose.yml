@@ -1,15 +1,11 @@
-version: "3"
+version: "2"
 
 services:
   web:
     image: nginx:1.12
-    deploy:
-      placement:
-        constraints: [node.role == manager]
     volumes:
       - ./data/website/dist:/usr/share/nginx/html
       - ./data/website/default:/etc/nginx/conf.d/default.conf
-    #restart: always 
     ports:
       - "5000:5000"
     networks:
@@ -19,17 +15,13 @@ services:
 
   api:
     image: tomcat:8.0.20-jre8
-    #restart: always
-    deploy:
-      placement:
-        constraints: [node.role == manager]     
     ports:
       - "8080:8080"
     networks:
       - overlay
     volumes:
       - ./images:/images
-      - ../varwatch-service/target/varwatch-service-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/varwatch.war
+      - ./service/varwatch-service-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/varwatch.war
     depends_on:
       - varwatchdb
 
@@ -45,10 +37,6 @@ services:
 
   varwatchdb:
     image: mysql:5.7.21
-    #restart: always 
-    deploy:
-      placement:
-        constraints: [node.role == manager]
     ports:
       - "3307:3306"
     environment:
