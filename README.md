@@ -56,3 +56,5 @@ Inspect a docker container:
 ### Database configuration
 
 If you want to change the database connection you have to change the parameter for the service and the parameter for the worker and beekeeper. In order to do this change the property db in the file varwatch-service/src/main/webapp/WEB-INF/classes/server.properties and in the file docker/beekeeper/config_worker.txt. Both values should always be the same.
+
+The database is stored persistently on the host server in the folder '/tmp/mysql_data'. To change the path open the docker-compose.yml file and change the volumes configuration from the vardb service. 

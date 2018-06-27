@@ -8,7 +8,6 @@ package com.ikmb.rest.guice;
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
-import com.ikmb.core.VWConfiguration;
 import com.ikmb.core.data.auth.client.ClientBuilder;
 import com.ikmb.core.data.auth.client.ClientManager;
 import com.ikmb.core.data.auth.token.TokenManager;
@@ -32,9 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
-import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.LoggerFactory;
 
 /**
