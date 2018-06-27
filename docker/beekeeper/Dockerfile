@@ -24,7 +24,7 @@ COPY ./slurm_service.sh slurm_service.sh
 #RUN mvn -Dmaven.test.skip=true clean install
 
 COPY ./varwatch-beekeeper-1.0-SNAPSHOT-jar-with-dependencies.jar varwatch-beekeeper-1.0-SNAPSHOT-jar-with-dependencies.jar
-COPY ./ancestors_path_newHpo.txt ancestors_path_newHpo.txt
+#COPY ./ancestors_path_newHpo.txt ancestors_path_newHpo.txt
 COPY ./varwatch-worker-1.0-SNAPSHOT-jar-with-dependencies.jar varwatch-worker-1.0-SNAPSHOT-jar-with-dependencies.jar
 COPY config_worker.txt config_worker.txt
 COPY varwatch_worker_slurm.sh varwatch_worker_slurm.sh

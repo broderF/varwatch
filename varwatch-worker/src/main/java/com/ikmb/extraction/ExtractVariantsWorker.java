@@ -103,7 +103,7 @@ public class ExtractVariantsWorker implements Worker {
 
         //crossmap the variants based on the given assembly
 //        List<GenomicFeature> mappedVariants = uniformFormatConverter.getGenomicFeatures();
-        List<Variant> mappedVariants = new ArrayList<>();
+        List<Variant> mappedVariants = extractVariantsNew;
         if (!_dataset.getRawDataAssembly().equals(VWConfiguration.STANDARD_COORDS)) {
             for (Variant variant : extractVariantsNew) {
                 Optional<Variant> run = crossMap.run(variant, _dataset.getRawDataAssembly(), VWConfiguration.STANDARD_COORDS);
@@ -131,14 +131,13 @@ public class ExtractVariantsWorker implements Worker {
 //        List<VWVariant> correctVariants = variantChecker.getCorrectVariants();
 //        logger.info("{} correct variants", correctVariants.size());
 //        extractionDataManager.setVariantStatus(_dataset, maxIndelExceededVariants);
-       extractionDataManager.persistVariantsNew(mappedVariants, _dataset);
+        extractionDataManager.persistVariantsNew(mappedVariants, _dataset);
 
 //        VariantDatabaseHelper.persistVariants(_variants, _dataset);
 //        DatasetVW dataset = VariantDatabaseHelper.getDatasetByID(_dataset.getId());
 //        Set<Variant> variants = dataset.getVariants();
 //        String vcf = json2vcf(persistVariants);
 //        extractionDataManager.persistVCFFile(vcf.getBytes(), _dataset);
-
         jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.ANNOTATION, null, AnalysisJob.JobAction.NEW.toString());
         jobProcessStatus = WorkFlowManager.JobProcessStatus.SUCCESSFUL;
     }
@@ -227,6 +226,7 @@ public class ExtractVariantsWorker implements Worker {
         List<Variant> passVariants = variants.stream().filter(variant -> variant.getFilter().equals("pass")).collect(Collectors.toList());
 
         logger.info("{} variants couldnt be extracted", notPassVariants.size());
+        logger.info("{} variants passed extration step", passVariants.size());
         extractionDataManager.setRawVariantStatus(_dataset, notPassVariants);
         return passVariants;
     }
