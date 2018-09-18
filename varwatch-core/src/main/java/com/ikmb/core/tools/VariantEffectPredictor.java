@@ -48,6 +48,9 @@ public class VariantEffectPredictor {
     public List<VariantEffect> getVariantEffectFromResponse(Variant variant, String response) {
         List<VariantEffect> variantEffects = new ArrayList<>();
         try {
+            if (response == null){
+                return variantEffects;
+            }
             System.out.println(response);
             JSONObject result = new JSONArray(response).getJSONObject(0);
             variant.setVepOutput(result);

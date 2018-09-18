@@ -16,4 +16,6 @@ public interface WipeDataDao {
     public void wipeDataset(Long datasetID);
 
     public void wipeVariantsByDataset(DatasetVW dataset);
+
+    public void deleteUser(String mail);
 }

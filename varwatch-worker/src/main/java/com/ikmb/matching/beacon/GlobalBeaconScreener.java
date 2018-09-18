@@ -93,7 +93,7 @@ public class GlobalBeaconScreener {
 //                }
                 System.out.println("------------------------------");
                 for (int i = 0; i < 1; i++) {
-                    URI build = UriBuilder.fromUri("https://beacon-network.org/api/responses").build();
+                    URI build = UriBuilder.fromUri("http://beacon-network.org/api/responses").build();
                     Logger logger = Logger.getLogger(getClass().getName());
 
                     JerseyClient client = JerseyClientBuilder.createClient();

@@ -199,8 +199,8 @@ public class VariantEffectDataManager {
     }
 
     public void persistSQLVariantEffectTmp(Variant curVar, List<VariantEffect> curVariantEffects) {
-
         DatasetVW dataset = curVar.getDataset();
+        boolean varianteffectStored = false;
         for (VariantEffect variantEffect : curVariantEffects) {
             Transcript transcriptSQL = transcriptDao.getByName(variantEffect.getTranscriptName());
             if (transcriptSQL == null) {
@@ -211,7 +211,7 @@ public class VariantEffectDataManager {
                 variantStatusManager.save(dataset, null, variantHash, curVar, status);
                 continue;
             }
-
+            varianteffectStored = true;
             VWStatus status = variantStatusBuilder.withStatus(VariantStatusBuilder.VariantStatusTerm.STORED).withMessage(VariantStatusBuilder.VariantStatusMessage.STORED_IN_VARWATCH.getMessage()).buildVWStatus();
             VWVariant buildVW = variantBuilder.withVariant(curVar).buildVW();
             String variantHash = variantHasher.getVariantHash(buildVW, hpoTermBuilder.addFeatures(dataset.getPhenotypes()).buildStringSet());
@@ -221,7 +221,9 @@ public class VariantEffectDataManager {
             variantEffect.setTranscript(transcriptSQL);
             variantEffectDao.persist(variantEffect);
         }
-
+        if(!varianteffectStored){
+            removeVariant(curVar);
+        }
     }
 
     public void removeVariant(Variant variant) {

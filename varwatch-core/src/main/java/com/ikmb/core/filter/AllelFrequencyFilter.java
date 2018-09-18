@@ -41,6 +41,8 @@ public class AllelFrequencyFilter implements VariantFilter {
                         double gnomadmaf = colocatedVariant.getDouble("gnomad_maf");
                         if (gnomadmaf <= maf) {
                             return true;
+                        }else{
+                            return false;
                         }
                     }
                 }
@@ -48,7 +50,7 @@ public class AllelFrequencyFilter implements VariantFilter {
         } catch (JSONException ex) {
             Logger.getLogger(AllelFrequencyFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        return true;
     }
 
     @Override

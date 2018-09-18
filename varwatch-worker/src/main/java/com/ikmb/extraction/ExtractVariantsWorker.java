@@ -15,8 +15,6 @@ import com.ikmb.core.data.variant.VariantStatusBuilder;
 import com.ikmb.core.data.wipe.WipeDataManager;
 import com.ikmb.core.varwatchcommons.entities.GenomicFeature;
 import com.ikmb.core.varwatchcommons.entities.VWStatus;
-import com.ikmb.core.varwatchcommons.entities.VWVariant;
-import com.ikmb.core.utils.VariantParser;
 import com.ikmb.core.data.workflow.analysis.Analysis;
 import com.ikmb.core.data.workflow.job.AnalysisJob;
 import com.ikmb.core.data.workflow.job.JobManager;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,18 +55,6 @@ public class ExtractVariantsWorker implements Worker {
 
     @Inject
     private ExtractionDataManager extractionDataManager;
-
-    @Inject
-    private AssemblyCrossMapper crossMapper;
-
-    @Inject
-    private VWCrossMapper vwCrossMapper;
-
-    @Inject
-    private VariantStatusBuilder variantStatusBuilder;
-
-    @Inject
-    private VariantIndelChecker variantChecker;
 
     @Inject
     private JobManager jobManager;
@@ -103,7 +88,7 @@ public class ExtractVariantsWorker implements Worker {
 
         //crossmap the variants based on the given assembly
 //        List<GenomicFeature> mappedVariants = uniformFormatConverter.getGenomicFeatures();
-        List<Variant> mappedVariants = extractVariantsNew;
+        List<Variant> mappedVariants = new ArrayList<>();
         if (!_dataset.getRawDataAssembly().equals(VWConfiguration.STANDARD_COORDS)) {
             for (Variant variant : extractVariantsNew) {
                 Optional<Variant> run = crossMap.run(variant, _dataset.getRawDataAssembly(), VWConfiguration.STANDARD_COORDS);
@@ -116,28 +101,13 @@ public class ExtractVariantsWorker implements Worker {
                     mappedVariants.add(mappedVariant);
                 }
             }
+        }else{
+            mappedVariants = extractVariantsNew;
         }
         logger.info("{} variants mapped", mappedVariants.size());
 
-//        String vcfString = VariantParser.json2vcf(mappedVariants);
-//        byte[] vcfFile = vcfString.getBytes();
-//        VCFParser vcfParser = new VCFParser();
-//        vcfParser.run(vcfFile);
-//        List<VWVariant> variants = vcfParser.getVariants();
-//
-//        variantChecker.filterVariants(variants);
-//        Map<VWVariant, VWStatus> maxIndelExceededVariants = variantChecker.getErrorVariants();
-//        logger.info("{} variants with too large indels", maxIndelExceededVariants.size());
-//        List<VWVariant> correctVariants = variantChecker.getCorrectVariants();
-//        logger.info("{} correct variants", correctVariants.size());
-//        extractionDataManager.setVariantStatus(_dataset, maxIndelExceededVariants);
         extractionDataManager.persistVariantsNew(mappedVariants, _dataset);
 
-//        VariantDatabaseHelper.persistVariants(_variants, _dataset);
-//        DatasetVW dataset = VariantDatabaseHelper.getDatasetByID(_dataset.getId());
-//        Set<Variant> variants = dataset.getVariants();
-//        String vcf = json2vcf(persistVariants);
-//        extractionDataManager.persistVCFFile(vcf.getBytes(), _dataset);
         jobManager.createJob(_dataset.getId(), AnalysisBuilder.ModuleName.ANNOTATION, null, AnalysisJob.JobAction.NEW.toString());
         jobProcessStatus = WorkFlowManager.JobProcessStatus.SUCCESSFUL;
     }

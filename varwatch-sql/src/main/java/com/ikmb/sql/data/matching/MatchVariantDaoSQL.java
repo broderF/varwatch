@@ -211,6 +211,7 @@ public class MatchVariantDaoSQL implements MatchVariantDao {
 
     public List<DatasetHGMD> getSimilarHGMDVariantsByGene(Variant variant) {
         emProvider.get().refresh(variant);
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "current variant; " + variant);
         //genes
         Set<Integer> geneids = new HashSet<>();
         for (VariantEffect vareff : variant.getVariantEffects()) {

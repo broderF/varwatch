@@ -5,12 +5,8 @@
  */
 package com.ikmb.core.data.wipe;
 
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.persist.Transactional;
-import com.google.inject.persist.jpa.JpaPersistModule;
-import com.ikmb.core.data.auth.user.UserManager;
 import com.ikmb.core.data.dataset.DatasetManager;
 import com.ikmb.core.data.dataset.DatasetVW;
 import java.util.List;
@@ -64,4 +60,10 @@ public class WipeDataManager {
 ////        }
 //        System.out.println("finish");
 //    }
+
+    @Transactional
+    public void wipeUser(String mail) {
+        wipeDataByUser(mail);
+        wipeDataDao.deleteUser(mail);
+    }
 }

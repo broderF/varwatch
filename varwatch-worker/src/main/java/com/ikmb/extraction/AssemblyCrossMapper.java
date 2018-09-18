@@ -102,9 +102,6 @@ public class AssemblyCrossMapper {
 
                 errorVariants.addAll(vcfParser.getVariantsFromFile(varOutputUnmapName));
 
-//                Files.deleteIfExists(Paths.get(varInputName));
-//                Files.deleteIfExists(Paths.get(varOutputName));
-//                Files.deleteIfExists(Paths.get(varOutputUnmapName));
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(AssemblyCrossMapper.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UnsupportedEncodingException ex) {

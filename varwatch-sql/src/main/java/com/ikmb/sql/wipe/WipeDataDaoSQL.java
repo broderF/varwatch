@@ -98,8 +98,15 @@ public class WipeDataDaoSQL implements WipeDataDao{
 //            }
 //        }
 //    }
+    @Override
     public void wipeVariantsByDataset(DatasetVW dataset) {
         Query q = emProvider.get().createQuery("Delete FROM Variant u WHERE u.dataset_vw = :ds").setParameter("ds", dataset);
+        q.executeUpdate();
+    }
+
+    @Override
+    public void deleteUser(String mail) {
+         Query q = emProvider.get().createQuery("Delete FROM User u WHERE u.email = :mail").setParameter("mail", mail);
         q.executeUpdate();
     }
 }
